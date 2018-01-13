@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<ui version="4.0">
+ <class>OMSens</class>
+ <widget class="QMainWindow" name="OMSens">
+  <property name="geometry">
+   <rect>
+    <x>0</x>
+    <y>0</y>
+    <width>400</width>
+    <height>300</height>
+   </rect>
+  </property>
+  <property name="windowTitle">
+   <string>OMSens</string>
+  </property>
+  <widget class="QWidget" name="centralWidget"/>
+  <widget class="QMenuBar" name="menuBar">
+   <property name="geometry">
+    <rect>
+     <x>0</x>
+     <y>0</y>
+     <width>400</width>
+     <height>19</height>
+    </rect>
+   </property>
+   <widget class="QMenu" name="menuSens_Analyisis">
+    <property name="title">
+     <string>Sens. Analyisis</string>
+    </property>
+    <addaction name="actionRel_Sens"/>
+    <addaction name="actionRMS_Sens"/>
+    <addaction name="actionCURVI_Sens"/>
+    <addaction name="actionMultiparam_Sweep"/>
+   </widget>
+   <addaction name="menuSens_Analyisis"/>
+  </widget>
+  <widget class="QToolBar" name="mainToolBar">
+   <attribute name="toolBarArea">
+    <enum>TopToolBarArea</enum>
+   </attribute>
+   <attribute name="toolBarBreak">
+    <bool>false</bool>
+   </attribute>
+  </widget>
+  <widget class="QStatusBar" name="statusBar"/>
+  <action name="actionRel_Sens">
+   <property name="text">
+    <string>Rel Sens</string>
+   </property>
+  </action>
+  <action name="actionRMS_Sens">
+   <property name="text">
+    <string>RMS Sens</string>
+   </property>
+  </action>
+  <action name="actionCURVI_Sens">
+   <property name="text">
+    <string>CURVI Sens</string>
+   </property>
+  </action>
+  <action name="actionMultiparam_Sweep">
+   <property name="text">
+    <string>Multiparam Sweep</string>
+   </property>
+  </action>
+ </widget>
+ <layoutdefault spacing="6" margin="11"/>
+ <resources/>
+ <connections/>
+</ui>
