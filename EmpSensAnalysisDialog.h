@@ -13,11 +13,15 @@ class EmpSensAnalysisDialog : public QDialog
 public:
     EmpSensAnalysisDialog(QWidget *pParent = 0);
 private:
-    Label *mpImportFMUHeading;
+    Label *mpHeading;
     QFrame *mpHorizontalLine;
-    Label *mpFmuFileLabel;
-    QLineEdit *mpFmuFileTextBox;
-    QPushButton *mpBrowseFileButton;
+    Label *mpPercentageLabel;
+    QLineEdit *mpPercentageBox;
+ //   Label *mpVariableLabel;
+   // QComboBox *mpVariableComboBox;
+    QPushButton *mpRunButton;
+
+/*    QPushButton *mpBrowseFileButton;
     Label *mpOutputDirectoryLabel;
     QLineEdit *mpOutputDirectoryTextBox;
     QPushButton *mpBrowseDirectoryButton;
@@ -28,8 +32,11 @@ private:
     QCheckBox *mpGenerateOutputConnectors;
     Label *mpOutputDirectoryNoteLabel;
     QPushButton *mpImportButton;
-/*
+*/
+
 private slots:
+  void runEmpSensAnalysis();
+/*
   void setSelectedFile();
   void setSelectedDirectory();
   void importFMU();

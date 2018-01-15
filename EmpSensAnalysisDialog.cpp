@@ -5,6 +5,9 @@
 #include <QFrame>
 #include <QGridLayout>
 
+// BORRAR:
+#include <iostream>
+// BORRAR^
 
 
 EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
@@ -16,14 +19,26 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     setMinimumWidth(550);
     // set import heading
     //mpImportFMUHeading = Utilities::getHeadingLabel(Helper::importFMU);
-    mpImportFMUHeading = Utilities::getHeadingLabel("Empirical Sensitivity Analysis");
+    mpHeading = Utilities::getHeadingLabel("Empirical Sensitivity Analysis");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();
-    // create FMU File selection controls
-    mpFmuFileLabel = new Label(tr("FMU File:"));
+    // Sens Analysis inputs
+    mpPercentageLabel = new Label(tr("Percentage:"));
+    mpPercentageBox = new QLineEdit;
+    //mpVariableLabel = new Label(tr("Variable:"));
 /*
-    mpFmuFileTextBox = new QLineEdit;
-    mpBrowseFileButton = new QPushButton(Helper::browse);
+    mpLogLevelComboBox = new QComboBox;
+    // Needs reification to write the real variables of a model programatically
+    mpLogLevelComboBox->addItem(tr("Nothing"), QVariant(0));
+    mpLogLevelComboBox->addItem(tr("Fatal"), QVariant(1));
+    mpLogLevelComboBox->addItem(tr("Error"), QVariant(2));
+    mpLogLevelComboBox->addItem(tr("Warning"), QVariant(3));
+    mpLogLevelComboBox->addItem(Helper::information, QVariant(4));
+    mpLogLevelComboBox->addItem(tr("Verbose"), QVariant(5));
+    mpLogLevelComboBox->addItem(tr("Debug"), QVariant(6));
+*/
+
+/*    mpBrowseFileButton = new QPushButton(Helper::browse);
     mpBrowseFileButton->setAutoDefault(false);
     connect(mpBrowseFileButton, SIGNAL(clicked()), SLOT(setSelectedFile()));
     // create Output Directory selection controls
@@ -55,19 +70,21 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     mpOutputDirectoryNoteLabel = new Label(tr("* If no Output Directory specified then the FMU files are generated in the current working directory."));
 */
     // create OK button
-    mpImportButton = new QPushButton("Ok");
-    mpImportButton->setAutoDefault(true);
-    //connect(mpImportButton, SIGNAL(clicked()), SLOT(importFMU()));
+    mpRunButton = new QPushButton("Ok");
+    mpRunButton->setAutoDefault(true);
+    connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
+    // Button quits:
+    //connect(mpRunButton, SIGNAL(clicked()),QApplication::instance(), SLOT(quit()));
     // set grid layout
     Label *pNoteLabel = new Label(tr("* This feature is experimental. Most models are not yet handled by it."));
     QGridLayout *pMainLayout = new QGridLayout;
     pMainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
-    pMainLayout->addWidget(mpImportFMUHeading, 0, 0, 1, 3);
+    pMainLayout->addWidget(mpHeading, 0, 0, 1, 3);
     pMainLayout->addWidget(mpHorizontalLine, 1, 0, 1, 3);
-    pMainLayout->addWidget(mpFmuFileLabel, 2, 0);
-/*
-    pMainLayout->addWidget(mpFmuFileTextBox, 2, 1);
-    pMainLayout->addWidget(mpBrowseFileButton, 2, 2);
+    pMainLayout->addWidget(mpPercentageLabel, 2, 0);
+    pMainLayout->addWidget(mpPercentageBox, 2, 1);
+
+/*    pMainLayout->addWidget(mpBrowseFileButton, 2, 2);
     pMainLayout->addWidget(mpOutputDirectoryLabel, 3, 0);
     pMainLayout->addWidget(mpOutputDirectoryTextBox, 3, 1);
     pMainLayout->addWidget(mpBrowseDirectoryButton, 3, 2);
@@ -79,6 +96,13 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     pMainLayout->addWidget(mpGenerateOutputConnectors, 8, 0, 1, 3);
     pMainLayout->addWidget(pNoteLabel, 9, 0, 1, 3, Qt::AlignLeft);
 */
-    pMainLayout->addWidget(mpImportButton, 10, 0, 1, 3, Qt::AlignRight);
+    pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
     setLayout(pMainLayout);
 }
+
+void EmpSensAnalysisDialog::runEmpSensAnalysis()
+{
+    std::cout << mpPercentageBox->text().toUtf8().constData() << std::endl;
+    accept();
+}
+

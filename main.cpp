@@ -8,8 +8,8 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     //OMSens w;
     //w.show();
-    EmpSensAnalysisDialog sensanaldialog;
-    sensanaldialog.exec();
+    EmpSensAnalysisDialog *sensanaldialog = new EmpSensAnalysisDialog;
+    sensanaldialog->show();
 
     return a.exec();
 }
