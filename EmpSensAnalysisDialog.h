@@ -17,8 +17,10 @@ private:
     QFrame *mpHorizontalLine;
     Label *mpPercentageLabel;
     QLineEdit *mpPercentageBox;
- //   Label *mpVariableLabel;
-   // QComboBox *mpVariableComboBox;
+    Label *mpVariableLabel;
+    QComboBox *mpVariableComboBox;
+    Label *mpIndexLabel;
+    QComboBox *mpIndexComboBox;
     QPushButton *mpRunButton;
 
 /*    QPushButton *mpBrowseFileButton;

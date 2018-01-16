@@ -25,18 +25,44 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     // Sens Analysis inputs
     mpPercentageLabel = new Label(tr("Percentage:"));
     mpPercentageBox = new QLineEdit;
-    //mpVariableLabel = new Label(tr("Variable:"));
-/*
-    mpLogLevelComboBox = new QComboBox;
-    // Needs reification to write the real variables of a model programatically
-    mpLogLevelComboBox->addItem(tr("Nothing"), QVariant(0));
-    mpLogLevelComboBox->addItem(tr("Fatal"), QVariant(1));
-    mpLogLevelComboBox->addItem(tr("Error"), QVariant(2));
-    mpLogLevelComboBox->addItem(tr("Warning"), QVariant(3));
-    mpLogLevelComboBox->addItem(Helper::information, QVariant(4));
-    mpLogLevelComboBox->addItem(tr("Verbose"), QVariant(5));
-    mpLogLevelComboBox->addItem(tr("Debug"), QVariant(6));
-*/
+    mpVariableLabel = new Label(tr("Variable:"));
+
+    mpVariableComboBox = new QComboBox;
+// ADAPTAR:
+    //QVector<int> modelVars({1,2,3,4});
+    const QVector<QString> modelVars( QVector<QString>()
+                                   << "population"
+                                   << "nr_resources"
+                                   << "human_welfare_index");
+    for (int i_vars=0; i_vars<modelVars.size(); i_vars++)
+    {
+        mpVariableComboBox->addItem(modelVars[i_vars], QVariant(0));
+
+    }
+
+    mpIndexLabel = new Label(tr("Index:"));
+
+    mpIndexComboBox = new QComboBox;
+// ADAPTAR:
+    //QVector<int> modelVars({1,2,3,4});
+    const QVector<QString> indices( QVector<QString>()
+                                   << "Relative index"
+                                   << "Root Mean Square index");
+    for (int i_indices=0; i_indices<indices.size(); i_indices++)
+    {
+        mpIndexComboBox->addItem(indices[i_indices], QVariant(0));
+
+    }
+
+// ADAPTAR^
+
+//    mpVariableComboBox->addItem(tr("Nothing"), QVariant(0));
+//    mpVariableComboBox->addItem(tr("Fatal"), QVariant(1));
+//    mpVariableComboBox->addItem(tr("Error"), QVariant(2));
+//    mpVariableComboBox->addItem(tr("Warning"), QVariant(3));
+//    mpVariableComboBox->addItem(tr("hola"), QVariant(4));
+//    mpVariableComboBox->addItem(tr("Verbose"), QVariant(5));
+//    mpVariableComboBox->addItem(tr("Debug"), QVariant(6));
 
 /*    mpBrowseFileButton = new QPushButton(Helper::browse);
     mpBrowseFileButton->setAutoDefault(false);
@@ -83,6 +109,10 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     pMainLayout->addWidget(mpHorizontalLine, 1, 0, 1, 3);
     pMainLayout->addWidget(mpPercentageLabel, 2, 0);
     pMainLayout->addWidget(mpPercentageBox, 2, 1);
+    pMainLayout->addWidget(mpVariableLabel, 5, 0);
+    pMainLayout->addWidget(mpVariableComboBox, 5, 1, 1, 2);
+    pMainLayout->addWidget(mpIndexLabel, 6, 0);
+    pMainLayout->addWidget(mpIndexComboBox, 6, 1, 1, 2);
 
 /*    pMainLayout->addWidget(mpBrowseFileButton, 2, 2);
     pMainLayout->addWidget(mpOutputDirectoryLabel, 3, 0);
@@ -102,7 +132,10 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
 
 void EmpSensAnalysisDialog::runEmpSensAnalysis()
 {
-    std::cout << mpPercentageBox->text().toUtf8().constData() << std::endl;
+    std::cout << "Values chosen:" << std::endl;
+    std::cout << " Percentage: " << mpPercentageBox->text().toUtf8().constData() << std::endl;
+    std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
+    std::cout << " Index i: " << mpIndexComboBox->currentIndex() << std::endl;
     accept();
 }
 
