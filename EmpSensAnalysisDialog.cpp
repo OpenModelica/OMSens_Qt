@@ -48,11 +48,12 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     }
 
     mpIndexLabel = new Label(tr("Index:"));
-    mpIndexComboBox = new QComboBox;
-    for (int i_indices=0; i_indices<indices.size(); i_indices++)
-    {
-        mpIndexComboBox->addItem(indices[i_indices], QVariant(i_indices));
-    }
+    mpIndicesButtonGoup = new QButtonGroup();
+    mpRelRadio = new QRadioButton(tr("Relative Index"),this);
+    mpRelRadio->toggle(); //This index start selected by default
+    mpRMSRadio = new QRadioButton(tr("Root Mean Square Index"),this);
+    mpIndicesButtonGoup->addButton(mpRelRadio, 0);
+    mpIndicesButtonGoup->addButton(mpRMSRadio, 1);
 
     mpTimeLabel = new Label(tr("Time:"));
     mpTimeBox = new QDoubleSpinBox;
@@ -73,7 +74,8 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     pMainLayout->addWidget(mpVariableLabel, 5, 0);
     pMainLayout->addWidget(mpVariableComboBox, 5, 1, 1, 2);
     pMainLayout->addWidget(mpIndexLabel, 6, 0);
-    pMainLayout->addWidget(mpIndexComboBox, 6, 1, 1, 2);
+    pMainLayout->addWidget(mpRelRadio, 6, 1);
+    pMainLayout->addWidget(mpRMSRadio, 6, 2);
     pMainLayout->addWidget(mpTimeLabel, 7, 0);
     pMainLayout->addWidget(mpTimeBox, 7, 1);
 
@@ -86,7 +88,7 @@ void EmpSensAnalysisDialog::runEmpSensAnalysis()
     std::cout << "Values chosen:" << std::endl;
     std::cout << " Percentage: " << mpPercentageBox->text().toUtf8().constData() << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
-    std::cout << " Index i: " << mpIndexComboBox->currentIndex() << std::endl;
+    std::cout << " Index i: " << mpIndicesButtonGoup->checkedId() << std::endl;
     std::cout << " Time: " << mpTimeBox->text().toUtf8().constData() << std::endl;
     accept();
 }

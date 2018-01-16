@@ -5,6 +5,8 @@
 #include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
+#include <QRadioButton>
+#include <QButtonGroup>
 
 class Label;
 class EmpSensAnalysisDialog : public QDialog
@@ -18,9 +20,11 @@ private:
     Label *mpPercentageLabel;
     QDoubleSpinBox *mpPercentageBox;
     Label *mpVariableLabel;
+    QButtonGroup *mpIndicesButtonGoup;
+    QRadioButton *mpRelRadio;
+    QRadioButton *mpRMSRadio;
     QComboBox *mpVariableComboBox;
     Label *mpIndexLabel;
-    QComboBox *mpIndexComboBox;
     QPushButton *mpRunButton;
     Label *mpTimeLabel;
     QDoubleSpinBox *mpTimeBox;
