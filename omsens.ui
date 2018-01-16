@@ -27,8 +27,7 @@
     <property name="title">
      <string>Sens. Analyisis</string>
     </property>
-    <addaction name="actionRel_Sens"/>
-    <addaction name="actionRMS_Sens"/>
+    <addaction name="actionEmpirical_Indices"/>
     <addaction name="actionCURVI_Sens"/>
     <addaction name="actionMultiparam_Sweep"/>
    </widget>
@@ -43,14 +42,9 @@
    </attribute>
   </widget>
   <widget class="QStatusBar" name="statusBar"/>
-  <action name="actionRel_Sens">
+  <action name="actionEmpirical_Indices">
    <property name="text">
-    <string>Rel Sens</string>
-   </property>
-  </action>
-  <action name="actionRMS_Sens">
-   <property name="text">
-    <string>RMS Sens</string>
+    <string>Empirical Indices</string>
    </property>
   </action>
   <action name="actionCURVI_Sens">

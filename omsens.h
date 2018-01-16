@@ -16,7 +16,7 @@ public:
     ~OMSens();
 
 private slots:
-    void on_actionRel_Sens_triggered();
+    void on_actionEmpirical_Indices_triggered();
 
 private:
     Ui::OMSens *ui;

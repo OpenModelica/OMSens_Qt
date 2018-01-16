@@ -22,6 +22,8 @@ private:
     Label *mpIndexLabel;
     QComboBox *mpIndexComboBox;
     QPushButton *mpRunButton;
+    Label *mpTimeLabel;
+    QLineEdit *mpTimeBox;
 
 /*    QPushButton *mpBrowseFileButton;
     Label *mpOutputDirectoryLabel;
