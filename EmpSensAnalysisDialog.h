@@ -2,7 +2,7 @@
 #define EMPSENSANALYSISDIALOG_H
 #include <QDialog>
 #include <QFrame>
-#include <QLineEdit>
+#include <QDoubleSpinBox>
 #include <QComboBox>
 #include <QCheckBox>
 
@@ -16,35 +16,17 @@ private:
     Label *mpHeading;
     QFrame *mpHorizontalLine;
     Label *mpPercentageLabel;
-    QLineEdit *mpPercentageBox;
+    QDoubleSpinBox *mpPercentageBox;
     Label *mpVariableLabel;
     QComboBox *mpVariableComboBox;
     Label *mpIndexLabel;
     QComboBox *mpIndexComboBox;
     QPushButton *mpRunButton;
     Label *mpTimeLabel;
-    QLineEdit *mpTimeBox;
-
-/*    QPushButton *mpBrowseFileButton;
-    Label *mpOutputDirectoryLabel;
-    QLineEdit *mpOutputDirectoryTextBox;
-    QPushButton *mpBrowseDirectoryButton;
-    Label *mpLogLevelLabel;
-    QComboBox *mpLogLevelComboBox;
-    QCheckBox *mpDebugLoggingCheckBox;
-    QCheckBox *mpGenerateIntputConnectors;
-    QCheckBox *mpGenerateOutputConnectors;
-    Label *mpOutputDirectoryNoteLabel;
-    QPushButton *mpImportButton;
-*/
+    QDoubleSpinBox *mpTimeBox;
 
 private slots:
   void runEmpSensAnalysis();
-/*
-  void setSelectedFile();
-  void setSelectedDirectory();
-  void importFMU();
-*/
 };
 
 #endif // EMPSENSANALYSISDIALOG_H
