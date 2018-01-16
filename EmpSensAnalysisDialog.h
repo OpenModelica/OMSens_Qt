@@ -20,11 +20,11 @@ private:
     Label *mpPercentageLabel;
     QDoubleSpinBox *mpPercentageBox;
     Label *mpVariableLabel;
+    QComboBox *mpVariableComboBox;
+    Label *mpIndexLabel;
     QButtonGroup *mpIndicesButtonGoup;
     QRadioButton *mpRelRadio;
     QRadioButton *mpRMSRadio;
-    QComboBox *mpVariableComboBox;
-    Label *mpIndexLabel;
     QPushButton *mpRunButton;
     Label *mpTimeLabel;
     QDoubleSpinBox *mpTimeBox;
