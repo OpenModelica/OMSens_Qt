@@ -18,6 +18,8 @@ public:
 private slots:
     void on_actionEmpirical_Indices_triggered();
 
+    void on_actionCURVI_Sens_triggered();
+
 private:
     Ui::OMSens *ui;
 };
