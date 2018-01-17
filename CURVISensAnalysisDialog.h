@@ -19,18 +19,20 @@ public:
 private:
     Label *mpHeading;
     QFrame *mpHorizontalLine;
-    Label *mpPercentageLabel;
-    QDoubleSpinBox *mpPercentageBox;
+    Label *mpLowerBoundLabel;
+    QDoubleSpinBox *mpLowerBoundBox;
+    Label *mpUpperBoundLabel;
+    QDoubleSpinBox *mpUpperBoundBox;
     Label *mpVariableLabel;
     QComboBox *mpVariableComboBox;
-    Label *mpIndexLabel;
     QButtonGroup *mpOptimTypeButtonGroup;
     QRadioButton *mpMaxRadio;
     QRadioButton *mpMinRadio;
-    QVBoxLayout *mpOptimRadioLayout;
-    QPushButton *mpRunButton;
+    Label *mpParameterLabel;
+    QComboBox *mpParameterComboBox;
     Label *mpTimeLabel;
     QDoubleSpinBox *mpTimeBox;
+    QPushButton *mpRunButton;
 
 signals:
 
