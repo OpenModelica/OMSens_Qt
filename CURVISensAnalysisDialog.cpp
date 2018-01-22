@@ -162,6 +162,7 @@ void CURVISensAnalysisDialog::runCURVISensAnalysis()
 {
     std::cout << "Values chosen:" << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
+    std::cout << " Maximize or minimize?: " << mpOptimTypeButtonGroup->checkedButton()->text().toUtf8().constData() << std::endl;
     std::cout << " Index i: " << mpOptimTypeButtonGroup->checkedId() << std::endl;
     std::cout << " Time: " << mpTimeBox->text().toUtf8().constData() << std::endl;
     // Print chosen parameters:
