@@ -1,5 +1,9 @@
+// Ours
 #include "CURVISensAnalysisDialog.h"
 #include "utilities.h"
+#include "DualLists.h"
+
+// Qt
 #include <QMessageBox>
 #include <QLabel>
 #include <QFrame>
@@ -59,11 +63,19 @@ void CURVISensAnalysisDialog::initializeVarForms(const QVector<QString> modelVar
 void CURVISensAnalysisDialog::initializeParameterForms(const QVector<QString> modelParams)
 {
     mpParameterLabel = new Label(tr("Parameter:"));
+    // Remove combobox once duallists is finished
     mpParameterComboBox = new QComboBox;
     for (int i_params=0; i_params<modelParams.size(); i_params++)
     {
         mpParameterComboBox->addItem(modelParams[i_params], QVariant(i_params));
     }
+    // Dual Lists. On the left are the options to select and on the right the selected options
+    mpParametersDualLists = new DualLists;
+    for (int i_params=0; i_params<modelParams.size(); i_params++)
+    {
+        mpParametersDualLists->addItemToLeftList(modelParams[i_params]);
+    }
+
 }
 
 void CURVISensAnalysisDialog::initializeTimeForms(const double defaultTime, const double maxTargetTime)
@@ -112,7 +124,8 @@ void CURVISensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpMinRadio, 6, 1);
     pMainLayout->addWidget(mpVariableComboBox, 5, 2);
     pMainLayout->addWidget(mpParameterLabel, 7, 0);
-    pMainLayout->addWidget(mpParameterComboBox,7, 1);
+    //pMainLayout->addWidget(mpParameterComboBox,7, 1);
+    pMainLayout->addWidget(mpParametersDualLists,7, 1);
     pMainLayout->addWidget(mpTimeLabel, 8, 0);
     pMainLayout->addWidget(mpTimeBox, 8, 1);
 
@@ -148,9 +161,19 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pPa
 void CURVISensAnalysisDialog::runCURVISensAnalysis()
 {
     std::cout << "Values chosen:" << std::endl;
-    //std::cout << " Percentage: " << mpPercentageBox->text().toUtf8().constData() << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
     std::cout << " Index i: " << mpOptimTypeButtonGroup->checkedId() << std::endl;
     std::cout << " Time: " << mpTimeBox->text().toUtf8().constData() << std::endl;
+    // Print chosen parameters:
+    QList<QListWidgetItem *> rightListItems = mpParametersDualLists->itemsOnRightList();
+    QString rightListAsString;
+    foreach( QListWidgetItem *item, rightListItems )
+    {
+        QString commaSeparatorStr = QString(", ");
+        QString itemAsStr = commaSeparatorStr.append(item->text());
+        rightListAsString.append(itemAsStr);
+    }
+    std::cout << " Chosen parameters: " << rightListAsString.toUtf8().constData()<< std::endl;
+
     accept();
 }

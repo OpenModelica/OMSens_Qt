@@ -40,7 +40,7 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     mpPercentageBox->setValue(5);
     mpPercentageBox->setSuffix("%");
 
-    mpVariableLabel = new Label(tr("Variable:"));
+    mpVariableLabel = new Label(tr("Target Variable:"));
     mpVariableComboBox = new QComboBox;
     for (int i_vars=0; i_vars<modelVars.size(); i_vars++)
     {

@@ -9,6 +9,7 @@
 #include <QRadioButton>
 #include <QButtonGroup>
 #include <QVBoxLayout>
+#include "DualLists.h"
 
 class Label;
 class CURVISensAnalysisDialog : public QDialog
@@ -30,6 +31,8 @@ private:
     QRadioButton *mpMaxRadio;
     QRadioButton *mpMinRadio;
     Label *mpParameterLabel;
+    DualLists *mpParametersDualLists;
+// Remove combobox once duallists is finished
     QComboBox *mpParameterComboBox;
     Label *mpTimeLabel;
     QDoubleSpinBox *mpTimeBox;

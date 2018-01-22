@@ -28,13 +28,15 @@ SOURCES += \
         omsens.cpp \
     EmpSensAnalysisDialog.cpp \
     utilities.cpp \
-    CURVISensAnalysisDialog.cpp
+    CURVISensAnalysisDialog.cpp \
+    DualLists.cpp
 
 HEADERS += \
         omsens.h \
     EmpSensAnalysisDialog.h \
     utilities.h \
-    CURVISensAnalysisDialog.h
+    CURVISensAnalysisDialog.h \
+    DualLists.h
 
 FORMS += \
         omsens.ui
