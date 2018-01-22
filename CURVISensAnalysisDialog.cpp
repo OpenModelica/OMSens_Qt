@@ -13,6 +13,32 @@
 #include <iostream>
 // BORRAR^
 
+CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pParent)
+{
+    // Function parameters
+    const double defaultTime= 2000;
+    const double maxTargetTime= 5000;
+    const double maxPerturbationPercentage= 100;
+    const double minPerturbationPercentage= -100;
+    // Model information:
+    const QVector<QString> modelVars( QVector<QString>()
+                                   << "population"
+                                   << "nr_resources"
+                                   << "human_welfare_index");
+    const QVector<QString> modelParams( QVector<QString>()
+                                   << "nr_resources_init"
+                                   << "param_2"
+                                   << "param_3");
+    initializeWindowSettings();
+    setHeading();
+    initializeFormInputsAndLabels(maxTargetTime, maxPerturbationPercentage, modelVars, defaultTime, minPerturbationPercentage, modelParams);
+    initializeButton();
+    QGridLayout *pMainLayout = initializeLayout();
+    addWidgetsToLayout(pMainLayout);
+    // QWidget function to set layout to "this"
+    setLayout(pMainLayout);
+}
+
 void CURVISensAnalysisDialog::initializeWindowSettings()
 {
     setWindowTitle("Parameter Sensitivity Analysis - Empirical Indices");
@@ -130,32 +156,6 @@ void CURVISensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpTimeBox, 8, 1);
 
     pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
-}
-
-CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pParent)
-{
-    // Function parameters
-    const double defaultTime= 2000;
-    const double maxTargetTime= 5000;
-    const double maxPerturbationPercentage= 100;
-    const double minPerturbationPercentage= -100;
-    // Model information:
-    const QVector<QString> modelVars( QVector<QString>()
-                                   << "population"
-                                   << "nr_resources"
-                                   << "human_welfare_index");
-    const QVector<QString> modelParams( QVector<QString>()
-                                   << "nr_resources_init"
-                                   << "param_2"
-                                   << "param_3");
-    initializeWindowSettings();
-    setHeading();
-    initializeFormInputsAndLabels(maxTargetTime, maxPerturbationPercentage, modelVars, defaultTime, minPerturbationPercentage, modelParams);
-    initializeButton();
-    QGridLayout *pMainLayout = initializeLayout();
-    addWidgetsToLayout(pMainLayout);
-    // QWidget function to set layout to "this"
-    setLayout(pMainLayout);
 }
 
 void CURVISensAnalysisDialog::runCURVISensAnalysis()
