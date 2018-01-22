@@ -24,9 +24,8 @@ void CURVISensAnalysisDialog::setHeading()
     mpHorizontalLine = Utilities::getHeadingLine();
 }
 
-void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const QVector<QString> modelVars, const double defaultTime, const double minPerturbationPercentage, const QVector<QString> modelParams)
+void CURVISensAnalysisDialog::initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage)
 {
-    // User inputs
     mpLowerBoundLabel = new Label(tr("Lower Bound:"));
     mpLowerBoundBox = new QDoubleSpinBox;
     mpLowerBoundBox->setRange(minPerturbationPercentage, 0);
@@ -37,7 +36,10 @@ void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTarg
     mpUpperBoundBox->setRange(0, maxPerturbationPercentage);
     mpUpperBoundBox->setValue(5);
     mpUpperBoundBox->setSuffix("%");
+}
 
+void CURVISensAnalysisDialog::initializeVarForms(const QVector<QString> modelVars)
+{
     mpVariableLabel = new Label(tr("Target Variable:"));
     // The button group is purely backend specific. No effect on the GUI
     mpOptimTypeButtonGroup = new QButtonGroup();
@@ -52,19 +54,32 @@ void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTarg
     {
         mpVariableComboBox->addItem(modelVars[i_vars], QVariant(i_vars));
     }
+}
 
+void CURVISensAnalysisDialog::initializeParameterForms(const QVector<QString> modelParams)
+{
     mpParameterLabel = new Label(tr("Parameter:"));
     mpParameterComboBox = new QComboBox;
     for (int i_params=0; i_params<modelParams.size(); i_params++)
     {
         mpParameterComboBox->addItem(modelParams[i_params], QVariant(i_params));
     }
+}
 
-
+void CURVISensAnalysisDialog::initializeTimeForms(const double defaultTime, const double maxTargetTime)
+{
     mpTimeLabel = new Label(tr("Time:"));
     mpTimeBox = new QDoubleSpinBox;
     mpTimeBox->setRange(0, maxTargetTime);
     mpTimeBox->setValue(defaultTime);
+}
+
+void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const QVector<QString> modelVars, const double defaultTime, const double minPerturbationPercentage, const QVector<QString> modelParams)
+{
+    initializeUpperAndLowerBoundsForms(minPerturbationPercentage, maxPerturbationPercentage);
+    initializeVarForms(modelVars);
+    initializeParameterForms(modelParams);
+    initializeTimeForms(defaultTime, maxTargetTime);
 }
 
 void CURVISensAnalysisDialog::initializeButton()
@@ -126,6 +141,7 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pPa
     initializeButton();
     QGridLayout *pMainLayout = initializeLayout();
     addWidgetsToLayout(pMainLayout);
+    // QWidget function to set layout to "this"
     setLayout(pMainLayout);
 }
 

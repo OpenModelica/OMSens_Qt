@@ -26,6 +26,14 @@ public:
     
     void addWidgetsToLayout(QGridLayout *pMainLayout);
     
+    void initializeVarForms();
+    
+    void initializeVarForms(const QVector<QString> modelVars);
+    
+    void initializeParameterForms(const QVector<QString> modelParams);
+    
+    void initializeTimeForms(const double defaultTime, const double maxTargetTime);
+    
 private:
     Label *mpHeading;
     QFrame *mpHorizontalLine;
@@ -45,6 +53,8 @@ private:
     QPushButton *mpRunButton;
 
     void setHeading();
+    
+    void initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage);
     
 signals:
 
