@@ -16,6 +16,16 @@ class CURVISensAnalysisDialog : public QDialog
     Q_OBJECT
 public:
     CURVISensAnalysisDialog(QWidget *pParent = 0);
+    void initializeWindowSettings();
+    
+    void initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const QVector<QString> modelVars, const double defaultTime, const double minPerturbationPercentage, const QVector<QString> modelParams);
+    
+    void initializeButton();
+    
+    QGridLayout * initializeLayout();
+    
+    void addWidgetsToLayout(QGridLayout *pMainLayout);
+    
 private:
     Label *mpHeading;
     QFrame *mpHorizontalLine;
@@ -34,6 +44,8 @@ private:
     QDoubleSpinBox *mpTimeBox;
     QPushButton *mpRunButton;
 
+    void setHeading();
+    
 signals:
 
 private slots:

@@ -9,33 +9,23 @@
 #include <iostream>
 // BORRAR^
 
-CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pParent)
+void CURVISensAnalysisDialog::initializeWindowSettings()
 {
-    // Function parameters
-    const double defaultTime= 2000;
-    const double maxTargetTime= 5000;
-    const double maxPerturbationPercentage= 100;
-    const double minPerturbationPercentage= -100;
-    // Model information:
-    const QVector<QString> modelVars( QVector<QString>()
-                                   << "population"
-                                   << "nr_resources"
-                                   << "human_welfare_index");
-    const QVector<QString> modelParams( QVector<QString>()
-                                   << "nr_resources_init"
-                                   << "param_2"
-                                   << "param_3");
-    // Emp Analysis Information:
-    const QVector<QString> indices( QVector<QString>()
-                                   << "Relative index"
-                                   << "Root Mean Square index");
     setWindowTitle("Parameter Sensitivity Analysis - Empirical Indices");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
+}
+
+void CURVISensAnalysisDialog::setHeading()
+{
     // set import heading
     mpHeading = Utilities::getHeadingLabel("CURVI Sensitivity Analysis");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();
+}
+
+void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const QVector<QString> modelVars, const double defaultTime, const double minPerturbationPercentage, const QVector<QString> modelParams)
+{
     // User inputs
     mpLowerBoundLabel = new Label(tr("Lower Bound:"));
     mpLowerBoundBox = new QDoubleSpinBox;
@@ -48,7 +38,7 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pPa
     mpUpperBoundBox->setValue(5);
     mpUpperBoundBox->setSuffix("%");
 
-    mpVariableLabel = new Label(tr("Variable:"));
+    mpVariableLabel = new Label(tr("Target Variable:"));
     // The button group is purely backend specific. No effect on the GUI
     mpOptimTypeButtonGroup = new QButtonGroup();
     mpMaxRadio = new QRadioButton(tr("Maximize"),this);
@@ -75,14 +65,27 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pPa
     mpTimeBox = new QDoubleSpinBox;
     mpTimeBox->setRange(0, maxTargetTime);
     mpTimeBox->setValue(defaultTime);
+}
 
+void CURVISensAnalysisDialog::initializeButton()
+{
     // create OK button
     mpRunButton = new QPushButton("Ok");
     mpRunButton->setAutoDefault(true);
     connect(mpRunButton, SIGNAL(clicked()), SLOT(runCURVISensAnalysis()));
+}
+
+QGridLayout * CURVISensAnalysisDialog::initializeLayout()
+{
     // set grid layout
     QGridLayout *pMainLayout = new QGridLayout;
     pMainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+    return pMainLayout;
+}
+
+void CURVISensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
+{
     pMainLayout->addWidget(mpHeading, 0, 0, 1, 3);
     pMainLayout->addWidget(mpHorizontalLine, 1, 0, 1, 3);
     pMainLayout->addWidget(mpLowerBoundLabel, 2, 0);
@@ -99,6 +102,30 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pPa
     pMainLayout->addWidget(mpTimeBox, 8, 1);
 
     pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
+}
+
+CURVISensAnalysisDialog::CURVISensAnalysisDialog(QWidget *pParent) : QDialog(pParent)
+{
+    // Function parameters
+    const double defaultTime= 2000;
+    const double maxTargetTime= 5000;
+    const double maxPerturbationPercentage= 100;
+    const double minPerturbationPercentage= -100;
+    // Model information:
+    const QVector<QString> modelVars( QVector<QString>()
+                                   << "population"
+                                   << "nr_resources"
+                                   << "human_welfare_index");
+    const QVector<QString> modelParams( QVector<QString>()
+                                   << "nr_resources_init"
+                                   << "param_2"
+                                   << "param_3");
+    initializeWindowSettings();
+    setHeading();
+    initializeFormInputsAndLabels(maxTargetTime, maxPerturbationPercentage, modelVars, defaultTime, minPerturbationPercentage, modelParams);
+    initializeButton();
+    QGridLayout *pMainLayout = initializeLayout();
+    addWidgetsToLayout(pMainLayout);
     setLayout(pMainLayout);
 }
 
