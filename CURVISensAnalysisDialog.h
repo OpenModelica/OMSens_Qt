@@ -32,8 +32,6 @@ private:
     QRadioButton *mpMinRadio;
     Label *mpParameterLabel;
     DualLists *mpParametersDualLists;
-// Remove combobox once duallists is finished
-    QComboBox *mpParameterComboBox;
     Label *mpTimeLabel;
     QDoubleSpinBox *mpTimeBox;
     QPushButton *mpRunButton;

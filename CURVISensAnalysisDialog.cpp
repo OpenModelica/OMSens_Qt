@@ -89,12 +89,6 @@ void CURVISensAnalysisDialog::initializeVarForms(const QVector<QString> modelVar
 void CURVISensAnalysisDialog::initializeParameterForms(const QVector<QString> modelParams)
 {
     mpParameterLabel = new Label(tr("Parameter:"));
-    // Remove combobox once duallists is finished
-    mpParameterComboBox = new QComboBox;
-    for (int i_params=0; i_params<modelParams.size(); i_params++)
-    {
-        mpParameterComboBox->addItem(modelParams[i_params], QVariant(i_params));
-    }
     // Dual Lists. On the left are the options to select and on the right the selected options
     mpParametersDualLists = new DualLists;
     for (int i_params=0; i_params<modelParams.size(); i_params++)
@@ -150,7 +144,6 @@ void CURVISensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpMinRadio, 6, 1);
     pMainLayout->addWidget(mpVariableComboBox, 5, 2);
     pMainLayout->addWidget(mpParameterLabel, 7, 0);
-    //pMainLayout->addWidget(mpParameterComboBox,7, 1);
     pMainLayout->addWidget(mpParametersDualLists,7, 1);
     pMainLayout->addWidget(mpTimeLabel, 8, 0);
     pMainLayout->addWidget(mpTimeBox, 8, 1);
