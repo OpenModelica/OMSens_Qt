@@ -7,6 +7,7 @@
 #include <QCheckBox>
 #include <QRadioButton>
 #include <QButtonGroup>
+#include <QGridLayout>
 
 class Label;
 class EmpSensAnalysisDialog : public QDialog
@@ -14,6 +15,7 @@ class EmpSensAnalysisDialog : public QDialog
     Q_OBJECT
 public:
     EmpSensAnalysisDialog(QWidget *pParent = 0);
+
 private:
     Label *mpHeading;
     QFrame *mpHorizontalLine;
@@ -28,6 +30,18 @@ private:
     QPushButton *mpRunButton;
     Label *mpTimeLabel;
     QDoubleSpinBox *mpTimeBox;
+
+    void initializeWindowSettings();
+
+    void setHeading();
+
+    void initializeFormInputsAndLabels(const double min_perturbation_perc, const QVector<QString> modelVars, const double max_perturbation_perc, const double max_target_time);
+
+    void initializeButton();
+
+    void addWidgetsToLayout(QGridLayout *pMainLayout);
+
+    QGridLayout * initializeLayout();
 
 private slots:
   void runEmpSensAnalysis();

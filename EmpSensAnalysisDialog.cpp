@@ -9,7 +9,6 @@
 #include <iostream>
 // BORRAR^
 
-
 EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
   : QDialog(pParent)
 {
@@ -26,13 +25,42 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     const QVector<QString> indices( QVector<QString>()
                                    << "Relative index"
                                    << "Root Mean Square index");
+    initializeWindowSettings();
+    setHeading();
+    initializeFormInputsAndLabels(min_perturbation_perc, modelVars, max_perturbation_perc, max_target_time);
+    initializeButton();
+    QGridLayout *pMainLayout = initializeLayout();
+    addWidgetsToLayout(pMainLayout);
+    // QWidget function to set layout to "this"
+    setLayout(pMainLayout);
+}
+
+
+void EmpSensAnalysisDialog::initializeWindowSettings()
+{
     setWindowTitle("Parameter Sensitivity Analysis - Empirical Indices");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
-    // set import heading
+}
+
+void EmpSensAnalysisDialog::setHeading()
+{
+    // set dialog heading
     mpHeading = Utilities::getHeadingLabel("Empirical Sensitivity Analysis");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();
+}
+
+void EmpSensAnalysisDialog::initializeButton()
+{
+    // create OK button
+    mpRunButton = new QPushButton("Ok");
+    mpRunButton->setAutoDefault(true);
+    connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
+}
+
+void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const QVector<QString> modelVars, const double max_perturbation_perc, const double max_target_time)
+{
     // User inputs
     mpPercentageLabel = new Label(tr("Percentage:"));
     mpPercentageBox = new QDoubleSpinBox;
@@ -60,13 +88,19 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     mpTimeBox->setRange(0, max_target_time);
     mpTimeBox->setValue(1);
 
-    // create OK button
-    mpRunButton = new QPushButton("Ok");
-    mpRunButton->setAutoDefault(true);
-    connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
+}
+
+QGridLayout * EmpSensAnalysisDialog::initializeLayout()
+{
     // set grid layout
     QGridLayout *pMainLayout = new QGridLayout;
     pMainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
+
+    return pMainLayout;
+}
+
+void EmpSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
+{
     pMainLayout->addWidget(mpHeading, 0, 0, 1, 3);
     pMainLayout->addWidget(mpHorizontalLine, 1, 0, 1, 3);
     pMainLayout->addWidget(mpPercentageLabel, 2, 0);
@@ -80,13 +114,13 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
     pMainLayout->addWidget(mpTimeBox, 7, 1);
 
     pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
-    setLayout(pMainLayout);
 }
+
 
 void EmpSensAnalysisDialog::runEmpSensAnalysis()
 {
     std::cout << "Values chosen:" << std::endl;
-    std::cout << " Percentage: " << mpPercentageBox->text().toUtf8().constData() << std::endl;
+    std::cout << " Percentage: " << mpPercentageBox->cleanText().toUtf8().constData() << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
     std::cout << " Index i: " << mpIndicesButtonGoup->checkedId() << std::endl;
     std::cout << " Time: " << mpTimeBox->text().toUtf8().constData() << std::endl;

@@ -15,15 +15,15 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    // OMSens w;
-    // w.show();
+    OMSens w;
+    w.show();
     // Comment the "w.show()" and uncomment the following to test separately:
-    //EmpSensAnalysisDialog *sensanaldialog = new EmpSensAnalysisDialog;
-    //sensanaldialog->show();
+    // EmpSensAnalysisDialog *sensanaldialog = new EmpSensAnalysisDialog;
+    // sensanaldialog->show();
     // CURVISensAnalysisDialog *curviDialog = new CURVISensAnalysisDialog;
     // curviDialog->show();
-    MultiParamSweepDialog *mpsDialog = new MultiParamSweepDialog;
-    mpsDialog->show();
+    // MultiParamSweepDialog *mpsDialog = new MultiParamSweepDialog;
+    // mpsDialog->show();
 
     return a.exec();
 }

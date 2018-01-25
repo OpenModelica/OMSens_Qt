@@ -12,7 +12,7 @@ void MultiParamSweepDialog::initializeWindowSettings()
 
 void MultiParamSweepDialog::setHeading()
 {
-    // set import heading
+    // set dialog heading
     mpHeading = Utilities::getHeadingLabel("Multi-parameter sweep");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();

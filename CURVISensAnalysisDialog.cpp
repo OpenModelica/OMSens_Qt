@@ -48,7 +48,7 @@ void CURVISensAnalysisDialog::initializeWindowSettings()
 
 void CURVISensAnalysisDialog::setHeading()
 {
-    // set import heading
+    // set dialog heading
     mpHeading = Utilities::getHeadingLabel("CURVI Sensitivity Analysis");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();
