@@ -9,25 +9,20 @@
 #include <iostream>
 // BORRAR^
 
-EmpSensAnalysisDialog::EmpSensAnalysisDialog(QWidget *pParent)
-  : QDialog(pParent)
+EmpSensAnalysisDialog::EmpSensAnalysisDialog(QVector<QString> modelVars,QWidget *pParent)
+  : QDialog(pParent), modelVars(modelVars)
 {
     // Function parameters
     const double max_target_time= 5000;
     const double max_perturbation_perc= 100;
     const double min_perturbation_perc= -100;
-    // Model information:
-    const QVector<QString> modelVars( QVector<QString>()
-                                   << "population"
-                                   << "nr_resources"
-                                   << "human_welfare_index");
     // Emp Analysis Information:
     const QVector<QString> indices( QVector<QString>()
                                    << "Relative index"
                                    << "Root Mean Square index");
     initializeWindowSettings();
     setHeading();
-    initializeFormInputsAndLabels(min_perturbation_perc, modelVars, max_perturbation_perc, max_target_time);
+    initializeFormInputsAndLabels(min_perturbation_perc, max_perturbation_perc, max_target_time);
     initializeButton();
     QGridLayout *pMainLayout = initializeLayout();
     addWidgetsToLayout(pMainLayout);
@@ -59,7 +54,7 @@ void EmpSensAnalysisDialog::initializeButton()
     connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
 }
 
-void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const QVector<QString> modelVars, const double max_perturbation_perc, const double max_target_time)
+void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time)
 {
     // User inputs
     mpPercentageLabel = new Label(tr("Percentage:"));

@@ -15,11 +15,16 @@
 int main(int argc, char *argv[])
 {
     QApplication a(argc, argv);
-    OMSens w;
-    w.show();
+    // Model information for testing:
+    const QVector<QString> modelVars( QVector<QString>()
+                                   << "population"
+                                   << "nr_resources"
+                                   << "human_welfare_index");
+    // OMSens w(modelVars);
+    // w.show();
     // Comment the "w.show()" and uncomment the following to test separately:
-    // EmpSensAnalysisDialog *sensanaldialog = new EmpSensAnalysisDialog;
-    // sensanaldialog->show();
+    EmpSensAnalysisDialog *sensanaldialog = new EmpSensAnalysisDialog(modelVars);
+    sensanaldialog->show();
     // CURVISensAnalysisDialog *curviDialog = new CURVISensAnalysisDialog;
     // curviDialog->show();
     // MultiParamSweepDialog *mpsDialog = new MultiParamSweepDialog;

@@ -12,7 +12,7 @@ class OMSens : public QMainWindow
     Q_OBJECT
 
 public:
-    explicit OMSens(QWidget *parent = 0);
+    explicit OMSens(QVector<QString> modelVars,QWidget *pParent);
     ~OMSens();
 
 private slots:
@@ -22,6 +22,8 @@ private slots:
 
 private:
     Ui::OMSens *ui;
+    // Model info for testing
+    QVector<QString> modelVars;
 };
 
 #endif // OMSENS_H

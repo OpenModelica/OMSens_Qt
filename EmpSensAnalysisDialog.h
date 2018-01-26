@@ -14,9 +14,12 @@ class EmpSensAnalysisDialog : public QDialog
 {
     Q_OBJECT
 public:
-    EmpSensAnalysisDialog(QWidget *pParent = 0);
+    EmpSensAnalysisDialog(QVector<QString> modelVars, QWidget *pParent = 0);
 
 private:
+    // Model information members
+    QVector<QString> modelVars;
+    // GUI members
     Label *mpHeading;
     QFrame *mpHorizontalLine;
     Label *mpPercentageLabel;
