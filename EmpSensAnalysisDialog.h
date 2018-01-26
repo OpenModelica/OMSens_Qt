@@ -39,7 +39,7 @@ private:
 
     void setHeading();
 
-    void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time);
+    void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time, const QVector<QString> indices);
 
     void initializeButton();
 

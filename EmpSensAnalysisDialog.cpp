@@ -23,7 +23,7 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
                                    << "Root Mean Square index");
     initializeWindowSettings();
     setHeading();
-    initializeFormInputsAndLabels(min_perturbation_perc, max_perturbation_perc, max_target_time);
+    initializeFormInputsAndLabels(min_perturbation_perc, max_perturbation_perc, max_target_time, indices);
     initializeButton();
     QGridLayout *pMainLayout = initializeLayout();
     addWidgetsToLayout(pMainLayout);
@@ -55,7 +55,7 @@ void EmpSensAnalysisDialog::initializeButton()
     connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
 }
 
-void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time)
+void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time,  const QVector<QString> indices )
 {
     // User inputs
     mpPercentageLabel = new Label(tr("Percentage:"));
@@ -74,9 +74,9 @@ void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_pertu
 
     mpIndexLabel = new Label(tr("Index:"));
     mpIndicesButtonGoup = new QButtonGroup();
-    mpRelRadio = new QRadioButton(tr("Relative Index"),this);
+    mpRelRadio = new QRadioButton(tr(qPrintable(indices[0])),this);
     mpRelRadio->toggle(); //This index start selected by default
-    mpRMSRadio = new QRadioButton(tr("Root Mean Square Index"),this);
+    mpRMSRadio = new QRadioButton(tr(qPrintable(indices[1])),this);
     mpIndicesButtonGoup->addButton(mpRelRadio, 0);
     mpIndicesButtonGoup->addButton(mpRMSRadio, 1);
 

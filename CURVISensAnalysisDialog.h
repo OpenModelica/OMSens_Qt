@@ -10,15 +10,19 @@
 #include <QButtonGroup>
 #include <QVBoxLayout>
 #include "DualLists.h"
+#include "model.h"
 
 class Label;
 class CURVISensAnalysisDialog : public QDialog
 {
     Q_OBJECT
 public:
-    CURVISensAnalysisDialog(QWidget *pParent = 0);
+    CURVISensAnalysisDialog(Model model, QWidget *pParent = 0);
     
 private:
+    // Model information members
+    Model model;
+    // GUI members
     Label *mpHeading;
     QFrame *mpHorizontalLine;
     Label *mpLowerBoundLabel;
@@ -39,13 +43,12 @@ private:
     // Aux functions
     void setHeading();
     void initializeWindowSettings();
-    void initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const QVector<QString> modelVars, const double defaultTime, const double minPerturbationPercentage, const QVector<QString> modelParams);
+    void initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const double defaultTime, const double minPerturbationPercentage);
     void initializeButton();
     QGridLayout * initializeLayout();
     void addWidgetsToLayout(QGridLayout *pMainLayout);
     void initializeVarForms();
-    void initializeVarForms(const QVector<QString> modelVars);
-    void initializeParameterForms(const QVector<QString> modelParams);
+    void initializeParameterForms();
     void initializeTimeForms(const double defaultTime, const double maxTargetTime);
     void initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage);
     

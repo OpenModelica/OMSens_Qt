@@ -2,6 +2,7 @@
 #define MULTIPARAMSWEEPDIALOG_H
 
 #include "DualLists.h"
+#include "model.h"
 
 #include <QDialog>
 #include <QDoubleSpinBox>
@@ -15,14 +16,16 @@ class MultiParamSweepDialog : public QDialog
 {
     Q_OBJECT
 public:
-    MultiParamSweepDialog(QWidget *pParent = 0);
+    MultiParamSweepDialog(Model model, QWidget *pParent = 0);
     QGridLayout * initializeLayout();
 
     void addWidgetsToLayout(QGridLayout *pMainLayout);
 
 
 private:
-    // Members:
+    // Model information members
+    Model model;
+    // GUI members
     QPushButton *mpRunButton;
     Label *mpHeading;
     QFrame *mpHorizontalLine;

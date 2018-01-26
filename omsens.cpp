@@ -25,6 +25,6 @@ void OMSens::on_actionEmpirical_Indices_triggered()
 
 void OMSens::on_actionCURVI_Sens_triggered()
 {
-    CURVISensAnalysisDialog *curviDialog = new CURVISensAnalysisDialog;
+    CURVISensAnalysisDialog *curviDialog = new CURVISensAnalysisDialog(model);
     curviDialog->exec();
 }

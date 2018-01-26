@@ -1,7 +1,39 @@
 #include "DualLists.h"
+#include "model.h"
 #include "MultiParamSweepDialog.h"
 #include "utilities.h"
 #include <QGridLayout>
+
+MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
+    QDialog(pParent), model(model)
+{
+    // Function parameters
+    const double defaultTime= 2000;
+    const double maxTargetTime= 5000;
+
+    initializeWindowSettings();
+    setHeading();
+    // Initialize Form Inputs and Labels
+    mpStopTimeLabel = new Label(tr("Time:"));
+    mpStopTimeBox = new QDoubleSpinBox;
+    mpStopTimeBox->setRange(0, maxTargetTime);
+    mpStopTimeBox->setValue(defaultTime);
+    mpVarsToPlotLabel = new Label(tr("Variables to plot:"));
+    mpVarsToPlotDualLists = new DualLists;
+    QList<QString> parameters = model.getParameters();
+    for (int i_params=0; i_params<parameters.size(); i_params++)
+    {
+        mpVarsToPlotDualLists->addItemToLeftList(parameters[i_params]);
+    }
+    mpParamsToSweepTable = new QTableWidget(1, 4, this);
+    // create OK button
+    initializeButton();
+    // set grid layout
+    QGridLayout *pMainLayout = initializeLayout();
+    addWidgetsToLayout(pMainLayout);
+    // QWidget function to set layout to "this"
+    setLayout(pMainLayout);
+}
 
 void MultiParamSweepDialog::initializeWindowSettings()
 {
@@ -42,42 +74,6 @@ void MultiParamSweepDialog::initializeButton()
     connect(mpRunButton, SIGNAL(clicked()), this, SLOT(runMultiParamSweep()));
 }
 
-MultiParamSweepDialog::MultiParamSweepDialog(QWidget *pParent) : QDialog(pParent)
-{
-    // Function parameters
-    const double defaultTime= 2000;
-    const double maxTargetTime= 5000;
-    // Model information:
-    const QVector<QString> modelVars( QVector<QString>()
-                                   << "population"
-                                   << "nr_resources"
-                                   << "human_welfare_index");
-    const QVector<QString> modelParams( QVector<QString>()
-                                   << "nr_resources_init"
-                                   << "param_2"
-                                   << "param_3");
-    initializeWindowSettings();
-    setHeading();
-    // Initialize Form Inputs and Labels
-    mpStopTimeLabel = new Label(tr("Time:"));
-    mpStopTimeBox = new QDoubleSpinBox;
-    mpStopTimeBox->setRange(0, maxTargetTime);
-    mpStopTimeBox->setValue(defaultTime);
-    mpVarsToPlotLabel = new Label(tr("Variables to plot:"));
-    mpVarsToPlotDualLists = new DualLists;
-    for (int i_params=0; i_params<modelParams.size(); i_params++)
-    {
-        mpVarsToPlotDualLists->addItemToLeftList(modelParams[i_params]);
-    }
-    mpParamsToSweepTable = new QTableWidget(1, 4, this);
-    // create OK button
-    initializeButton();
-    // set grid layout
-    QGridLayout *pMainLayout = initializeLayout();
-    addWidgetsToLayout(pMainLayout);
-    // QWidget function to set layout to "this"
-    setLayout(pMainLayout);
-}
 
 void MultiParamSweepDialog::runMultiParamSweep()
 {
