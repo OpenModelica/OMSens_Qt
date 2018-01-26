@@ -5,7 +5,7 @@
 #include <CURVISensAnalysisDialog.h>
 
 OMSens::OMSens(QVector<QString> modelVars,QWidget *pParent) :
-    QMainWindow(parent),
+    QMainWindow(pParent),
     ui(new Ui::OMSens), modelVars(modelVars)
 {
     ui->setupUi(this);
