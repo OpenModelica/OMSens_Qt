@@ -1,12 +1,13 @@
 #include "omsens.h"
 #include "ui_omsens.h"
+#include "model.h"
 
 #include <EmpSensAnalysisDialog.h>
 #include <CURVISensAnalysisDialog.h>
 
-OMSens::OMSens(QVector<QString> modelVars,QWidget *pParent) :
+OMSens::OMSens(Model model,QWidget *pParent) :
     QMainWindow(pParent),
-    ui(new Ui::OMSens), modelVars(modelVars)
+    ui(new Ui::OMSens), model(model)
 {
     ui->setupUi(this);
 }
@@ -18,7 +19,7 @@ OMSens::~OMSens()
 
 void OMSens::on_actionEmpirical_Indices_triggered()
 {
-    EmpSensAnalysisDialog *empiricalDialog = new EmpSensAnalysisDialog(modelVars);
+    EmpSensAnalysisDialog *empiricalDialog = new EmpSensAnalysisDialog(model);
     empiricalDialog->exec();
 }
 

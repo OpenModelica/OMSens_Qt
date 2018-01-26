@@ -1,5 +1,6 @@
 #ifndef EMPSENSANALYSISDIALOG_H
 #define EMPSENSANALYSISDIALOG_H
+#include "model.h"
 #include <QDialog>
 #include <QFrame>
 #include <QDoubleSpinBox>
@@ -14,11 +15,11 @@ class EmpSensAnalysisDialog : public QDialog
 {
     Q_OBJECT
 public:
-    EmpSensAnalysisDialog(QVector<QString> modelVars, QWidget *pParent = 0);
+    EmpSensAnalysisDialog(Model model, QWidget *pParent = 0);
 
 private:
     // Model information members
-    QVector<QString> modelVars;
+    Model model;
     // GUI members
     Label *mpHeading;
     QFrame *mpHorizontalLine;

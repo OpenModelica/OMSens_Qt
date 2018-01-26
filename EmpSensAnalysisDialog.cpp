@@ -1,4 +1,5 @@
 #include "EmpSensAnalysisDialog.h"
+#include "model.h"
 #include "utilities.h"
 #include <QMessageBox>
 #include <QLabel>
@@ -9,8 +10,8 @@
 #include <iostream>
 // BORRAR^
 
-EmpSensAnalysisDialog::EmpSensAnalysisDialog(QVector<QString> modelVars,QWidget *pParent)
-  : QDialog(pParent), modelVars(modelVars)
+EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
+  : QDialog(pParent), model(model)
 {
     // Function parameters
     const double max_target_time= 5000;
@@ -65,9 +66,10 @@ void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_pertu
 
     mpVariableLabel = new Label(tr("Target Variable:"));
     mpVariableComboBox = new QComboBox;
-    for (int i_vars=0; i_vars<modelVars.size(); i_vars++)
+    QList<QString> outputVariables = model.getOutputVariables();
+    for (int i_vars=0; i_vars<outputVariables.size(); i_vars++)
     {
-        mpVariableComboBox->addItem(modelVars[i_vars], QVariant(i_vars));
+        mpVariableComboBox->addItem(outputVariables[i_vars], QVariant(i_vars));
     }
 
     mpIndexLabel = new Label(tr("Index:"));
