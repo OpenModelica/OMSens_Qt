@@ -6,20 +6,8 @@
 #include <QHeaderView>
 #include <QSizePolicy>
 
-MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
-    QDialog(pParent), model(model)
+void MultiParamSweepDialog::initializeVarsToPlotForms(Model model)
 {
-    // Function parameters
-    const double defaultTime= 2000;
-    const double maxTargetTime= 5000;
-
-    initializeWindowSettings();
-    setHeading();
-    // Initialize Form Inputs and Labels
-    mpStopTimeLabel = new Label(tr("Time:"));
-    mpStopTimeBox = new QDoubleSpinBox;
-    mpStopTimeBox->setRange(0, maxTargetTime);
-    mpStopTimeBox->setValue(defaultTime);
     mpVarsToPlotLabel = new Label(tr("Variables to plot:"));
     mpVarsToPlotDualLists = new DualLists;
     QList<QString> variables = model.getOutputVariables();
@@ -27,13 +15,25 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     {
         mpVarsToPlotDualLists->addItemToLeftList(variables[i_params]);
     }
+}
+
+void MultiParamSweepDialog::initializeParamsToSweepLabel()
+{
     mpParamsToSweepLabel = new Label(tr("Parameters to sweep:"));
+}
+
+void MultiParamSweepDialog::setParamsTableHeaders()
+{
     mpParamsToSweepTable = new QTableWidget(0, 3);
     const QList<QString> tableHeaders( QList<QString>()
                                      << "Parameter Name"
                                      << "#iterations"
                                      << "Perturbation");
     mpParamsToSweepTable->setHorizontalHeaderLabels(tableHeaders);
+}
+
+void MultiParamSweepDialog::setParamsTableSettings()
+{
     // Hide grid
     mpParamsToSweepTable->setShowGrid(false);
     // Resize columns to contents
@@ -45,12 +45,10 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     QHeaderView *headerView = mpParamsToSweepTable->verticalHeader();
     // Hide line counter
     headerView->setVisible(false);
+}
 
-    // Add a row with valid values as an example
-    // Add "blank" row
-    const int rowNum = 0;
-    mpParamsToSweepTable->insertRow(rowNum);
-    // Create parameters combobox
+void MultiParamSweepDialog::addParamsComboBoxToTable(const int rowNum, const int paramsColNum, Model model)
+{
     QComboBox *parametersComboBox = new QComboBox;
     QList<QString> parameters = model.getParameters();
     for (int i_parameters=0; i_parameters<parameters.size(); i_parameters++)
@@ -58,30 +56,49 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
         parametersComboBox->addItem(parameters[i_parameters], QVariant(i_parameters));
     }
     // Add params combobox
-    int paramsColNum = 0;
     mpParamsToSweepTable->setCellWidget(rowNum,paramsColNum,parametersComboBox);
-    // Create #iterations spinbox
-    const double maxNumberOfIterations= 50000;
+}
+
+void MultiParamSweepDialog::addIterationsSpinBoxToTable(const int rowNum, const int numberOfIterationsColNum, const int maxNumberOfIterations)
+{
     QSpinBox *iterationsSpinBox = new QSpinBox;
     iterationsSpinBox->setRange(0,maxNumberOfIterations);
     iterationsSpinBox->setValue(1);
     iterationsSpinBox->setAlignment(Qt::AlignRight);
     // Add iterations spinbox
-    int numberOfIterationsColNum = 1;
     mpParamsToSweepTable->setCellWidget(rowNum,numberOfIterationsColNum,iterationsSpinBox);
-    // Create perturbation spinbox
-    const double minPerturbationPercentage= -100;
-    const double maxPerturbationPercentage= 100;
+}
+
+void MultiParamSweepDialog::addPerturbSpinBoxToTable(const double minPerturbationPercentage, const double maxPerturbationPercentage, const int rowNum, const int perturbationColNum)
+{
     QDoubleSpinBox *perturbationSpinBox = new QDoubleSpinBox;
     perturbationSpinBox->setRange(minPerturbationPercentage, maxPerturbationPercentage);
     perturbationSpinBox->setValue(5);
     perturbationSpinBox->setSuffix("%");
     perturbationSpinBox->setAlignment(Qt::AlignRight);
     // Add perturbation spinbox
-    int perturbationColNum = 2;
     mpParamsToSweepTable->setCellWidget(rowNum,perturbationColNum,perturbationSpinBox);
+}
 
+void MultiParamSweepDialog::addExampleRowToParamsTable(Model model,const int perturbationColNum, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int paramsColNum, const int numberOfIterationsColNum, const int maxNumberOfIterations)
+{
+    // Row index to add row to
+    const int rowNum = 0;
+
+    // Add "blank" row
+    mpParamsToSweepTable->insertRow(rowNum);
+
+    // Edit blank row with custom widgets in its cells
+    addParamsComboBoxToTable(rowNum, paramsColNum, model);
+    addIterationsSpinBoxToTable(rowNum, numberOfIterationsColNum, maxNumberOfIterations);
+    // Create perturbation spinbox
+    addPerturbSpinBoxToTable(minPerturbationPercentage, maxPerturbationPercentage, rowNum, perturbationColNum);
+}
+
+void MultiParamSweepDialog::resizeParamsTable()
+{
     // Resize table depending on number of rows and cols
+
     // Get widths, lengths and heights from table headers
     const int verticalHeaderWidth    = mpParamsToSweepTable->verticalHeader()->width();
     const int verticalHeaderLength   = mpParamsToSweepTable->verticalHeader()->length();
@@ -96,15 +113,60 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     const int tableWidth  = horizontalHeaderLength + verticalHeaderWidth    + widthPadding;
     const int tableHeight = verticalHeaderLength   + horizontalHeaderHeight + heightPadding;
     mpParamsToSweepTable->setFixedSize(tableWidth,tableHeight);
+}
 
-    // Create time label and form
-    mpTimeLabel = new Label(tr("Time:"));
-    mpTimeBox = new QDoubleSpinBox;
-    mpTimeBox->setRange(0, maxTargetTime);
-    mpTimeBox->setValue(defaultTime);
+void MultiParamSweepDialog::initializeParamsToSweepForms(Model model,const int perturbationColNum, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int paramsColNum, const int numberOfIterationsColNum,const int maxNumberOfIterations)
+{
+    // We represent the form as a table and give the user the option to add new rows
+    //   representing new params to sweep
+    initializeParamsToSweepLabel();
+    setParamsTableHeaders();
+    setParamsTableSettings();
+
+    // Add a row with valid values as an example for the user
+    addExampleRowToParamsTable(model,perturbationColNum,minPerturbationPercentage,maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
+
+    resizeParamsTable();
+}
+
+void MultiParamSweepDialog::initializeStopTimeForms(const double maxTargetTime, const double defaultTime)
+{
+    mpStopTimeLabel = new Label(tr("Time:"));
+    mpStopTimeBox = new QDoubleSpinBox;
+    mpStopTimeBox->setRange(0, maxTargetTime);
+    mpStopTimeBox->setValue(defaultTime);
+}
+
+void MultiParamSweepDialog::initializeFormInputsAndLabels(const double defaultTime, const double maxTargetTime, Model model,const int perturbationColNum, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int paramsColNum, const int numberOfIterationsColNum,const int maxNumberOfIterations)
+{
+    initializeVarsToPlotForms(model);
+    initializeParamsToSweepForms(model,perturbationColNum, minPerturbationPercentage, maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
+    initializeStopTimeForms(maxTargetTime, defaultTime);
+}
+
+MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
+    QDialog(pParent), model(model)
+{
+    // Function parameters
+    const double defaultTime= 2000;
+    const double maxTargetTime= 5000;
+    const int maxNumberOfIterations= 50000;
+    const double minPerturbationPercentage= -100;
+    const double maxPerturbationPercentage= 100;
+    // Default columns positions in table. We put them here for now but it should
+    //  be better organized in the future
+    //  Col numbers
+    const int paramsColNum = 0;
+    const int numberOfIterationsColNum = 1;
+    const int perturbationColNum = 2;
+
+    initializeWindowSettings();
+    setHeading();
+    initializeFormInputsAndLabels(defaultTime, maxTargetTime, model,perturbationColNum, minPerturbationPercentage, maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
 
     // create OK button
     initializeButton();
+
     // set grid layout
     QGridLayout *pMainLayout = initializeLayout();
     addWidgetsToLayout(pMainLayout);
@@ -143,8 +205,8 @@ void MultiParamSweepDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpVarsToPlotDualLists, 2, 1, 1, 3);
     pMainLayout->addWidget(mpParamsToSweepLabel, 3, 0);
     pMainLayout->addWidget(mpParamsToSweepTable, 3, 1, 1, 3);
-    pMainLayout->addWidget(mpTimeLabel, 4, 0);
-    pMainLayout->addWidget(mpTimeBox, 4, 1);
+    pMainLayout->addWidget(mpStopTimeLabel, 4, 0);
+    pMainLayout->addWidget(mpStopTimeBox, 4, 1);
     pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
 }
 
