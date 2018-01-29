@@ -66,6 +66,7 @@ private:
 
 private slots:
     void runMultiParamSweep();
+    void removeRowSlot();
 };
 
 #endif // MULTIPARAMSWEEPDIALOG_H
