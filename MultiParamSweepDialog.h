@@ -33,7 +33,10 @@ private:
     DualLists *mpVarsToPlotDualLists;
     Label *mpStopTimeLabel;
     QDoubleSpinBox *mpStopTimeBox;
+    Label *mpParamsToSweepLabel;
     QTableWidget *mpParamsToSweepTable;
+    Label *mpTimeLabel;
+    QDoubleSpinBox *mpTimeBox;
     // Auxs:
     void initializeWindowSettings();
     void setHeading();

@@ -21,6 +21,8 @@ private slots:
 
     void on_actionCURVI_Sens_triggered();
 
+    void on_actionMultiparam_Sweep_triggered();
+
 private:
     Ui::OMSens *ui;
     // Model info for testing
