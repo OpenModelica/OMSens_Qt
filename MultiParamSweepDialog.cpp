@@ -19,16 +19,10 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     const int maxNumberOfIterations= 50000;
     const double minPerturbationPercentage= -100;
     const double maxPerturbationPercentage= 100;
-    // Default columns positions in table. We put them here for now but it should
-    //  be better organized in the future
-    //  Col numbers
-    const int paramsColNum = 0;
-    const int numberOfIterationsColNum = 1;
-    const int perturbationColNum = 2;
 
     initializeWindowSettings();
     setHeading();
-    initializeFormInputsAndLabels(defaultTime, maxTargetTime, model,perturbationColNum, minPerturbationPercentage, maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
+    initializeFormInputsAndLabels(defaultTime, maxTargetTime, model, minPerturbationPercentage, maxPerturbationPercentage, maxNumberOfIterations);
 
     // create OK button
     initializeButton();
@@ -82,7 +76,7 @@ void MultiParamSweepDialog::setParamsTableSettings()
     headerView->setVisible(false);
 }
 
-void MultiParamSweepDialog::addParamsComboBoxToTable(const int rowNum, const int paramsColNum, Model model)
+void MultiParamSweepDialog::addParamsComboBoxToTable(const int rowNum, Model model)
 {
     QComboBox *pParametersComboBox = new QComboBox;
     QList<QString> parameters = model.getParameters();
@@ -94,7 +88,7 @@ void MultiParamSweepDialog::addParamsComboBoxToTable(const int rowNum, const int
     mpParamsToSweepTable->setCellWidget(rowNum,paramsColNum,pParametersComboBox);
 }
 
-void MultiParamSweepDialog::addIterationsSpinBoxToTable(const int rowNum, const int numberOfIterationsColNum, const int maxNumberOfIterations)
+void MultiParamSweepDialog::addIterationsSpinBoxToTable(const int rowNum, const int maxNumberOfIterations)
 {
     QSpinBox *pIterationsSpinBox = new QSpinBox;
     pIterationsSpinBox->setRange(0,maxNumberOfIterations);
@@ -104,7 +98,7 @@ void MultiParamSweepDialog::addIterationsSpinBoxToTable(const int rowNum, const 
     mpParamsToSweepTable->setCellWidget(rowNum,numberOfIterationsColNum,pIterationsSpinBox);
 }
 
-void MultiParamSweepDialog::addPerturbSpinBoxToTable(const double minPerturbationPercentage, const double maxPerturbationPercentage, const int rowNum, const int perturbationColNum)
+void MultiParamSweepDialog::addPerturbSpinBoxToTable(const double minPerturbationPercentage, const double maxPerturbationPercentage, const int rowNum)
 {
     QDoubleSpinBox *pPerturbationSpinBox = new QDoubleSpinBox;
     pPerturbationSpinBox->setRange(minPerturbationPercentage, maxPerturbationPercentage);
@@ -115,39 +109,25 @@ void MultiParamSweepDialog::addPerturbSpinBoxToTable(const double minPerturbatio
     mpParamsToSweepTable->setCellWidget(rowNum,perturbationColNum,pPerturbationSpinBox);
 }
 
-void MultiParamSweepDialog::addExampleRowToParamsTable(Model model,const int perturbationColNum, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int paramsColNum, const int numberOfIterationsColNum, const int maxNumberOfIterations)
+void MultiParamSweepDialog::addExampleRowToParamsTable(Model model, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int maxNumberOfIterations)
 {
     // Row index to add row to
     const int rowNum = 0;
-    const int removeRowButtonColNum = 3;
 
     // Add "blank" row
     mpParamsToSweepTable->insertRow(rowNum);
 
     // Edit blank row with custom widgets in its cells
-    addParamsComboBoxToTable(rowNum, paramsColNum, model);
-    addIterationsSpinBoxToTable(rowNum, numberOfIterationsColNum, maxNumberOfIterations);
+    addParamsComboBoxToTable(rowNum, model);
+    addIterationsSpinBoxToTable(rowNum, maxNumberOfIterations);
     // Create perturbation spinbox
-    addPerturbSpinBoxToTable(minPerturbationPercentage, maxPerturbationPercentage, rowNum, perturbationColNum);
+    addPerturbSpinBoxToTable(minPerturbationPercentage, maxPerturbationPercentage, rowNum);
     // Create a "Remove button" for this row
     QPushButton* pRemoveRowButton = new QPushButton();
     pRemoveRowButton->setText("X");
     connect(pRemoveRowButton, SIGNAL(clicked()), this, SLOT(removeRowSlot()));
     // Add remove row button to table
     mpParamsToSweepTable->setCellWidget(rowNum,removeRowButtonColNum,pRemoveRowButton);
-}
-
-void MultiParamSweepDialog::removeRowSlot()
-{
-    const int removeRowButtonColNum = 3;
-    QPushButton  *pClickedButton = qobject_cast<QPushButton *>(sender());
-    for(int i = 0; i < mpParamsToSweepTable->rowCount(); i++)
-    {
-        if(pClickedButton == mpParamsToSweepTable->cellWidget(i,removeRowButtonColNum))
-        {
-            mpParamsToSweepTable->removeRow(i);
-        }
-    }
 }
 void MultiParamSweepDialog::resizeParamsTable()
 {
@@ -169,7 +149,7 @@ void MultiParamSweepDialog::resizeParamsTable()
     mpParamsToSweepTable->setFixedSize(tableWidth,tableHeight);
 }
 
-void MultiParamSweepDialog::initializeParamsToSweepForms(Model model,const int perturbationColNum, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int paramsColNum, const int numberOfIterationsColNum,const int maxNumberOfIterations)
+void MultiParamSweepDialog::initializeParamsToSweepForms(Model model, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int maxNumberOfIterations)
 {
     // We represent the form as a table and give the user the option to add new rows
     //   representing new params to sweep
@@ -178,9 +158,9 @@ void MultiParamSweepDialog::initializeParamsToSweepForms(Model model,const int p
     setParamsTableSettings();
 
     // Add a row with valid values as an example for the user
-    addExampleRowToParamsTable(model,perturbationColNum,minPerturbationPercentage,maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
-    addExampleRowToParamsTable(model,perturbationColNum,minPerturbationPercentage,maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
-    addExampleRowToParamsTable(model,perturbationColNum,minPerturbationPercentage,maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
+    addExampleRowToParamsTable(model,minPerturbationPercentage,maxPerturbationPercentage,maxNumberOfIterations);
+    addExampleRowToParamsTable(model,minPerturbationPercentage,maxPerturbationPercentage,maxNumberOfIterations);
+    addExampleRowToParamsTable(model,minPerturbationPercentage,maxPerturbationPercentage,maxNumberOfIterations);
 
     resizeParamsTable();
 }
@@ -193,10 +173,10 @@ void MultiParamSweepDialog::initializeStopTimeForms(const double maxTargetTime, 
     mpStopTimeBox->setValue(defaultTime);
 }
 
-void MultiParamSweepDialog::initializeFormInputsAndLabels(const double defaultTime, const double maxTargetTime, Model model,const int perturbationColNum, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int paramsColNum, const int numberOfIterationsColNum,const int maxNumberOfIterations)
+void MultiParamSweepDialog::initializeFormInputsAndLabels(const double defaultTime, const double maxTargetTime, Model model, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int maxNumberOfIterations)
 {
     initializeVarsToPlotForms(model);
-    initializeParamsToSweepForms(model,perturbationColNum, minPerturbationPercentage, maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
+    initializeParamsToSweepForms(model, minPerturbationPercentage, maxPerturbationPercentage,maxNumberOfIterations);
     initializeStopTimeForms(maxTargetTime, defaultTime);
 }
 
@@ -244,8 +224,21 @@ void MultiParamSweepDialog::initializeButton()
     connect(mpRunButton, SIGNAL(clicked()), this, SLOT(runMultiParamSweep()));
 }
 
+// Slots:
 
 void MultiParamSweepDialog::runMultiParamSweep()
 {
     accept();
+}
+
+void MultiParamSweepDialog::removeRowSlot()
+{
+    QPushButton  *pClickedButton = qobject_cast<QPushButton *>(sender());
+    for(int i = 0; i < mpParamsToSweepTable->rowCount(); i++)
+    {
+        if(pClickedButton == mpParamsToSweepTable->cellWidget(i,removeRowButtonColNum))
+        {
+            mpParamsToSweepTable->removeRow(i);
+        }
+    }
 }
