@@ -67,6 +67,8 @@ private:
 
     void addRemoveButtonToTable(const int rowNum);
 
+    void addButtonToAddRows();
+
 private slots:
     void runMultiParamSweep();
     void removeRowSlot();

@@ -115,7 +115,7 @@ void MultiParamSweepDialog::addRemoveButtonToTable(const int rowNum)
 void MultiParamSweepDialog::addExampleRowToParamsTable()
 {
     // Row index to add row to
-    const int rowNum = 0;
+    const int rowNum = mpParamsToSweepTable->rowCount();
 
     // Add "blank" row
     mpParamsToSweepTable->insertRow(rowNum);
