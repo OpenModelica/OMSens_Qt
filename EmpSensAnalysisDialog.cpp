@@ -117,10 +117,10 @@ void EmpSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
 void EmpSensAnalysisDialog::runEmpSensAnalysis()
 {
     std::cout << "Values chosen:" << std::endl;
-    std::cout << " Percentage: " << mpPercentageBox->cleanText().toUtf8().constData() << std::endl;
+    std::cout << " Percentage: " << mpPercentageBox->value() << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
     std::cout << " Index i: " << mpIndicesButtonGoup->checkedId() << std::endl;
-    std::cout << " Time: " << mpTimeBox->text().toUtf8().constData() << std::endl;
+    std::cout << " Time: " << mpTimeBox->value() << std::endl;
     accept();
 }
 

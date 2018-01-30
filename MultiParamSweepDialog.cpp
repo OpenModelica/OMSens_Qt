@@ -91,7 +91,7 @@ void MultiParamSweepDialog::addParamsComboBoxToTable(const int rowNum, Model mod
 void MultiParamSweepDialog::addIterationsSpinBoxToTable(const int rowNum, const int maxNumberOfIterations)
 {
     QSpinBox *pIterationsSpinBox = new QSpinBox;
-    pIterationsSpinBox->setRange(0,maxNumberOfIterations);
+    pIterationsSpinBox->setRange(1,maxNumberOfIterations);
     pIterationsSpinBox->setValue(1);
     pIterationsSpinBox->setAlignment(Qt::AlignRight);
     // Add iterations spinbox
@@ -183,7 +183,7 @@ void MultiParamSweepDialog::initializeFormInputsAndLabels(const double defaultTi
 
 void MultiParamSweepDialog::initializeWindowSettings()
 {
-    setWindowTitle("Parameter Sensitivity Analysis - Empirical Indices");
+    setWindowTitle("Parameter Sensitivity Analysis - Multiparameter Sweep");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
 }
@@ -225,20 +225,49 @@ void MultiParamSweepDialog::initializeButton()
 }
 
 // Slots:
-
-void MultiParamSweepDialog::runMultiParamSweep()
-{
-    accept();
-}
-
 void MultiParamSweepDialog::removeRowSlot()
 {
     QPushButton  *pClickedButton = qobject_cast<QPushButton *>(sender());
-    for(int i = 0; i < mpParamsToSweepTable->rowCount(); i++)
+    for(int i_row = 0; i_row < mpParamsToSweepTable->rowCount(); i_row++)
     {
-        if(pClickedButton == mpParamsToSweepTable->cellWidget(i,removeRowButtonColNum))
+        if(pClickedButton == mpParamsToSweepTable->cellWidget(i_row,removeRowButtonColNum))
         {
-            mpParamsToSweepTable->removeRow(i);
+            mpParamsToSweepTable->removeRow(i_row);
         }
     }
+}
+
+void MultiParamSweepDialog::runMultiParamSweep()
+{
+    std::cout << "Values chosen:" << std::endl;
+    // Variables to plot from dual lists:
+    QList<QListWidgetItem *> rightListItems = mpVarsToPlotDualLists->itemsOnRightList();
+    QString rightListAsString;
+    foreach( QListWidgetItem *item, rightListItems )
+    {
+        QString commaSeparatorStr = QString(", ");
+        QString itemAsStr = commaSeparatorStr.append(item->text());
+        rightListAsString.append(itemAsStr);
+    }
+    std::cout << " Chosen variables to plot: " << rightListAsString.toUtf8().constData()<< std::endl;
+    // Params to sweep table
+    std::cout << " Parameters sweeping info : " << std::endl;
+    for(int i_row = 0; i_row < mpParamsToSweepTable->rowCount(); i_row++)
+    {
+        QComboBox *paramsCombobox = qobject_cast<QComboBox *>(mpParamsToSweepTable->cellWidget(i_row,paramsColNum));
+        int paramIndexChosen = paramsCombobox->currentIndex();
+        std::cout << "  Param i: " << paramIndexChosen << std::endl;
+
+        QSpinBox  *numOfItersSpinBox = qobject_cast<QSpinBox *>(mpParamsToSweepTable->cellWidget(i_row,numberOfIterationsColNum));
+        int numberOfItersChosen = numOfItersSpinBox->value();
+        std::cout << "  #Iters: " << numberOfItersChosen<< std::endl;
+
+        QDoubleSpinBox  *perturbDSpinBox = qobject_cast<QDoubleSpinBox *>(mpParamsToSweepTable->cellWidget(i_row,perturbationColNum));
+        double perturbationPercentage = perturbDSpinBox->value();
+        std::cout << "  Perturbation percetage: " << perturbationPercentage<< std::endl;
+    }
+    // Stoptime
+    std::cout << " Stoptime: " << mpStopTimeBox->value() << std::endl;
+
+    accept();
 }
