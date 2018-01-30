@@ -10,6 +10,36 @@
 #include <iostream>
 // BORRAR^
 
+MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
+    QDialog(pParent), model(model)
+{
+    // Function parameters
+    const double defaultTime= 2000;
+    const double maxTargetTime= 5000;
+    const int maxNumberOfIterations= 50000;
+    const double minPerturbationPercentage= -100;
+    const double maxPerturbationPercentage= 100;
+    // Default columns positions in table. We put them here for now but it should
+    //  be better organized in the future
+    //  Col numbers
+    const int paramsColNum = 0;
+    const int numberOfIterationsColNum = 1;
+    const int perturbationColNum = 2;
+
+    initializeWindowSettings();
+    setHeading();
+    initializeFormInputsAndLabels(defaultTime, maxTargetTime, model,perturbationColNum, minPerturbationPercentage, maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
+
+    // create OK button
+    initializeButton();
+
+    // set grid layout
+    QGridLayout *pMainLayout = initializeLayout();
+    addWidgetsToLayout(pMainLayout);
+    // QWidget function to set layout to "this"
+    setLayout(pMainLayout);
+}
+
 void MultiParamSweepDialog::initializeVarsToPlotForms(Model model)
 {
     mpVarsToPlotLabel = new Label(tr("Variables to plot:"));
@@ -170,35 +200,6 @@ void MultiParamSweepDialog::initializeFormInputsAndLabels(const double defaultTi
     initializeStopTimeForms(maxTargetTime, defaultTime);
 }
 
-MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
-    QDialog(pParent), model(model)
-{
-    // Function parameters
-    const double defaultTime= 2000;
-    const double maxTargetTime= 5000;
-    const int maxNumberOfIterations= 50000;
-    const double minPerturbationPercentage= -100;
-    const double maxPerturbationPercentage= 100;
-    // Default columns positions in table. We put them here for now but it should
-    //  be better organized in the future
-    //  Col numbers
-    const int paramsColNum = 0;
-    const int numberOfIterationsColNum = 1;
-    const int perturbationColNum = 2;
-
-    initializeWindowSettings();
-    setHeading();
-    initializeFormInputsAndLabels(defaultTime, maxTargetTime, model,perturbationColNum, minPerturbationPercentage, maxPerturbationPercentage, paramsColNum, numberOfIterationsColNum,maxNumberOfIterations);
-
-    // create OK button
-    initializeButton();
-
-    // set grid layout
-    QGridLayout *pMainLayout = initializeLayout();
-    addWidgetsToLayout(pMainLayout);
-    // QWidget function to set layout to "this"
-    setLayout(pMainLayout);
-}
 
 void MultiParamSweepDialog::initializeWindowSettings()
 {
