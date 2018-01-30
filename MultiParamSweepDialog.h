@@ -33,33 +33,42 @@ private:
     QDoubleSpinBox *mpStopTimeBox;
     Label *mpParamsToSweepLabel;
     QTableWidget *mpParamsToSweepTable;
+    QPushButton *mpAddRowButton;
     // Conventions:
+    //   Columns ordering
     static const int paramsColNum = 0;
     static const int numberOfIterationsColNum = 1;
     static const int perturbationColNum = 2;
     static const int removeRowButtonColNum = 3;
+    // Forms min, max, default values
+    static const double defaultTime= 2000;
+    static const double maxTargetTime= 5000;
+    static const int maxNumberOfIterations= 50000;
+    static const double minPerturbationPercentage= -100;
+    static const double maxPerturbationPercentage= 100;
 
     // Auxs:
     void initializeWindowSettings();
     void setHeading();
     void initializeButton();
-    void initializeFormInputsAndLabels(const double defaultTime, const double maxTargetTime, Model model, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int maxNumberOfIterations);
-    void initializeVarsToPlotForms(Model model);
-    void initializeParamsToSweepForms(Model model, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int maxNumberOfIterations);
-    void initializeStopTimeForms(const double maxTargetTime, const double defaultTime);
+    void initializeFormInputsAndLabels();
+    void initializeVarsToPlotForms();
+    void initializeParamsToSweepForms();
+    void initializeStopTimeForms();
     void initializeParamsToSweepLabel();
     void setParamsTableHeaders();
     void setParamsTableSettings();
-    void addExampleRowToParamsTable(Model model, const double minPerturbationPercentage, const double maxPerturbationPercentage, const int maxNumberOfIterations);
+    void addExampleRowToParamsTable();
     void resizeParamsTable();
-    void addParamsComboBoxToTable(const int rowNum, Model model);
-    void addIterationsSpinBoxToTable(const int rowNum, const int maxNumberOfIterations);
-    void addPerturbSpinBoxToTable(const double minPerturbationPercentage, const double maxPerturbationPercentage, const int rowNum);
+    void addParamsComboBoxToTable(const int rowNum);
+    void addIterationsSpinBoxToTable(const int rowNum);
+    void addPerturbSpinBoxToTable(const int rowNum);
     void addWidgetsToLayout(QGridLayout *pMainLayout);
 
 private slots:
     void runMultiParamSweep();
     void removeRowSlot();
+    void addNewRowToParamsSweepTable();
 };
 
 #endif // MULTIPARAMSWEEPDIALOG_H
