@@ -65,6 +65,8 @@ private:
     void addPerturbSpinBoxToTable(const int rowNum);
     void addWidgetsToLayout(QGridLayout *pMainLayout);
 
+    void addRemoveButtonToTable(const int rowNum);
+
 private slots:
     void runMultiParamSweep();
     void removeRowSlot();

@@ -60,8 +60,9 @@ void MultiParamSweepDialog::setParamsTableSettings()
     mpParamsToSweepTable->setShowGrid(false);
     // Resize columns to contents
     mpParamsToSweepTable->resizeColumnsToContents();
-    // Disable scrollbars
-    mpParamsToSweepTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    // Edit scrollbars
+    mpParamsToSweepTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOn);
+    mpParamsToSweepTable->setVerticalScrollMode(QAbstractItemView::ScrollPerPixel);
     mpParamsToSweepTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Settings with QHeaderView:
     QHeaderView *headerView = mpParamsToSweepTable->verticalHeader();
@@ -102,6 +103,15 @@ void MultiParamSweepDialog::addPerturbSpinBoxToTable(const int rowNum)
     mpParamsToSweepTable->setCellWidget(rowNum,perturbationColNum,pPerturbationSpinBox);
 }
 
+void MultiParamSweepDialog::addRemoveButtonToTable(const int rowNum)
+{
+    QPushButton* pRemoveRowButton = new QPushButton();
+    pRemoveRowButton->setText("X");
+    connect(pRemoveRowButton, SIGNAL(clicked()), this, SLOT(removeRowSlot()));
+    // Add remove row button to table
+    mpParamsToSweepTable->setCellWidget(rowNum,removeRowButtonColNum,pRemoveRowButton);
+}
+
 void MultiParamSweepDialog::addExampleRowToParamsTable()
 {
     // Row index to add row to
@@ -116,11 +126,7 @@ void MultiParamSweepDialog::addExampleRowToParamsTable()
     // Create perturbation spinbox
     addPerturbSpinBoxToTable(rowNum);
     // Create a "Remove button" for this row
-    QPushButton* pRemoveRowButton = new QPushButton();
-    pRemoveRowButton->setText("X");
-    connect(pRemoveRowButton, SIGNAL(clicked()), this, SLOT(removeRowSlot()));
-    // Add remove row button to table
-    mpParamsToSweepTable->setCellWidget(rowNum,removeRowButtonColNum,pRemoveRowButton);
+    addRemoveButtonToTable(rowNum);
 }
 void MultiParamSweepDialog::resizeParamsTable()
 {
@@ -133,13 +139,19 @@ void MultiParamSweepDialog::resizeParamsTable()
     const int horizontalHeaderHeight = mpParamsToSweepTable->horizontalHeader()->height();
 
     // Define paddings
-    const int widthPadding  = 0;
+    const int widthPadding  = 17;
     const int heightPadding = 0;
 
     // Set final widths and heights
     const int tableWidth  = horizontalHeaderLength + verticalHeaderWidth    + widthPadding;
     const int tableHeight = verticalHeaderLength   + horizontalHeaderHeight + heightPadding;
     mpParamsToSweepTable->setFixedSize(tableWidth,tableHeight);
+}
+
+void MultiParamSweepDialog::addButtonToAddRows()
+{
+    mpAddRowButton = new QPushButton("Add new parameter to sweep");
+    connect(mpAddRowButton, SIGNAL(clicked()), this, SLOT(addNewRowToParamsSweepTable()));
 }
 
 void MultiParamSweepDialog::initializeParamsToSweepForms()
@@ -157,8 +169,7 @@ void MultiParamSweepDialog::initializeParamsToSweepForms()
 
     resizeParamsTable();
 
-    mpAddRowButton = new QPushButton("Add new parameter to sweep");
-    connect(mpAddRowButton, SIGNAL(clicked()), this, SLOT(addNewRowToParamsSweepTable()));
+    addButtonToAddRows();
 }
 
 
@@ -209,8 +220,9 @@ void MultiParamSweepDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpVarsToPlotDualLists, 2, 1, 1, 3);
     pMainLayout->addWidget(mpParamsToSweepLabel, 3, 0);
     pMainLayout->addWidget(mpParamsToSweepTable, 3, 1, 1, 3);
-    pMainLayout->addWidget(mpStopTimeLabel, 4, 0);
-    pMainLayout->addWidget(mpStopTimeBox, 4, 1);
+    pMainLayout->addWidget(mpAddRowButton, 4, 1);
+    pMainLayout->addWidget(mpStopTimeLabel, 5, 0);
+    pMainLayout->addWidget(mpStopTimeBox, 5, 1);
     pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
 }
 
