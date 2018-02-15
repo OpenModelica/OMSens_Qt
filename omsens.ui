@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSens_Analyisis">
@@ -30,6 +30,8 @@
     <addaction name="actionEmpirical_Indices"/>
     <addaction name="actionCURVI_Sens"/>
     <addaction name="actionMultiparam_Sweep"/>
+    <addaction name="separator"/>
+    <addaction name="actionRun_Script"/>
    </widget>
    <addaction name="menuSens_Analyisis"/>
   </widget>
@@ -55,6 +57,11 @@
   <action name="actionMultiparam_Sweep">
    <property name="text">
     <string>Multiparam Sweep</string>
+   </property>
+  </action>
+  <action name="actionRun_Script">
+   <property name="text">
+    <string>Run Script</string>
    </property>
   </action>
  </widget>

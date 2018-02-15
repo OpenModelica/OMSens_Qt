@@ -23,6 +23,8 @@ private slots:
 
     void on_actionMultiparam_Sweep_triggered();
 
+    void on_actionRun_Script_triggered();
+
 private:
     Ui::OMSens *ui;
     // Model info for testing

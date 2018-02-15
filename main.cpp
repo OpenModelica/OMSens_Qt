@@ -45,15 +45,15 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     // Model information for testing:
     Model model = modelExample();
-    // OMSens w(model);
-    // w.show();
+     OMSens w(model);
+     w.show();
     // Comment the "w.show()" and uncomment the following to test separately:
     //EmpSensAnalysisDialog *sensanaldialog = new EmpSensAnalysisDialog(model);
     //sensanaldialog->show();
     // CURVISensAnalysisDialog *curviDialog = new CURVISensAnalysisDialog(model);
     // curviDialog->show();
-     MultiParamSweepDialog *mpsDialog = new MultiParamSweepDialog(model);
-     mpsDialog->show();
+    // MultiParamSweepDialog *mpsDialog = new MultiParamSweepDialog(model);
+    // mpsDialog->show();
 
     //int aExec= a.exec();
     //delete pModel;

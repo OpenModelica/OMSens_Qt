@@ -5,6 +5,7 @@
 #include <EmpSensAnalysisDialog.h>
 #include <CURVISensAnalysisDialog.h>
 #include <MultiParamSweepDialog.h>
+#include <QFileDialog>
 
 OMSens::OMSens(Model model,QWidget *pParent) :
     QMainWindow(pParent),
@@ -35,4 +36,13 @@ void OMSens::on_actionMultiparam_Sweep_triggered()
     MultiParamSweepDialog *mpsDialog = new MultiParamSweepDialog(model);
     mpsDialog->exec();
 
+}
+
+void OMSens::on_actionRun_Script_triggered()
+{
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this,tr("Open Python Script"), "", tr("Python script(*.py)"));
+    QString pythonBinPath = "/home/adanos/anaconda3/bin/python";
+    QString command = QString(pythonBinPath) + " " + fileName;
+    system(qPrintable(command));
 }
