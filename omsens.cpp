@@ -6,6 +6,8 @@
 #include <CURVISensAnalysisDialog.h>
 #include <MultiParamSweepDialog.h>
 #include <QFileDialog>
+#include <QDir>
+#include <QFileInfo>
 
 OMSens::OMSens(Model model,QWidget *pParent) :
     QMainWindow(pParent),
@@ -44,5 +46,12 @@ void OMSens::on_actionRun_Script_triggered()
     fileName = QFileDialog::getOpenFileName(this,tr("Open Python Script"), "", tr("Python script(*.py)"));
     QString pythonBinPath = "/home/adanos/anaconda3/bin/python";
     QString command = QString(pythonBinPath) + " " + fileName;
-    system(qPrintable(command));
+    QFileInfo fileNameFileInfo = QFileInfo(fileName);
+    QDir      fileDir          = fileNameFileInfo.canonicalPath();
+    QString fileDirPath        = fileDir.canonicalPath();
+    bool currentDirChangeSuccessful = QDir::setCurrent(fileDirPath);
+    if (currentDirChangeSuccessful)
+    {
+        system(qPrintable(command));
+    }
 }
