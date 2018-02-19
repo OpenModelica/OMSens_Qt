@@ -25,6 +25,8 @@ private slots:
 
     void on_actionRun_Script_triggered();
 
+    void on_actionOpen_Sens_Analysis_Result_triggered();
+
 private:
     Ui::OMSens *ui;
     // Model info for testing

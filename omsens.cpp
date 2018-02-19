@@ -8,6 +8,8 @@
 #include <QFileDialog>
 #include <QDir>
 #include <QFileInfo>
+#include <QTextStream>
+#include <QStandardItemModel>
 
 OMSens::OMSens(Model model,QWidget *pParent) :
     QMainWindow(pParent),
@@ -54,4 +56,46 @@ void OMSens::on_actionRun_Script_triggered()
     {
         system(qPrintable(command));
     }
+}
+
+void OMSens::on_actionOpen_Sens_Analysis_Result_triggered()
+{
+
+    // Ask for file path using dialog
+    QString fileName;
+    fileName = QFileDialog::getOpenFileName(this,tr("Open Sens Analysis Results"), "", tr("Comma Separated Values file(*.csv)"));
+    // Open file
+    QFile file(fileName);
+    file.open(QFile::ReadOnly | QFile::Text);
+    // Create a thread to retrieve data from a file
+    QTextStream in(&file);
+    // Read first row into column names
+    QString columnNamesLine = in.readLine();
+    QList<QString> columnNames = columnNamesLine.split(",");
+    int numberOfColumns = columnNames.length();
+    // Create table from columns data
+    QStandardItemModel *csvModel;
+    csvModel = new QStandardItemModel(this);
+    csvModel->setColumnCount(numberOfColumns);
+    // Read the rest of the lines. Each one will correspond to a parameter result
+    while (!in.atEnd())
+    {
+        QString line = in.readLine();
+        // Adding to the model in line with the elements
+        QList<QStandardItem *> standardItemsList;
+        // consider that the line separated by semicolons into columns
+        QList<QString> cells = line.split(";");
+        for (int i = 0; i < cells.length(); i++ ) {
+            QString item = cells[i];
+            standardItemsList.append(new QStandardItem(item));
+        }
+        csvModel->insertRow(csvModel->rowCount(), standardItemsList);
+    }
+    // Close file
+    file.close();
+    // Assign model to window
+// DESDE ACA FALTA
+//    QWindow csvWindow;
+//    ui->tableView->setModel(csvModel);
+// HASTA ACA FALTA
 }
