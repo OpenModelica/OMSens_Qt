@@ -42,7 +42,8 @@ HEADERS += \
     DualLists.h \
     MultiParamSweepDialog.h \
     model.h \
-    SensitivityAnalysisResultDialog.h
+    SensitivityAnalysisResultDialog.h \
+    TableItemDelegate.h
 
 FORMS += \
         omsens.ui

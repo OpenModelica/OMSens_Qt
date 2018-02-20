@@ -6,6 +6,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <TableItemDelegate.h>
 
 SensitivityAnalysisResultDialog::SensitivityAnalysisResultDialog(QString filePath, QWidget *parent) : QDialog(parent)
 {
@@ -37,9 +38,20 @@ QStandardItemModel * SensitivityAnalysisResultDialog::standardItemModelFromFileP
         QList<QStandardItem *> standardItemsList;
         // consider that the line separated by semicolons into columns
         QList<QString> cells = line.split(",");
+        // Convert to double every number so the notation is consistent (the column sort is buggy otherwise)
+
         for (int i = 0; i < cells.length(); i++ ) {
-            QString item = cells[i];
-            standardItemsList.append(new QStandardItem(item));
+            QString itemStr = cells[i];
+            bool ok;
+            double d;
+            d = itemStr.toDouble(&ok); // ok == true, d == 12.3456
+            QStandardItem *stdItem = new QStandardItem(itemStr);
+            // Assign a numeric QVariant if it's numeric
+            if(ok){
+                // If it's a valid double
+                stdItem->setData(QVariant(d),Qt::DisplayRole);
+            }
+            standardItemsList.append(stdItem);
         }
         csvModel->insertRow(csvModel->rowCount(), standardItemsList);
     }
@@ -56,6 +68,9 @@ void SensitivityAnalysisResultDialog::initializeTableWithStandardItemModel(QStan
     // Resize columns to contents
     mpResultsTable->resizeColumnsToContents();
     mpResultsTable->setSortingEnabled(true);
+    // Set item delegate to format doubles in specified precision
+    TableItemDelegate *decDelegate = new TableItemDelegate;
+    mpResultsTable->setItemDelegate(decDelegate);
 }
 
 void SensitivityAnalysisResultDialog::configureLayout()

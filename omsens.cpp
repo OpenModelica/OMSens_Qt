@@ -62,9 +62,11 @@ void OMSens::on_actionOpen_Sens_Analysis_Result_triggered()
 {
 
     // Ask for file path using dialog
-    QString filePath;
-    filePath = QFileDialog::getOpenFileName(this,tr("Open Sens Analysis Results"), "", tr("Comma Separated Values file(*.csv)"));
-    // Initialize Results dialog
-    SensitivityAnalysisResultDialog *mpSensResult = new SensitivityAnalysisResultDialog(filePath);
-    mpSensResult->exec();
+    QString filePath = QFileDialog::getOpenFileName(this,tr("Open Sens Analysis Results"), "", tr("Comma Separated Values file(*.csv)"));
+    // Check if the user selected a file or if they clicked cancel
+    if (!filePath.isNull()){
+        // Initialize Results dialog
+        SensitivityAnalysisResultDialog *mpSensResult = new SensitivityAnalysisResultDialog(filePath);
+        mpSensResult->exec();
+    }
 }
