@@ -31,7 +31,8 @@ SOURCES += \
     CURVISensAnalysisDialog.cpp \
     DualLists.cpp \
     MultiParamSweepDialog.cpp \
-    model.cpp
+    model.cpp \
+    SensitivityAnalysisResultDialog.cpp
 
 HEADERS += \
         omsens.h \
@@ -40,7 +41,8 @@ HEADERS += \
     CURVISensAnalysisDialog.h \
     DualLists.h \
     MultiParamSweepDialog.h \
-    model.h
+    model.h \
+    SensitivityAnalysisResultDialog.h
 
 FORMS += \
         omsens.ui
