@@ -4,6 +4,7 @@
 #include <QDialog>
 #include <QFile>
 #include <QTableView>
+#include <QStandardItemModel>
 
 class SensitivityAnalysisResultDialog : public QDialog
 {
@@ -12,6 +13,12 @@ public:
     explicit SensitivityAnalysisResultDialog(QString filePath, QWidget *parent = 0);
 private:
     QTableView* mpResultsTable;
+
+    QStandardItemModel* standardItemModelFromFilePath(QString filePath);
+
+    void initializeTableWithStandardItemModel(QStandardItemModel *csvModel);
+
+    void configureLayout();
 
 signals:
 

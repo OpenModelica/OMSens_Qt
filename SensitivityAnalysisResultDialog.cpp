@@ -5,8 +5,16 @@
 #include <QTextStream>
 #include <QTableView>
 #include <QVBoxLayout>
+#include <QHeaderView>
 
 SensitivityAnalysisResultDialog::SensitivityAnalysisResultDialog(QString filePath, QWidget *parent) : QDialog(parent)
+{
+    QStandardItemModel *csvModel = standardItemModelFromFilePath(filePath);
+    initializeTableWithStandardItemModel(csvModel);
+    configureLayout();
+}
+
+QStandardItemModel * SensitivityAnalysisResultDialog::standardItemModelFromFilePath(QString filePath)
 {
     // Open file
     QFile file(filePath);
@@ -35,13 +43,28 @@ SensitivityAnalysisResultDialog::SensitivityAnalysisResultDialog(QString filePat
         }
         csvModel->insertRow(csvModel->rowCount(), standardItemsList);
     }
-    // Assign csv model to table view
-    mpResultsTable = new QTableView;
-    mpResultsTable->setModel(csvModel);
-    // Assign table view to layout
-    QVBoxLayout *mainLayout = new QVBoxLayout;
-    mainLayout->addWidget(mpResultsTable);
-    setLayout(mainLayout);
     // Close file
     file.close();
+
+    return csvModel;
 }
+
+void SensitivityAnalysisResultDialog::initializeTableWithStandardItemModel(QStandardItemModel *csvModel)
+{
+    mpResultsTable = new QTableView;
+    mpResultsTable->setModel(csvModel);
+    // Resize columns to contents
+    mpResultsTable->resizeColumnsToContents();
+    mpResultsTable->setSortingEnabled(true);
+}
+
+void SensitivityAnalysisResultDialog::configureLayout()
+{
+    // New layout
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    // Assign table view to layout
+    mainLayout->addWidget(mpResultsTable);
+    // Set Dialog layout
+    setLayout(mainLayout);
+}
+
