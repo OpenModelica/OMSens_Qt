@@ -71,6 +71,8 @@ void SensitivityAnalysisResultDialog::initializeTableWithStandardItemModel(QStan
     // Set item delegate to format doubles in specified precision
     TableItemDelegate *decDelegate = new TableItemDelegate;
     mpResultsTable->setItemDelegate(decDelegate);
+    // Set table as readonly
+    mpResultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
 void SensitivityAnalysisResultDialog::configureLayout()
