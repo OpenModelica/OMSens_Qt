@@ -1,9 +1,3 @@
-#if defined(QT_PRINTSUPPORT_LIB)
-#include <QtPrintSupport/qtprintsupportglobal.h>
-#if QT_CONFIG(printdialog)
-#include <QPrintDialog>
-#endif
-#endif
 
 #include "ImageViewer.h"
 #include <QLabel>
@@ -22,12 +16,17 @@
 #include <QMimeData>
 #include <QMenuBar>
 #include <QMenu>
+#include <QVBoxLayout>
 
+// BORRAR:
+#include <iostream>
+// BORRAR^
 
-ImageViewer::ImageViewer()
-   : imageLabel(new QLabel)
-   , scrollArea(new QScrollArea)
-   , scaleFactor(1)
+ImageViewer::ImageViewer(QString filePath, QWidget *parent)
+   : imageLabel(new QLabel),
+     scrollArea(new QScrollArea),
+     scaleFactor(1),
+     QDialog(parent)
 {
     imageLabel->setBackgroundRole(QPalette::Base);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
@@ -36,34 +35,50 @@ ImageViewer::ImageViewer()
     scrollArea->setBackgroundRole(QPalette::Dark);
     scrollArea->setWidget(imageLabel);
     scrollArea->setVisible(false);
-    setCentralWidget(scrollArea);
+    //setCentralWidget(scrollArea);
 
-    createActions();
+    // BORRAR/ADAPTAR:
+    //createActions();
+    // BORRAR/ADAPTAR^
 
     resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
+
+    loadFile(filePath);
+
+    // New layout
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    // Assign table view to layout
+    mainLayout->addWidget(scrollArea);
+    // Set Dialog layout
+    setLayout(mainLayout);
+
+    // BORRAR:
+    std::cout << "asd" << std::endl;
+    // BORRAR^
+
 }
 
 
 bool ImageViewer::loadFile(const QString &fileName)
 {
-    QImageReader reader(fileName);
-    reader.setAutoTransform(true);
-    const QImage newImage = reader.read();
-    if (newImage.isNull()) {
-        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
-                                 tr("Cannot load %1: %2")
-                                 .arg(QDir::toNativeSeparators(fileName), reader.errorString()));
-        return false;
-    }
+     QImageReader reader(fileName);
+     //reader.setAutoTransform(true);
+     const QImage newImage = reader.read();
+     if (newImage.isNull()) {
+         QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+                                  tr("Cannot load %1: %2")
+                                  .arg(QDir::toNativeSeparators(fileName), reader.errorString()));
+         return false;
+     }
 
-    setImage(newImage);
+     setImage(newImage);
 
-    setWindowFilePath(fileName);
+     setWindowFilePath(fileName);
 
-    const QString message = tr("Opened \"%1\", %2x%3, Depth: %4")
-        .arg(QDir::toNativeSeparators(fileName)).arg(image.width()).arg(image.height()).arg(image.depth());
-    statusBar()->showMessage(message);
-    return true;
+     const QString message = tr("Opened \"%1\", %2x%3, Depth: %4")
+         .arg(QDir::toNativeSeparators(fileName)).arg(image.width()).arg(image.height()).arg(image.depth());
+     //statusBar()->showMessage(message);
+     return true;
 }
 
 void ImageViewer::setImage(const QImage &newImage)
@@ -73,51 +88,51 @@ void ImageViewer::setImage(const QImage &newImage)
     scaleFactor = 1.0;
 
     scrollArea->setVisible(true);
-    printAct->setEnabled(true);
-    fitToWindowAct->setEnabled(true);
-    updateActions();
+    //printAct->setEnabled(true);
+    //fitToWindowAct->setEnabled(true);
+    //updateActions();
 
-    if (!fitToWindowAct->isChecked())
+    //if (!fitToWindowAct->isChecked())
         imageLabel->adjustSize();
 }
 
 
 bool ImageViewer::saveFile(const QString &fileName)
 {
-    QImageWriter writer(fileName);
+    //QImageWriter writer(fileName);
 
-    if (!writer.write(image)) {
-        QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
-                                 tr("Cannot write %1: %2")
-                                 .arg(QDir::toNativeSeparators(fileName)), writer.errorString());
-        return false;
-    }
-    const QString message = tr("Wrote \"%1\"").arg(QDir::toNativeSeparators(fileName));
-    statusBar()->showMessage(message);
-    return true;
+    //if (!writer.write(image)) {
+    //    QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+    //                             tr("Cannot write %1: %2")
+    //                             .arg(QDir::toNativeSeparators(fileName)), writer.errorString());
+    //    return false;
+    //}
+    //const QString message = tr("Wrote \"%1\"").arg(QDir::toNativeSeparators(fileName));
+    //statusBar()->showMessage(message);
+    //return true;
 }
 
 
 static void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode)
 {
-    static bool firstDialog = true;
+   // static bool firstDialog = true;
 
-    if (firstDialog) {
-        firstDialog = false;
-        const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
-        dialog.setDirectory(picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
-    }
+   // if (firstDialog) {
+   //     firstDialog = false;
+   //     const QStringList picturesLocations = QStandardPaths::standardLocations(QStandardPaths::PicturesLocation);
+   //     dialog.setDirectory(picturesLocations.isEmpty() ? QDir::currentPath() : picturesLocations.last());
+   // }
 
-    QStringList mimeTypeFilters;
-    const QByteArrayList supportedMimeTypes = acceptMode == QFileDialog::AcceptOpen
-        ? QImageReader::supportedMimeTypes() : QImageWriter::supportedMimeTypes();
-    foreach (const QByteArray &mimeTypeName, supportedMimeTypes)
-        mimeTypeFilters.append(mimeTypeName);
-    mimeTypeFilters.sort();
-    dialog.setMimeTypeFilters(mimeTypeFilters);
-    dialog.selectMimeTypeFilter("image/jpeg");
-    if (acceptMode == QFileDialog::AcceptSave)
-        dialog.setDefaultSuffix("jpg");
+   // QStringList mimeTypeFilters;
+   // const QByteArrayList supportedMimeTypes = acceptMode == QFileDialog::AcceptOpen
+   //     ? QImageReader::supportedMimeTypes() : QImageWriter::supportedMimeTypes();
+   // foreach (const QByteArray &mimeTypeName, supportedMimeTypes)
+   //     mimeTypeFilters.append(mimeTypeName);
+   // mimeTypeFilters.sort();
+   // dialog.setMimeTypeFilters(mimeTypeFilters);
+   // dialog.selectMimeTypeFilter("image/jpeg");
+   // if (acceptMode == QFileDialog::AcceptSave)
+   //     dialog.setDefaultSuffix("jpg");
 }
 
 void ImageViewer::open()
@@ -164,18 +179,18 @@ static QImage clipboardImage()
 
 void ImageViewer::paste()
 {
-#ifndef QT_NO_CLIPBOARD
-    const QImage newImage = clipboardImage();
-    if (newImage.isNull()) {
-        statusBar()->showMessage(tr("No image in clipboard"));
-    } else {
-        setImage(newImage);
-        setWindowFilePath(QString());
-        const QString message = tr("Obtained image from clipboard, %1x%2, Depth: %3")
-            .arg(newImage.width()).arg(newImage.height()).arg(newImage.depth());
-        statusBar()->showMessage(message);
-    }
-#endif // !QT_NO_CLIPBOARD
+//#ifndef QT_NO_CLIPBOARD
+//    const QImage newImage = clipboardImage();
+//    if (newImage.isNull()) {
+//        statusBar()->showMessage(tr("No image in clipboard"));
+//    } else {
+//        setImage(newImage);
+//        setWindowFilePath(QString());
+//        const QString message = tr("Obtained image from clipboard, %1x%2, Depth: %3")
+//            .arg(newImage.width()).arg(newImage.height()).arg(newImage.depth());
+//        statusBar()->showMessage(message);
+//    }
+//#endif // !QT_NO_CLIPBOARD
 }
 
 void ImageViewer::zoomIn()

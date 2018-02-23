@@ -6,13 +6,14 @@
 #include <QScrollArea>
 #include <QScrollBar>
 #include <QFileDialog>
+#include <QString>
 
-class ImageViewer : public QMainWindow
+class ImageViewer : public QDialog
 {
     Q_OBJECT
 
 public:
-    ImageViewer();
+    ImageViewer(QString filePath, QWidget *parent = 0);
     bool loadFile(const QString &);
     static void initializeImageFileDialog(QFileDialog &dialog, QFileDialog::AcceptMode acceptMode);
 

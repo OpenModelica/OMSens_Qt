@@ -20,7 +20,7 @@
      <x>0</x>
      <y>0</y>
      <width>400</width>
-     <height>19</height>
+     <height>22</height>
     </rect>
    </property>
    <widget class="QMenu" name="menuSens_Analyisis">
@@ -33,6 +33,7 @@
     <addaction name="separator"/>
     <addaction name="actionRun_Script"/>
     <addaction name="actionOpen_Sens_Analysis_Result"/>
+    <addaction name="actionOpen_Sens_Analysis_Image"/>
    </widget>
    <addaction name="menuSens_Analyisis"/>
   </widget>
@@ -68,6 +69,11 @@
   <action name="actionOpen_Sens_Analysis_Result">
    <property name="text">
     <string>Open Sens Analysis Result</string>
+   </property>
+  </action>
+  <action name="actionOpen_Sens_Analysis_Image">
+   <property name="text">
+    <string>Open Sens Analysis Image</string>
    </property>
   </action>
  </widget>
