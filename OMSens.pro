@@ -32,7 +32,8 @@ SOURCES += \
     DualLists.cpp \
     MultiParamSweepDialog.cpp \
     model.cpp \
-    SensitivityAnalysisResultDialog.cpp
+    SensitivityAnalysisResultDialog.cpp \
+    ImageViewer.cpp
 
 HEADERS += \
         omsens.h \
@@ -43,7 +44,8 @@ HEADERS += \
     MultiParamSweepDialog.h \
     model.h \
     SensitivityAnalysisResultDialog.h \
-    TableItemDelegate.h
+    TableItemDelegate.h \
+    ImageViewer.h
 
 FORMS += \
         omsens.ui
