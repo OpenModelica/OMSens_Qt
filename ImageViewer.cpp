@@ -8,20 +8,13 @@
 #include <QVBoxLayout>
 #include <QScreen>
 #include <QDir>
+#include <QFileDialog>
 
-ImageViewer::ImageViewer(QWidget *parent)
-   : imageLabel(new QLabel),
-     scrollArea(new QScrollArea),
-     QDialog(parent)
+ImageViewer::ImageViewer(QString filePath, QWidget *parent)
+   : QDialog(parent),
+     imageLabel(new QLabel),
+     scrollArea(new QScrollArea)
 {
-    // Ask for file path using dialog
-    QString filePath = QFileDialog::getOpenFileName(this,tr("Open Sens Analysis Results"), "", tr("Images (*.png)"));
-    // Check if the user selected a file or if they clicked cancel
-    if (!filePath.isNull()){
-        // Initialize Results dialog
-        ImageViewer *pImageViewer = new ImageViewer(filePath);
-        pImageViewer->exec();
-    }
     imageLabel->setBackgroundRole(QPalette::Base);
     imageLabel->setSizePolicy(QSizePolicy::Ignored, QSizePolicy::Ignored);
     imageLabel->setScaledContents(true);

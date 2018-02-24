@@ -11,7 +11,7 @@ class ImageViewer : public QDialog
     Q_OBJECT
 
 public:
-    ImageViewer(QWidget *parent = 0);
+    ImageViewer(QString filePath, QWidget *parent = 0);
 
 private:
     bool loadFile(const QString &);
