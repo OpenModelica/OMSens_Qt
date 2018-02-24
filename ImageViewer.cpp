@@ -8,7 +8,6 @@
 #include <QVBoxLayout>
 #include <QScreen>
 #include <QDir>
-#include <QFileDialog>
 
 ImageViewer::ImageViewer(QString filePath, QWidget *parent)
    : QDialog(parent),
