@@ -73,8 +73,17 @@ void OMSens::on_actionOpen_Sens_Analysis_Result_triggered()
 
 void OMSens::on_actionOpen_Sens_Analysis_Image_triggered()
 {
-    // Ask for file path using dialog
-    QString filePath = QFileDialog::getOpenFileName(this,tr("Open Sens Analysis Results"), "", tr("Images (*.png)"));
+
+    //Get the valid types supported by the image viewer
+     QStringList mimeTypeFilters =ImageViewer::compatibleMIMETypes();
+     // Initialize the QFileDialog instance to ask the user for a file
+     QFileDialog dialog(this, tr("Open File"));
+     dialog.setMimeTypeFilters(mimeTypeFilters);
+     dialog.selectMimeTypeFilter("image/png");
+     // Ask for file path using dialog
+     dialog.exec();
+     QString filePath = dialog.selectedFiles().first();
+
     // Check if the user selected a file or if they clicked cancel
     if (!filePath.isNull()){
         // Initialize Results dialog

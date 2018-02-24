@@ -12,6 +12,7 @@ class ImageViewer : public QDialog
 
 public:
     ImageViewer(QString filePath, QWidget *parent = 0);
+    static QStringList compatibleMIMETypes();
 
 private:
     bool loadFile(const QString &);
