@@ -70,3 +70,19 @@ void OMSens::on_actionOpen_Sens_Analysis_Result_triggered()
         mpSensResult->exec();
     }
 }
+
+void OMSens::on_actionRun_Curvi_Sens_Script_triggered()
+{
+    QString testFilePath = QFileDialog::getOpenFileName(this,tr("Open Curvi Sens Script"), "", tr("Curvi Sens script(*.txt)"));
+    QString curviSensOutputPath = QString("/tmp/curviOutput_omedit.csv");
+    QString curviSensBinPath = "/home/adanos/Documents/repos/tesis-work/modelica_scripts/fortran/curvi";
+    QString command = QString(curviSensBinPath) + " " + testFilePath + " " + curviSensOutputPath;
+    QFileInfo curviSensFileInfo = QFileInfo(curviSensBinPath);
+    QDir      fileDir          = curviSensFileInfo.canonicalPath();
+    QString fileDirPath        = fileDir.canonicalPath();
+    bool currentDirChangeSuccessful = QDir::setCurrent(fileDirPath);
+    if (currentDirChangeSuccessful)
+    {
+        system(qPrintable(command));
+    }
+}
