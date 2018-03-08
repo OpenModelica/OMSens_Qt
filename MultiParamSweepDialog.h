@@ -11,6 +11,7 @@
 #include <QTableWidget>
 
 
+class DualLists;
 class Label;
 class MultiParamSweepDialog : public QDialog
 {

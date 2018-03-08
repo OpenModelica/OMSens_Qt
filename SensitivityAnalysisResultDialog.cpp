@@ -6,7 +6,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QHeaderView>
-#include <TableItemDelegate.h>
+#include "TableItemDelegate.h"
 
 SensitivityAnalysisResultDialog::SensitivityAnalysisResultDialog(QString filePath, QWidget *parent) : QDialog(parent)
 {

@@ -12,6 +12,7 @@
 #include "DualLists.h"
 #include "model.h"
 
+class DualLists;
 class Label;
 class CURVISensAnalysisDialog : public QDialog
 {
