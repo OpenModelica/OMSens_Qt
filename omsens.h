@@ -27,6 +27,7 @@ private slots:
 
     void on_actionOpen_Sens_Analysis_Result_triggered();
 
+    void on_actionRun_Curvi_Sens_Script_triggered();
     void on_actionOpen_Sens_Analysis_Image_triggered();
 
 private:

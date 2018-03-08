@@ -71,9 +71,24 @@ void OMSens::on_actionOpen_Sens_Analysis_Result_triggered()
     }
 }
 
+void OMSens::on_actionRun_Curvi_Sens_Script_triggered()
+{
+    QString testFilePath = QFileDialog::getOpenFileName(this,tr("Open Curvi Sens Script"), "", tr("Curvi Sens script(*.txt)"));
+    QString curviSensOutputPath = QString("/tmp/curviOutput_omedit.csv");
+    QString curviSensBinPath = "/home/adanos/Documents/repos/tesis-work/modelica_scripts/fortran/curvi";
+    QString command = QString(curviSensBinPath) + " " + testFilePath + " " + curviSensOutputPath;
+    QFileInfo curviSensFileInfo = QFileInfo(curviSensBinPath);
+    QDir      fileDir          = curviSensFileInfo.canonicalPath();
+    QString fileDirPath        = fileDir.canonicalPath();
+    bool currentDirChangeSuccessful = QDir::setCurrent(fileDirPath);
+    if (currentDirChangeSuccessful)
+    {
+        system(qPrintable(command));
+    }
+}
+
 void OMSens::on_actionOpen_Sens_Analysis_Image_triggered()
 {
-
     //Get the valid types supported by the image viewer
      QStringList mimeTypeFilters =ImageViewer::compatibleMIMETypes();
      // Initialize the QFileDialog instance to ask the user for a file
@@ -90,5 +105,4 @@ void OMSens::on_actionOpen_Sens_Analysis_Image_triggered()
         ImageViewer *pImageViewer = new ImageViewer(filePath);
         pImageViewer->exec();
     }
-
 }

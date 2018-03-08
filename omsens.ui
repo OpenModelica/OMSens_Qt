@@ -32,6 +32,7 @@
     <addaction name="actionMultiparam_Sweep"/>
     <addaction name="separator"/>
     <addaction name="actionRun_Script"/>
+    <addaction name="actionRun_Curvi_Sens_Script"/>
     <addaction name="actionOpen_Sens_Analysis_Result"/>
     <addaction name="actionOpen_Sens_Analysis_Image"/>
    </widget>
@@ -63,12 +64,17 @@
   </action>
   <action name="actionRun_Script">
    <property name="text">
-    <string>Run Script</string>
+    <string>Run Emp Sens Script</string>
    </property>
   </action>
   <action name="actionOpen_Sens_Analysis_Result">
    <property name="text">
     <string>Open Sens Analysis Result</string>
+   </property>
+  </action>
+  <action name="actionRun_Curvi_Sens_Script">
+   <property name="text">
+    <string>Run Curvi Sens Script</string>
    </property>
   </action>
   <action name="actionOpen_Sens_Analysis_Image">
