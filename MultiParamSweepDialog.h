@@ -41,11 +41,11 @@ private:
     static const int perturbationColNum = 2;
     static const int removeRowButtonColNum = 3;
     // Forms min, max, default values
-    static const double defaultTime= 2000;
-    static const double maxTargetTime= 5000;
+    static constexpr double defaultTime= 2000;
+    static constexpr double maxTargetTime= 5000;
     static const int maxNumberOfIterations= 50000;
-    static const double minPerturbationPercentage= -100;
-    static const double maxPerturbationPercentage= 100;
+    static constexpr double minPerturbationPercentage= -100;
+    static constexpr double maxPerturbationPercentage= 100;
 
     // Auxs:
     void initializeWindowSettings();

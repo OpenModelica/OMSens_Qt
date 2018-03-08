@@ -1,6 +1,6 @@
 // Ours
 #include "CURVISensAnalysisDialog.h"
-#include "utilities.h"
+#include "Util/Utilities.h"
 #include "DualLists.h"
 
 // Qt

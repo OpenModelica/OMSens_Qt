@@ -32,7 +32,7 @@
  * @author Adeel Asghar <adeel.asghar@liu.se>
  */
 
-#include "utilities.h"
+#include "Util/Utilities.h"
 
 
 #include <QApplication>

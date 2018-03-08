@@ -5,6 +5,7 @@
 #-------------------------------------------------
 
 QT       += core gui
+CONFIG += c++11 # compile using c++11 like in OMEdit
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
@@ -27,25 +28,25 @@ SOURCES += \
         main.cpp \
         omsens.cpp \
     EmpSensAnalysisDialog.cpp \
-    utilities.cpp \
     CURVISensAnalysisDialog.cpp \
     DualLists.cpp \
     MultiParamSweepDialog.cpp \
     model.cpp \
     SensitivityAnalysisResultDialog.cpp \
-    ImageViewer.cpp
+    ImageViewer.cpp \
+    Util/Utilities.cpp
 
 HEADERS += \
         omsens.h \
     EmpSensAnalysisDialog.h \
-    utilities.h \
     CURVISensAnalysisDialog.h \
     DualLists.h \
     MultiParamSweepDialog.h \
     model.h \
     SensitivityAnalysisResultDialog.h \
     TableItemDelegate.h \
-    ImageViewer.h
+    ImageViewer.h \
+    Util/Utilities.h
 
 FORMS += \
         omsens.ui

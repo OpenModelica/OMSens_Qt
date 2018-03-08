@@ -1,6 +1,6 @@
 #include "EmpSensAnalysisDialog.h"
 #include "model.h"
-#include "utilities.h"
+#include "Util/Utilities.h"
 #include <QMessageBox>
 #include <QLabel>
 #include <QFrame>

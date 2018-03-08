@@ -1,7 +1,7 @@
 #include "DualLists.h"
 #include "model.h"
 #include "MultiParamSweepDialog.h"
-#include "utilities.h"
+#include "Util/Utilities.h"
 #include <QGridLayout>
 #include <QHeaderView>
 #include <QSizePolicy>
