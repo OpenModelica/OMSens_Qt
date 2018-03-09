@@ -19,7 +19,7 @@ class CURVISensAnalysisDialog : public QDialog
     Q_OBJECT
 public:
     CURVISensAnalysisDialog(Model model, QWidget *pParent = 0);
-    
+
 private:
     // Model information members
     Model model;
@@ -52,7 +52,7 @@ private:
     void initializeParameterForms();
     void initializeTimeForms(const double defaultTime, const double maxTargetTime);
     void initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage);
-    
+
 signals:
 
 private slots:

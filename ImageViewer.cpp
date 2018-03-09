@@ -69,7 +69,7 @@ QStringList ImageViewer::compatibleMIMETypes()
 // Static methods (class methods)
     // Get the valid MIME types compatible with ImageViewer
     QStringList mimeTypeFilters;
-    const QByteArrayList supportedMimeTypes = QImageReader::supportedMimeTypes();
+    const QList< QByteArray> supportedMimeTypes = QImageReader::supportedMimeTypes();
     foreach (const QByteArray &mimeTypeName, supportedMimeTypes)
         mimeTypeFilters.append(mimeTypeName);
     mimeTypeFilters.sort();
