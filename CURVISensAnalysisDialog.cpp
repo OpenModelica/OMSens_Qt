@@ -34,7 +34,7 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(Model model, QWidget *pParent) 
 
 void CURVISensAnalysisDialog::initializeWindowSettings()
 {
-    setWindowTitle("Parameter Sensitivity Analysis - Empirical Indices");
+    setWindowTitle("Parameter Sensitivity Analysis - Vectorial Parameter Based Sensitivity Analysis");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
 }
@@ -42,7 +42,7 @@ void CURVISensAnalysisDialog::initializeWindowSettings()
 void CURVISensAnalysisDialog::setHeading()
 {
     // set dialog heading
-    mpHeading = Utilities::getHeadingLabel("CURVI Sensitivity Analysis");
+    mpHeading = Utilities::getHeadingLabel("Vectorial Parameter Based Sensitivity Analysis");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();
 }

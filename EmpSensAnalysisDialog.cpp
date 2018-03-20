@@ -19,8 +19,8 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
     const double min_perturbation_perc= -100;
     // Emp Analysis Information:
     const QVector<QString> indices( QVector<QString>()
-                                   << "Relative index"
-                                   << "Root Mean Square index");
+                                   << "Relative"
+                                   << "Root Mean Square");
     initializeWindowSettings();
     setHeading();
     initializeFormInputsAndLabels(min_perturbation_perc, max_perturbation_perc, max_target_time, indices);
@@ -34,7 +34,7 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
 
 void EmpSensAnalysisDialog::initializeWindowSettings()
 {
-    setWindowTitle("Parameter Sensitivity Analysis - Empirical Indices");
+    setWindowTitle("Parameter Sensitivity Analysis - Individual Parameter Based Sensitivity Analysis");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
 }
@@ -42,7 +42,7 @@ void EmpSensAnalysisDialog::initializeWindowSettings()
 void EmpSensAnalysisDialog::setHeading()
 {
     // set dialog heading
-    mpHeading = Utilities::getHeadingLabel("Empirical Sensitivity Analysis");
+    mpHeading = Utilities::getHeadingLabel("Individual Parameter Based Sensitivity Analysis");
     // set separator line
     mpHorizontalLine = Utilities::getHeadingLine();
 }
@@ -72,10 +72,10 @@ void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_pertu
         mpVariableComboBox->addItem(outputVariables[i_vars], QVariant(i_vars));
     }
 
-    mpIndexLabel = new Label(tr("Index:"));
+    mpIndexLabel = new Label(tr("Method:"));
     mpIndicesButtonGoup = new QButtonGroup();
     mpRelRadio = new QRadioButton(tr(qPrintable(indices[0])),this);
-    mpRelRadio->toggle(); //This index start selected by default
+    mpRelRadio->toggle(); //This method starts selected by default
     mpRMSRadio = new QRadioButton(tr(qPrintable(indices[1])),this);
     mpIndicesButtonGoup->addButton(mpRelRadio, 0);
     mpIndicesButtonGoup->addButton(mpRMSRadio, 1);
