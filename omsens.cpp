@@ -25,14 +25,14 @@ OMSens::~OMSens()
 
 void OMSens::on_actionEmpirical_Indices_triggered()
 {
-    EmpSensAnalysisDialog *empiricalDialog = new EmpSensAnalysisDialog(model);
-    empiricalDialog->exec();
+  IndivParamSensAnalysisDialog *indivDialog = new IndivParamSensAnalysisDialog(model);
+  indivDialog->exec();
 }
 
 void OMSens::on_actionCURVI_Sens_triggered()
 {
-    CURVISensAnalysisDialog *curviDialog = new CURVISensAnalysisDialog(model);
-    curviDialog->exec();
+  vectorialSensAnalysisDialog *vectorialDialog = new vectorialSensAnalysisDialog(model);
+  vectorialDialog->exec();
 }
 
 void OMSens::on_actionMultiparam_Sweep_triggered()

@@ -10,14 +10,14 @@
 #include <iostream>
 // BORRAR^
 
-EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
+IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model,QWidget *pParent)
   : QDialog(pParent), model(model)
 {
     // Function parameters
     const double max_target_time= 5000;
     const double max_perturbation_perc= 100;
     const double min_perturbation_perc= -100;
-    // Emp Analysis Information:
+    // Indiv Param Analysis Information:
     const QVector<QString> methods( QVector<QString>()
                                    << "Relative"
                                    << "Root Mean Square");
@@ -32,14 +32,14 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
 }
 
 
-void EmpSensAnalysisDialog::initializeWindowSettings()
+void IndivParamSensAnalysisDialog::initializeWindowSettings()
 {
     setWindowTitle("Parameter Sensitivity Analysis - Individual Parameter Based Sensitivity Analysis");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
 }
 
-void EmpSensAnalysisDialog::setHeading()
+void IndivParamSensAnalysisDialog::setHeading()
 {
     // set dialog heading
     mpHeading = Utilities::getHeadingLabel("Individual Parameter Based Sensitivity Analysis");
@@ -47,15 +47,15 @@ void EmpSensAnalysisDialog::setHeading()
     mpHorizontalLine = Utilities::getHeadingLine();
 }
 
-void EmpSensAnalysisDialog::initializeButton()
+void IndivParamSensAnalysisDialog::initializeButton()
 {
     // create OK button
     mpRunButton = new QPushButton("Ok");
     mpRunButton->setAutoDefault(true);
-    connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
+    connect(mpRunButton, SIGNAL(clicked()), SLOT(runIndivParamSensAnalysis()));
 }
 
-void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time,  const QVector<QString> methods )
+void IndivParamSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time,  const QVector<QString> methods )
 {
     // User inputs
     mpPercentageLabel = new Label(tr("Percentage:"));
@@ -87,7 +87,7 @@ void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_pertu
 
 }
 
-QGridLayout * EmpSensAnalysisDialog::initializeLayout()
+QGridLayout * IndivParamSensAnalysisDialog::initializeLayout()
 {
     // set grid layout
     QGridLayout *pMainLayout = new QGridLayout;
@@ -96,7 +96,7 @@ QGridLayout * EmpSensAnalysisDialog::initializeLayout()
     return pMainLayout;
 }
 
-void EmpSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
+void IndivParamSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
 {
     pMainLayout->addWidget(mpHeading, 0, 0, 1, 3);
     pMainLayout->addWidget(mpHorizontalLine, 1, 0, 1, 3);
@@ -114,7 +114,7 @@ void EmpSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
 }
 
 
-void EmpSensAnalysisDialog::runEmpSensAnalysis()
+void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
 {
     std::cout << "Values chosen:" << std::endl;
     std::cout << " Percentage: " << mpPercentageBox->value() << std::endl;

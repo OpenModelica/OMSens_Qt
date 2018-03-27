@@ -13,7 +13,7 @@
 #include <iostream>
 // BORRAR^
 
-CURVISensAnalysisDialog::CURVISensAnalysisDialog(Model model, QWidget *pParent) :
+vectorialSensAnalysisDialog::vectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   QDialog(pParent), model(model)
 {
     // Function parameters
@@ -32,14 +32,14 @@ CURVISensAnalysisDialog::CURVISensAnalysisDialog(Model model, QWidget *pParent) 
     setLayout(pMainLayout);
 }
 
-void CURVISensAnalysisDialog::initializeWindowSettings()
+void vectorialSensAnalysisDialog::initializeWindowSettings()
 {
     setWindowTitle("Parameter Sensitivity Analysis - Vectorial Parameter Based Sensitivity Analysis");
     setAttribute(Qt::WA_DeleteOnClose);
     setMinimumWidth(550);
 }
 
-void CURVISensAnalysisDialog::setHeading()
+void vectorialSensAnalysisDialog::setHeading()
 {
     // set dialog heading
     mpHeading = Utilities::getHeadingLabel("Vectorial Parameter Based Sensitivity Analysis");
@@ -47,7 +47,7 @@ void CURVISensAnalysisDialog::setHeading()
     mpHorizontalLine = Utilities::getHeadingLine();
 }
 
-void CURVISensAnalysisDialog::initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage)
+void vectorialSensAnalysisDialog::initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage)
 {
     mpLowerBoundLabel = new Label(tr("Lower Bound:"));
     mpLowerBoundBox = new QDoubleSpinBox;
@@ -61,7 +61,7 @@ void CURVISensAnalysisDialog::initializeUpperAndLowerBoundsForms(const double mi
     mpUpperBoundBox->setSuffix("%");
 }
 
-void CURVISensAnalysisDialog::initializeVarForms()
+void vectorialSensAnalysisDialog::initializeVarForms()
 {
     mpVariableLabel = new Label(tr("Target Variable:"));
     // The button group is purely backend specific. No effect on the GUI
@@ -80,7 +80,7 @@ void CURVISensAnalysisDialog::initializeVarForms()
     }
 }
 
-void CURVISensAnalysisDialog::initializeParameterForms()
+void vectorialSensAnalysisDialog::initializeParameterForms()
 {
     mpParameterLabel = new Label(tr("Parameters to perturb:"));
     // Dual Lists. On the left are the options to select and on the right the selected options
@@ -93,7 +93,7 @@ void CURVISensAnalysisDialog::initializeParameterForms()
 
 }
 
-void CURVISensAnalysisDialog::initializeTimeForms(const double defaultTime, const double maxTargetTime)
+void vectorialSensAnalysisDialog::initializeTimeForms(const double defaultTime, const double maxTargetTime)
 {
     mpTimeLabel = new Label(tr("Time:"));
     mpTimeBox = new QDoubleSpinBox;
@@ -101,7 +101,7 @@ void CURVISensAnalysisDialog::initializeTimeForms(const double defaultTime, cons
     mpTimeBox->setValue(defaultTime);
 }
 
-void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const double defaultTime, const double minPerturbationPercentage)
+void vectorialSensAnalysisDialog::initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const double defaultTime, const double minPerturbationPercentage)
 {
     initializeUpperAndLowerBoundsForms(minPerturbationPercentage, maxPerturbationPercentage);
     initializeVarForms();
@@ -109,15 +109,15 @@ void CURVISensAnalysisDialog::initializeFormInputsAndLabels(const double maxTarg
     initializeTimeForms(defaultTime, maxTargetTime);
 }
 
-void CURVISensAnalysisDialog::initializeButton()
+void vectorialSensAnalysisDialog::initializeButton()
 {
     // create OK button
     mpRunButton = new QPushButton("Ok");
     mpRunButton->setAutoDefault(true);
-    connect(mpRunButton, SIGNAL(clicked()), SLOT(runCURVISensAnalysis()));
+    connect(mpRunButton, SIGNAL(clicked()), SLOT(runVectorialParamSensAnalysis()));
 }
 
-QGridLayout * CURVISensAnalysisDialog::initializeLayout()
+QGridLayout * vectorialSensAnalysisDialog::initializeLayout()
 {
     // set grid layout
     QGridLayout *pMainLayout = new QGridLayout;
@@ -126,7 +126,7 @@ QGridLayout * CURVISensAnalysisDialog::initializeLayout()
     return pMainLayout;
 }
 
-void CURVISensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
+void vectorialSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
 {
     pMainLayout->addWidget(mpHeading, 0, 0, 1, 3);
     pMainLayout->addWidget(mpHorizontalLine, 1, 0, 1, 3);
@@ -146,7 +146,7 @@ void CURVISensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpRunButton, 10, 0, 1, 3, Qt::AlignRight);
 }
 
-void CURVISensAnalysisDialog::runCURVISensAnalysis()
+void vectorialSensAnalysisDialog::runVectorialParamSensAnalysis()
 {
     std::cout << "Values chosen:" << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;

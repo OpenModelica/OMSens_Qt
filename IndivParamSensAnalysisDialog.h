@@ -1,5 +1,5 @@
-#ifndef EMPSENSANALYSISDIALOG_H
-#define EMPSENSANALYSISDIALOG_H
+#ifndef INDIVPARAMSENSANALYSISDIALOG_H
+#define INDIVPARAMSENSANALYSISDIALOG_H
 #include "model.h"
 #include <QDialog>
 #include <QFrame>
@@ -11,11 +11,11 @@
 #include <QGridLayout>
 
 class Label;
-class EmpSensAnalysisDialog : public QDialog
+class IndivParamSensAnalysisDialog : public QDialog
 {
     Q_OBJECT
 public:
-    EmpSensAnalysisDialog(Model model, QWidget *pParent = 0);
+    IndivParamSensAnalysisDialog(Model model, QWidget *pParent = 0);
 
 private:
     // Model information members
@@ -48,7 +48,7 @@ private:
     QGridLayout * initializeLayout();
 
 private slots:
-  void runEmpSensAnalysis();
+  void runIndivParamSensAnalysis();
 };
 
-#endif // EMPSENSANALYSISDIALOG_H
+#endif // INDIVPARAMSENSANALYSISDIALOG_H

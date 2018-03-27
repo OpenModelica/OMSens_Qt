@@ -1,5 +1,5 @@
-#ifndef CURVISENSANALYSISDIALOG_H
-#define CURVISENSANALYSISDIALOG_H
+#ifndef VECTORIALPARAMSENSANALYSISDIALOG_H
+#define VECTORIALPARAMSENSANALYSISDIALOG_H
 
 #include <QDialog>
 #include <QFrame>
@@ -14,11 +14,11 @@
 
 class DualLists;
 class Label;
-class CURVISensAnalysisDialog : public QDialog
+class vectorialSensAnalysisDialog : public QDialog
 {
     Q_OBJECT
 public:
-    CURVISensAnalysisDialog(Model model, QWidget *pParent = 0);
+    vectorialSensAnalysisDialog(Model model, QWidget *pParent = 0);
 
 private:
     // Model information members
@@ -56,7 +56,7 @@ private:
 signals:
 
 private slots:
-    void runCURVISensAnalysis();
+    void runVectorialParamSensAnalysis();
 };
 
-#endif // CURVISENSANALYSISDIALOG_H
+#endif // VECTORIALPARAMSENSANALYSISDIALOG_H
