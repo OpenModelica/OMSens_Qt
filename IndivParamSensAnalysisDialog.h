@@ -27,8 +27,8 @@ private:
     QDoubleSpinBox *mpPercentageBox;
     Label *mpVariableLabel;
     QComboBox *mpVariableComboBox;
-    Label *mpIndexLabel;
-    QButtonGroup *mpIndicesButtonGoup;
+    Label *mpMethodLabel;
+    QButtonGroup *mpMethodsButtonGroup;
     QRadioButton *mpRelRadio;
     QRadioButton *mpRMSRadio;
     QPushButton *mpRunButton;
@@ -39,7 +39,7 @@ private:
 
     void setHeading();
 
-    void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time, const QVector<QString> indices);
+    void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time, const QVector<QString> methods);
 
     void initializeButton();
 

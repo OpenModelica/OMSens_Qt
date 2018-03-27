@@ -1,4 +1,4 @@
-#include "EmpSensAnalysisDialog.h"
+#include "IndivParamSensAnalysisDialog.h"
 #include "model.h"
 #include "Util/Utilities.h"
 #include <QMessageBox>
@@ -18,12 +18,12 @@ EmpSensAnalysisDialog::EmpSensAnalysisDialog(Model model,QWidget *pParent)
     const double max_perturbation_perc= 100;
     const double min_perturbation_perc= -100;
     // Emp Analysis Information:
-    const QVector<QString> indices( QVector<QString>()
+    const QVector<QString> methods( QVector<QString>()
                                    << "Relative"
                                    << "Root Mean Square");
     initializeWindowSettings();
     setHeading();
-    initializeFormInputsAndLabels(min_perturbation_perc, max_perturbation_perc, max_target_time, indices);
+    initializeFormInputsAndLabels(min_perturbation_perc, max_perturbation_perc, max_target_time, methods);
     initializeButton();
     QGridLayout *pMainLayout = initializeLayout();
     addWidgetsToLayout(pMainLayout);
@@ -55,7 +55,7 @@ void EmpSensAnalysisDialog::initializeButton()
     connect(mpRunButton, SIGNAL(clicked()), SLOT(runEmpSensAnalysis()));
 }
 
-void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time,  const QVector<QString> indices )
+void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time,  const QVector<QString> methods )
 {
     // User inputs
     mpPercentageLabel = new Label(tr("Percentage:"));
@@ -72,13 +72,13 @@ void EmpSensAnalysisDialog::initializeFormInputsAndLabels(const double min_pertu
         mpVariableComboBox->addItem(outputVariables[i_vars], QVariant(i_vars));
     }
 
-    mpIndexLabel = new Label(tr("Method:"));
-    mpIndicesButtonGoup = new QButtonGroup();
-    mpRelRadio = new QRadioButton(tr(qPrintable(indices[0])),this);
+    mpMethodLabel = new Label(tr("Method:"));
+    mpMethodsButtonGroup = new QButtonGroup();
+    mpRelRadio = new QRadioButton(tr(qPrintable(methods[0])),this);
     mpRelRadio->toggle(); //This method starts selected by default
-    mpRMSRadio = new QRadioButton(tr(qPrintable(indices[1])),this);
-    mpIndicesButtonGoup->addButton(mpRelRadio, 0);
-    mpIndicesButtonGoup->addButton(mpRMSRadio, 1);
+    mpRMSRadio = new QRadioButton(tr(qPrintable(methods[1])),this);
+    mpMethodsButtonGroup->addButton(mpRelRadio, 0);
+    mpMethodsButtonGroup->addButton(mpRMSRadio, 1);
 
     mpTimeLabel = new Label(tr("Time:"));
     mpTimeBox = new QDoubleSpinBox;
@@ -104,7 +104,7 @@ void EmpSensAnalysisDialog::addWidgetsToLayout(QGridLayout *pMainLayout)
     pMainLayout->addWidget(mpPercentageBox, 2, 1);
     pMainLayout->addWidget(mpVariableLabel, 5, 0);
     pMainLayout->addWidget(mpVariableComboBox, 5, 1, 1, 2);
-    pMainLayout->addWidget(mpIndexLabel, 6, 0);
+    pMainLayout->addWidget(mpMethodLabel, 6, 0);
     pMainLayout->addWidget(mpRelRadio, 6, 1);
     pMainLayout->addWidget(mpRMSRadio, 6, 2);
     pMainLayout->addWidget(mpTimeLabel, 7, 0);
@@ -119,7 +119,7 @@ void EmpSensAnalysisDialog::runEmpSensAnalysis()
     std::cout << "Values chosen:" << std::endl;
     std::cout << " Percentage: " << mpPercentageBox->value() << std::endl;
     std::cout << " Variable i: " << mpVariableComboBox->currentIndex() << std::endl;
-    std::cout << " Index i: " << mpIndicesButtonGoup->checkedId() << std::endl;
+    std::cout << " Method i: " << mpMethodsButtonGroup->checkedId() << std::endl;
     std::cout << " Time: " << mpTimeBox->value() << std::endl;
     accept();
 }

@@ -2,8 +2,8 @@
 #include "ui_omsens.h"
 #include "model.h"
 
-#include <EmpSensAnalysisDialog.h>
-#include <CURVISensAnalysisDialog.h>
+#include <IndivParamSensAnalysisDialog.h>
+#include <VectorialParamSensAnalysisDialog.h>
 #include <MultiParamSweepDialog.h>
 #include <SensitivityAnalysisResultDialog.h>
 #include <ImageViewer.h>

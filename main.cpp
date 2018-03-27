@@ -1,7 +1,7 @@
 #include "omsens.h"
-#include <EmpSensAnalysisDialog.h>
+#include <IndivParamSensAnalysisDialog.h>
 #include <MultiParamSweepDialog.h>
-#include <CURVISensAnalysisDialog.h>
+#include <VectorialParamSensAnalysisDialog.h>
 
 #include <QApplication>
 #include <QLabel>

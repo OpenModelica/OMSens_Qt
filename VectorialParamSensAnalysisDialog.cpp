@@ -1,5 +1,5 @@
 // Ours
-#include "CURVISensAnalysisDialog.h"
+#include "VectorialParamSensAnalysisDialog.h"
 #include "Util/Utilities.h"
 #include "DualLists.h"
 

@@ -27,26 +27,26 @@ DEFINES += QT_DEPRECATED_WARNINGS
 SOURCES += \
         main.cpp \
         omsens.cpp \
-    EmpSensAnalysisDialog.cpp \
-    CURVISensAnalysisDialog.cpp \
     DualLists.cpp \
     MultiParamSweepDialog.cpp \
     model.cpp \
     SensitivityAnalysisResultDialog.cpp \
     ImageViewer.cpp \
-    Util/Utilities.cpp
+    Util/Utilities.cpp \
+    IndivParamSensAnalysisDialog.cpp \
+    VectorialParamSensAnalysisDialog.cpp
 
 HEADERS += \
         omsens.h \
-    EmpSensAnalysisDialog.h \
-    CURVISensAnalysisDialog.h \
     DualLists.h \
     MultiParamSweepDialog.h \
     model.h \
     SensitivityAnalysisResultDialog.h \
     TableItemDelegate.h \
     ImageViewer.h \
-    Util/Utilities.h
+    Util/Utilities.h \
+    IndivParamSensAnalysisDialog.h \
+    VectorialParamSensAnalysisDialog.h
 
 FORMS += \
         omsens.ui
