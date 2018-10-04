@@ -11,7 +11,7 @@ class IndivSensAnalTypeDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit IndivSensAnalTypeDialog(Model *pModel, QWidget *parent = 0);
+    explicit IndivSensAnalTypeDialog(Model model, QWidget *parent = 0);
     // Members
     bool choseW3InsteadOfOpenModel;
 

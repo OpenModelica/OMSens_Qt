@@ -49,21 +49,7 @@ void OMSensDialog::runIndivSensAnalysis()
 {
   // Hide this dialog before opening the new one
   hide();
-  // Check if there's an active model in the OMEdit editor
-  bool isThereAnActiveModel = true;
-  Model *pModel; // Needs to be added to the heap
-  IndivSensAnalTypeDialog *analysisTypeDialog; // needs to be extracted from the "if" and freed at the end of the function
-  if(isThereAnActiveModel){
-      // Get the OMSens model from the OMEdit information abount the open model
-      pModel = &mModel;
-      analysisTypeDialog = new IndivSensAnalTypeDialog(pModel,this);
-  }
-  else
-  {
-      // There's not an active model so initialize the pointer with 0
-      pModel = 0;
-      analysisTypeDialog = new IndivSensAnalTypeDialog(pModel,this);
-  }
+  IndivSensAnalTypeDialog * analysisTypeDialog = new IndivSensAnalTypeDialog(mModel,this);
   // Ask the user if they want to run a sample or define an analysis by themselves
   int dialogCodeFirstDialog = analysisTypeDialog->exec();
   if(dialogCodeFirstDialog == QDialog::Accepted)
@@ -176,75 +162,73 @@ void OMSensDialog::runMultiParameterSweep()
   // Hide this dialog before opening the new one
   hide();
   // Check if there's an active model in the OMEdit editor
-  bool isThereAnActiveModel = true;
-  if(isThereAnActiveModel){
-      // Get the OMSens model from the OMEdit information abount the open model
-      MultiParamSweepDialog *sweepDialog = new MultiParamSweepDialog(mModel,this);
-      int dialogCode  = sweepDialog->exec();
-      if(dialogCode == QDialog::Accepted)
-      {   // Get user inputs from dialog
-          QJsonObject runSpecifications = sweepDialog->getRunSpecifications();
-          QString destFolderPath = sweepDialog->getDestFolderPath();
-          // Make timestamp subfolder in dest folder path
-          QDateTime currentTime = QDateTime::currentDateTime();
-          QString date = currentTime.toString("dd-MM-yyyy");
-          QString h_m_s = currentTime.toString("H_m_s");
-          QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
-          QDir timestampFolderPathDir(timeStampFolderPath);
-          if (!timestampFolderPathDir.exists()){
-            timestampFolderPathDir.mkpath(".");
-          }
-          // Write JSON to disk
-          QString jsonSpecsName = "experiment_specs.json";
-          QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
-          // Save analysis specifications to disk
-          QJsonDocument runSpecificationsDoc(runSpecifications);
-          QFile runSpecificationsFile(jsonSpecsPath);
-          if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
-          {
-              runSpecificationsFile.write(runSpecificationsDoc.toJson());
-              runSpecificationsFile.close();
-          }
-          // Make sub-folder where the results will be written
-          QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
-          QDir resultsFolderPathDir(resultsFolderPath);
-          if (!resultsFolderPathDir.exists()){
-            resultsFolderPathDir.mkpath(".");
-          }
-          // Run sweep
-          QString scriptPath = "/home/omsens/Documents/OMSens/multiparam_sweep.py" ;
-          QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
-          QString scriptDestPathFlag = "--dest_folder_path";
-          QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
-          QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
-          QFileInfo scriptFileInfo = QFileInfo(scriptPath);
-          QDir      scriptDir          = scriptFileInfo.canonicalPath();
-          QString scriptDirPath        = scriptDir.canonicalPath();
-          bool currentDirChangeSuccessful = QDir::setCurrent(scriptDirPath);
-          if (currentDirChangeSuccessful)
-          {
-              system(qPrintable(command));
-          }
-          // Read JSON in results folder with the paths to the results of the script
-          QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + "paths.json");
-          // Read JSON file into string
-          QString val;
-          QFile jsonPathsQFile;
-          jsonPathsQFile.setFileName(analysisResultsJSONPath);
-          jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-          val = jsonPathsQFile.readAll();
-          jsonPathsQFile.close();
-          // Parse string into json document
-          QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
-          // Initialize results instance with JSON document
-          SweepResultsDialog *resultsDialog = new SweepResultsDialog(jsonPathsDocument,this);
-          resultsDialog->show();
+  // Get the OMSens model from the OMEdit information abount the open model
+  MultiParamSweepDialog *sweepDialog = new MultiParamSweepDialog(mModel,this);
+  int dialogCode  = sweepDialog->exec();
+  if(dialogCode == QDialog::Accepted)
+  {   // Get user inputs from dialog
+      QJsonObject runSpecifications = sweepDialog->getRunSpecifications();
+      QString destFolderPath = sweepDialog->getDestFolderPath();
+      // Make timestamp subfolder in dest folder path
+      QDateTime currentTime = QDateTime::currentDateTime();
+      QString date = currentTime.toString("dd-MM-yyyy");
+      QString h_m_s = currentTime.toString("H_m_s");
+      QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
+      QDir timestampFolderPathDir(timeStampFolderPath);
+      if (!timestampFolderPathDir.exists()){
+        timestampFolderPathDir.mkpath(".");
       }
-      // If the user pressed the "Cancel" button, do nothing for now
-      if(dialogCode == QDialog::Rejected) {
-          // Cancel button clicked
+      // Write JSON to disk
+      QString jsonSpecsName = "experiment_specs.json";
+      QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
+      // Save analysis specifications to disk
+      QJsonDocument runSpecificationsDoc(runSpecifications);
+      QFile runSpecificationsFile(jsonSpecsPath);
+      if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
+      {
+          runSpecificationsFile.write(runSpecificationsDoc.toJson());
+          runSpecificationsFile.close();
       }
-   }
+      // Make sub-folder where the results will be written
+      QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
+      QDir resultsFolderPathDir(resultsFolderPath);
+      if (!resultsFolderPathDir.exists()){
+        resultsFolderPathDir.mkpath(".");
+      }
+      // Run sweep
+      QString scriptPath = "/home/omsens/Documents/OMSens/multiparam_sweep.py" ;
+      QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
+      QString scriptDestPathFlag = "--dest_folder_path";
+      QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
+      QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
+      QFileInfo scriptFileInfo = QFileInfo(scriptPath);
+      QDir      scriptDir          = scriptFileInfo.canonicalPath();
+      QString scriptDirPath        = scriptDir.canonicalPath();
+      bool currentDirChangeSuccessful = QDir::setCurrent(scriptDirPath);
+      if (currentDirChangeSuccessful)
+      {
+          system(qPrintable(command));
+      }
+      // Read JSON in results folder with the paths to the results of the script
+      QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + "paths.json");
+      // Read JSON file into string
+      QString val;
+      QFile jsonPathsQFile;
+      jsonPathsQFile.setFileName(analysisResultsJSONPath);
+      jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
+      val = jsonPathsQFile.readAll();
+      jsonPathsQFile.close();
+      // Parse string into json document
+      QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
+      // Initialize results instance with JSON document
+      SweepResultsDialog *resultsDialog = new SweepResultsDialog(jsonPathsDocument,this);
+      resultsDialog->show();
+  }
+  // If the user pressed the "Cancel" button, do nothing for now
+  if(dialogCode == QDialog::Rejected) {
+      // Cancel button clicked
+  }
+
   // Close OMSens dialog
   accept();
 }
@@ -253,80 +237,78 @@ void OMSensDialog::runVectorialSensAnalysis()
   // Hide this dialog before opening the new one
   hide();
   // Check if there's an active model in the OMEdit editor
-  bool isThereAnActiveModel = true;
-  if(isThereAnActiveModel){
-      // Get the OMSens model from the OMEdit information abount the open model
-      VectorialSensAnalysisDialog *vectDialog = new VectorialSensAnalysisDialog(mModel,this);
-      int dialogCode  = vectDialog->exec();
-      if(dialogCode == QDialog::Accepted)
-      {   // Get user inputs from dialog
-          QJsonObject runSpecifications = vectDialog->getRunSpecifications();
-          QString destFolderPath = vectDialog->getDestFolderPath();
-          // Make timestamp subfolder in dest folder path
-          QDateTime currentTime = QDateTime::currentDateTime();
-          QString date = currentTime.toString("dd-MM-yyyy");
-          QString h_m_s = currentTime.toString("H_m_s");
-          QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
-          QDir timestampFolderPathDir(timeStampFolderPath);
-          if (!timestampFolderPathDir.exists()){
-            timestampFolderPathDir.mkpath(".");
-          }
-          // Write JSON to disk
-          QString jsonSpecsName = "experiment_specs.json";
-          QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
-          // Save analysis specifications to disk
-          QJsonDocument runSpecificationsDoc(runSpecifications);
-          QFile runSpecificationsFile(jsonSpecsPath);
-          if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
-          {
-              runSpecificationsFile.write(runSpecificationsDoc.toJson());
-              runSpecificationsFile.close();
-          }
-          // Make sub-folder where the results will be written
-          QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
-          QDir resultsFolderPathDir(resultsFolderPath);
-          if (!resultsFolderPathDir.exists()){
-            resultsFolderPathDir.mkpath(".");
-          }
-          // Run vectorial analysis
-          QString scriptPath = "/home/omsens/Documents/OMSens/vectorial_analysis.py" ;
-          QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
-          QString scriptDestPathFlag = "--dest_folder_path";
-          QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
-          QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
-          QFileInfo scriptFileInfo = QFileInfo(scriptPath);
-          QDir      scriptDir          = scriptFileInfo.canonicalPath();
-          QString scriptDirPath        = scriptDir.canonicalPath();
-          bool currentDirChangeSuccessful = QDir::setCurrent(scriptDirPath);
-          if (currentDirChangeSuccessful)
-          {
-              system(qPrintable(command));
-          }
-          // Read JSON in results folder with the paths to the results of the script
-          QString resultsFileName = "optim_results.json";
-          QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
-          // Read JSON file into string
-          QString val;
-          QFile jsonPathsQFile;
-          jsonPathsQFile.setFileName(analysisResultsJSONPath);
-          jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-          val = jsonPathsQFile.readAll();
-          jsonPathsQFile.close();
-          // Parse string into json document
-          QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
-          // Initialize results instance with JSON document
-          VectorialResultsDialog *resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
-          resultsDialog->show();
+  // Get the OMSens model from the OMEdit information abount the open model
+  VectorialSensAnalysisDialog *vectDialog = new VectorialSensAnalysisDialog(mModel,this);
+  int dialogCode  = vectDialog->exec();
+  if(dialogCode == QDialog::Accepted)
+  {   // Get user inputs from dialog
+      QJsonObject runSpecifications = vectDialog->getRunSpecifications();
+      QString destFolderPath = vectDialog->getDestFolderPath();
+      // Make timestamp subfolder in dest folder path
+      QDateTime currentTime = QDateTime::currentDateTime();
+      QString date = currentTime.toString("dd-MM-yyyy");
+      QString h_m_s = currentTime.toString("H_m_s");
+      QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
+      QDir timestampFolderPathDir(timeStampFolderPath);
+      if (!timestampFolderPathDir.exists()){
+        timestampFolderPathDir.mkpath(".");
       }
-      // If the user pressed the "Cancel" button, do nothing for now
-      if(dialogCode == QDialog::Rejected) {
-          // Cancel button clicked
+      // Write JSON to disk
+      QString jsonSpecsName = "experiment_specs.json";
+      QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
+      // Save analysis specifications to disk
+      QJsonDocument runSpecificationsDoc(runSpecifications);
+      QFile runSpecificationsFile(jsonSpecsPath);
+      if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
+      {
+          runSpecificationsFile.write(runSpecificationsDoc.toJson());
+          runSpecificationsFile.close();
       }
-   }
+      // Make sub-folder where the results will be written
+      QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
+      QDir resultsFolderPathDir(resultsFolderPath);
+      if (!resultsFolderPathDir.exists()){
+        resultsFolderPathDir.mkpath(".");
+      }
+      // Run vectorial analysis
+      QString scriptPath = "/home/omsens/Documents/OMSens/vectorial_analysis.py" ;
+      QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
+      QString scriptDestPathFlag = "--dest_folder_path";
+      QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
+      QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
+      QFileInfo scriptFileInfo = QFileInfo(scriptPath);
+      QDir      scriptDir          = scriptFileInfo.canonicalPath();
+      QString scriptDirPath        = scriptDir.canonicalPath();
+      bool currentDirChangeSuccessful = QDir::setCurrent(scriptDirPath);
+      if (currentDirChangeSuccessful)
+      {
+          system(qPrintable(command));
+      }
+      // Read JSON in results folder with the paths to the results of the script
+      QString resultsFileName = "optim_results.json";
+      QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
+      // Read JSON file into string
+      QString val;
+      QFile jsonPathsQFile;
+      jsonPathsQFile.setFileName(analysisResultsJSONPath);
+      jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
+      val = jsonPathsQFile.readAll();
+      jsonPathsQFile.close();
+      // Parse string into json document
+      QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
+      // Initialize results instance with JSON document
+      VectorialResultsDialog *resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+      resultsDialog->show();
+  }
+  // If the user pressed the "Cancel" button, do nothing for now
+  if(dialogCode == QDialog::Rejected) {
+      // Cancel button clicked
+  }
   // Close OMSens dialog
   accept();
 }
 
+// OLD FUNCTIONS THAT HAVE BEEN REPLACED:
 void OMSensDialog::openSensAnalysisResult()
 {
 //ADAPTAR:

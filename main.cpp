@@ -2,13 +2,6 @@
 #include "model.h"
 
 #include <QApplication>
-#include <QLabel>
-#include <QVBoxLayout>
-#include <QListWidget>
-#include <QPushButton>
-#include <QTableWidget>
-#include <QStandardItem>
-#include <QStandardItemModel>
 #include <QTemporaryDir>
 
 
@@ -57,7 +50,7 @@ int main(int argc, char *argv[])
     // Initialize OMSens Dialog
     OMSensDialog dialog(model);
     // Show OMSens Dialog
-    dialog.exec();
+    dialog.show();
     // Run and end Qt Application
     return a.exec();
 }
