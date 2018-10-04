@@ -6,12 +6,12 @@
 #include <QScrollArea>
 #include <QString>
 
-class ImageViewer : public QDialog
+class ImageViewerDialog : public QDialog
 {
     Q_OBJECT
 
 public:
-    ImageViewer(QString filePath, QWidget *parent = 0);
+    ImageViewerDialog(QString filePath, QWidget *parent = 0);
     static QStringList compatibleMIMETypes();
 
 private:

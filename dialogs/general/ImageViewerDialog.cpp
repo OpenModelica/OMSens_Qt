@@ -1,5 +1,5 @@
 
-#include "ImageViewer.h"
+#include "ImageViewerDialog.h"
 #include <QLabel>
 #include <QScrollArea>
 #include <QGuiApplication>
@@ -9,7 +9,7 @@
 #include <QScreen>
 #include <QDir>
 
-ImageViewer::ImageViewer(QString filePath, QWidget *parent)
+ImageViewerDialog::ImageViewerDialog(QString filePath, QWidget *parent)
    : QDialog(parent),
      imageLabel(new QLabel),
      scrollArea(new QScrollArea)
@@ -27,7 +27,7 @@ ImageViewer::ImageViewer(QString filePath, QWidget *parent)
     loadFile(filePath);
 
     // New layout
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     // Assign table view to layout
     mainLayout->addWidget(scrollArea);
     // Set Dialog layout
@@ -35,7 +35,7 @@ ImageViewer::ImageViewer(QString filePath, QWidget *parent)
 }
 
 
-bool ImageViewer::loadFile(const QString &fileName)
+bool ImageViewerDialog::loadFile(const QString &fileName)
 {
      QImageReader reader(fileName);
      //reader.setAutoTransform(true);
@@ -54,7 +54,7 @@ bool ImageViewer::loadFile(const QString &fileName)
      return true;
 }
 
-void ImageViewer::setImage(const QImage &newImage)
+void ImageViewerDialog::setImage(const QImage &newImage)
 {
     image = newImage;
     imageLabel->setPixmap(QPixmap::fromImage(image));
@@ -63,7 +63,7 @@ void ImageViewer::setImage(const QImage &newImage)
     imageLabel->adjustSize();
 }
 
-QStringList ImageViewer::compatibleMIMETypes()
+QStringList ImageViewerDialog::compatibleMIMETypes()
 {
 
 // Static methods (class methods)

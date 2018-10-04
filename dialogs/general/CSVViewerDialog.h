@@ -6,11 +6,11 @@
 #include <QTableView>
 #include <QStandardItemModel>
 
-class SensitivityAnalysisResultDialog : public QDialog
+class CSVViewerDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit SensitivityAnalysisResultDialog(QString filePath, QWidget *parent = 0);
+    explicit CSVViewerDialog(QString filePath, QWidget *parent = 0);
 private:
     QTableView* mpResultsTable;
 

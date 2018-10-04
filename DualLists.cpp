@@ -22,10 +22,10 @@ void DualLists::initializeMembers()
     mpRightList->setSortingEnabled(true);
 
     // Initialize buttons
-    mpMoveOneRightBtn = new QPushButton(">");
-    mpMoveAllRightBtn = new QPushButton(">>");
-    mpMoveOneLeftBtn = new QPushButton("<");
-    mpMoveAllLeftBtn = new QPushButton("<<");
+    mpMoveOneRightBtn = new QPushButton(">", this);
+    mpMoveAllRightBtn = new QPushButton(">>", this);
+    mpMoveOneLeftBtn = new QPushButton("<", this);
+    mpMoveAllLeftBtn = new QPushButton("<<", this);
     // Disable all buttons until an item on a list is clicked
     mpMoveOneRightBtn->setEnabled(false);
     mpMoveAllRightBtn->setEnabled(false);
@@ -45,7 +45,7 @@ void DualLists::organizeLayout()
     mpMainLayout->addWidget(mpLeftList);
 
     // Buttons sublayout in the middle
-    QVBoxLayout *mpBtnsLayout = new QVBoxLayout;
+    QVBoxLayout *mpBtnsLayout = new QVBoxLayout(this);
     mpBtnsLayout->addItem(new QSpacerItem(10, 20, QSizePolicy::Minimum, QSizePolicy::Expanding));
     mpBtnsLayout->addWidget(mpMoveOneRightBtn);
     mpBtnsLayout->addWidget(mpMoveAllRightBtn);

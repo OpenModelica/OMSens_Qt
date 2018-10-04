@@ -8,30 +8,21 @@
 class Model
 {
 public:
-  Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters);
+  Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters, QString filePath, QString modelName);
   QList<QString> getInputVariables() const;
   QList<QString> getOutputVariables() const;
   QList<QString> getAuxVariables() const;
   QList<QString> getParameters() const;
-
-// We don't use the file for now. When the time comes,
-//   decide what to store:
-//   1) QString filePath
-//   2) QFile filePath and return QString filePath
-//   3) QFile file and return QFile file
-//  QFile          getFile() const;
+  QString        getFilePath() const;
+  QString        getModelName() const;
 
 private:
   QList<QString> mInputVariables;
   QList<QString> mOutputVariables;
   QList<QString> mAuxVariables;
   QList<QString> mParameters;
-// We don't use the file for now. When the time comes,
-//   decide what to store:
-//   1) QString filePath
-//   2) QFile filePath and return QString filePath
-//   3) QFile file and return QFile file
-//  QFile          mFile;
+  QString        mFilePath;
+  QString        mModelName;
 };
 
 #endif // MODEL_H

@@ -3,16 +3,19 @@
 #include <QString>
 #include <QFile>
 
-Model::Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters):
+// Parametrized constructor
+Model::Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters, QString filePath, QString modelName):
   mInputVariables(inputVariables),
   mOutputVariables(outputVariables),
   mAuxVariables(auxVariables),
-  mParameters(parameters)
-  //mFile(filePath)
+  mParameters(parameters),
+  mFilePath(filePath),
+  mModelName(modelName)
 {
     // No code needed inside the class constructor for now
 }
 
+// ---- GETTERS ----
 QList<QString> Model::getInputVariables() const
 {
     return mInputVariables;
@@ -33,12 +36,12 @@ QList<QString> Model::getParameters() const
     return mParameters;
 }
 
-// We don't use the file for now. When the time comes,
-//   decide what to store:
-//   1) QString filePath
-//   2) QFile filePath and return QString filePath
-//   3) QFile file and return QFile file
-//QFile Model::getFile() const
-//{
-//    return mFile;
-//}
+QString Model::getFilePath() const
+{
+    return mFilePath;
+}
+
+QString Model::getModelName() const
+{
+    return mModelName;
+}

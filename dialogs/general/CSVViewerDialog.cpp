@@ -1,4 +1,4 @@
-#include "SensitivityAnalysisResultDialog.h"
+#include "CSVViewerDialog.h"
 
 #include <QStandardItemModel>
 #include <QFile>
@@ -6,16 +6,16 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QHeaderView>
-#include "TableItemDelegate.h"
+#include "OMSens/TableItemDelegate.h"
 
-SensitivityAnalysisResultDialog::SensitivityAnalysisResultDialog(QString filePath, QWidget *parent) : QDialog(parent)
+CSVViewerDialog::CSVViewerDialog(QString filePath, QWidget *parent) : QDialog(parent)
 {
     QStandardItemModel *csvModel = standardItemModelFromFilePath(filePath);
     initializeTableWithStandardItemModel(csvModel);
     configureLayout();
 }
 
-QStandardItemModel * SensitivityAnalysisResultDialog::standardItemModelFromFilePath(QString filePath)
+QStandardItemModel * CSVViewerDialog::standardItemModelFromFilePath(QString filePath)
 {
     // Open file
     QFile file(filePath);
@@ -61,24 +61,24 @@ QStandardItemModel * SensitivityAnalysisResultDialog::standardItemModelFromFileP
     return csvModel;
 }
 
-void SensitivityAnalysisResultDialog::initializeTableWithStandardItemModel(QStandardItemModel *csvModel)
+void CSVViewerDialog::initializeTableWithStandardItemModel(QStandardItemModel *csvModel)
 {
-    mpResultsTable = new QTableView;
+    mpResultsTable = new QTableView(this);
     mpResultsTable->setModel(csvModel);
     // Resize columns to contents
     mpResultsTable->resizeColumnsToContents();
     mpResultsTable->setSortingEnabled(true);
     // Set item delegate to format doubles in specified precision
-    TableItemDelegate *decDelegate = new TableItemDelegate;
+    TableItemDelegate *decDelegate = new TableItemDelegate(this);
     mpResultsTable->setItemDelegate(decDelegate);
     // Set table as readonly
     mpResultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }
 
-void SensitivityAnalysisResultDialog::configureLayout()
+void CSVViewerDialog::configureLayout()
 {
     // New layout
-    QVBoxLayout *mainLayout = new QVBoxLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout(this);
     // Assign table view to layout
     mainLayout->addWidget(mpResultsTable);
     // Set Dialog layout
