@@ -24,7 +24,6 @@ DEFINES += QT_DEPRECATED_WARNINGS
 
 
 SOURCES += \
-        main.cpp \
     dialogs/general/CSVViewerDialog.cpp \
     dialogs/general/ImageViewerDialog.cpp \
     dialogs/indiv/IndivParamSensAnalysisDialog.cpp \
@@ -67,3 +66,9 @@ HEADERS += \
     model.h \
     OMSensDialog.h \
     TableItemDelegate.h
+
+DISTFILES += \
+    resource/ModelWithVariousParams.mo
+
+RESOURCES += \
+    resources.qrc

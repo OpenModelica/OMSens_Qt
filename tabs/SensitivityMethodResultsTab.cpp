@@ -1,30 +1,30 @@
 #include "SensitivityMethodResultsTab.h"
 #include <QFormLayout>
-#include "../dialogs/ImageViewerDialog.h"
-#include "../dialogs/CSVViewerDialog.h"
+#include "../dialogs/general/ImageViewerDialog.h"
+#include "../dialogs/general/CSVViewerDialog.h"
 
 SensitivityMethodResultsTab::SensitivityMethodResultsTab(QString description, QString matrixPath, QString heatmapPath, QString columnsIDsPath, QString rowsIDsPath, QWidget *parent) : QWidget(parent)
 {
     // Dialog settings
     // Description
-    mpDescriptionLabel = new QLabel(tr("Description:"), this);
-    mpDescriptionValue = new QLabel(description, this);
+    mpDescriptionLabel = new QLabel(tr("Description:"));
+    mpDescriptionValue = new QLabel(description);
     // Heatmap
     mMatrixPath    = matrixPath;
     mHeatmapPath   = heatmapPath;
     mColumnIDsPath = columnsIDsPath;
     mRowsIDsPath   = rowsIDsPath;
-    mpHeatmapLabel      = new QLabel(tr("Results:"), this);
-    mpOpenMatrixButton    = new QPushButton("Matrix", this);
+    mpHeatmapLabel      = new QLabel(tr("Results:"));
+    mpOpenMatrixButton    = new QPushButton("Matrix");
     mpOpenMatrixButton->setAutoDefault(true);
     mpOpenMatrixButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    mpOpenHeatmapButton    = new QPushButton("Heatmap", this);
+    mpOpenHeatmapButton    = new QPushButton("Heatmap");
     mpOpenHeatmapButton->setAutoDefault(true);
     mpOpenHeatmapButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    mpOpenColumnsIDsButton = new QPushButton("Variables IDs", this);
+    mpOpenColumnsIDsButton = new QPushButton("Variables IDs");
     mpOpenColumnsIDsButton->setAutoDefault(true);
     mpOpenColumnsIDsButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    mpOpenRowsIDsButton    = new QPushButton("Parameters IDs", this);
+    mpOpenRowsIDsButton    = new QPushButton("Parameters IDs");
     mpOpenRowsIDsButton->setAutoDefault(true);
     mpOpenRowsIDsButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
 
@@ -33,11 +33,11 @@ SensitivityMethodResultsTab::SensitivityMethodResultsTab(QString description, QS
     connect(mpOpenColumnsIDsButton , &QPushButton::clicked, this, &SensitivityMethodResultsTab::openColumnIDs);
     connect(mpOpenRowsIDsButton    , &QPushButton::clicked, this, &SensitivityMethodResultsTab::openRowsIDs);
 
-    QFormLayout *mainLayout = new QFormLayout(this);
+    QFormLayout *mainLayout = new QFormLayout;
     // Description
     mainLayout->addRow(mpDescriptionLabel, mpDescriptionValue);
     // Heatmap
-    QHBoxLayout *pHeatmapRowLayout = new QHBoxLayout(this);
+    QHBoxLayout *pHeatmapRowLayout = new QHBoxLayout;
     pHeatmapRowLayout->addWidget(mpHeatmapLabel);
     pHeatmapRowLayout->addWidget(mpOpenMatrixButton);
     pHeatmapRowLayout->addWidget(mpOpenHeatmapButton);

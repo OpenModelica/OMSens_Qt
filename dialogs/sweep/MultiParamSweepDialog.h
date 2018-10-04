@@ -10,12 +10,12 @@
 #include <QDialogButtonBox>
 #include <QJsonObject>
 #include <QString>
-#include "OMSens/tabs/SimulationTab.h"
-#include "OMSens/tabs/VariablesTab.h"
-#include "OMSens/tabs/ParametersExtendedTab.h"
-#include "OMSens/tabs/HelpTab.h"
-#include "OMSens/DualLists.h"
-#include "OMSens/model.h"
+#include "tabs/SimulationTab.h"
+#include "tabs/VariablesTab.h"
+#include "tabs/ParametersExtendedTab.h"
+#include "tabs/HelpTab.h"
+#include "DualLists.h"
+#include "model.h"
 
 class MultiParamSweepDialog : public QDialog
 {

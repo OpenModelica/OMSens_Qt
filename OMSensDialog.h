@@ -9,11 +9,11 @@ class OMSensDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit OMSensDialog(Model model, QWidget *parent = nullptr);
+    OMSensDialog(Model model, QWidget *parent = nullptr);
 
 private:
     // Data
-    Model model;
+    Model mModel;
     // GUI
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;

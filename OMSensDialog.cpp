@@ -2,6 +2,7 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFileDialog>
+#include <QDateTime>
 #include "model.h"
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
@@ -13,33 +14,30 @@
 #include "dialogs/general/ImageViewerDialog.h"
 #include "dialogs/general/CSVViewerDialog.h"
 
-OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent)
+OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
 {
-    // Save args
-    model = model;
-
     // Dialog settings
     setMinimumWidth(400);
     setWindowTitle("OMSens");
 
     // Initialize buttons
-    mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"), this);
+    mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"));
     mpIndivButton->setAutoDefault(true);
     mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
 
-    mpSweepButton = new QPushButton(tr("Multi-parameter sweep"), this);
+    mpSweepButton = new QPushButton(tr("Multi-parameter sweep"));
     mpSweepButton->setAutoDefault(true);
     mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
 
-    mpVectButton = new QPushButton(tr("Vectorial Parameter Based Sensitivity Analysis"), this);
+    mpVectButton = new QPushButton(tr("Vectorial Parameter Based Sensitivity Analysis"));
     mpVectButton->setAutoDefault(true);
     mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
 
     // Layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
@@ -57,7 +55,7 @@ void OMSensDialog::runIndivSensAnalysis()
   IndivSensAnalTypeDialog *analysisTypeDialog; // needs to be extracted from the "if" and freed at the end of the function
   if(isThereAnActiveModel){
       // Get the OMSens model from the OMEdit information abount the open model
-      pModel = &model;
+      pModel = &mModel;
       analysisTypeDialog = new IndivSensAnalTypeDialog(pModel,this);
   }
   else
@@ -79,7 +77,7 @@ void OMSensDialog::runIndivSensAnalysis()
           // Initialize the Dialog with a predefined analysis
           // Read JSON with W3 specs
           QString jsonSpecsName = "exp_01_paper_fig_2_heatmap.json";
-          QString experimentsFolderPath = "/home/omsens/Documents/omsens/resource/experiments/individual/";
+          QString experimentsFolderPath = "/home/omsens/Documents/OMSens/resource/experiments/individual/";
           QString jsonSpecsPath = QDir::cleanPath(experimentsFolderPath + QDir::separator() + jsonSpecsName);
           // Reed analysis specifications from disk
           QString fileContents;
@@ -97,7 +95,7 @@ void OMSensDialog::runIndivSensAnalysis()
       {
           // Give the user the option to run an analysis from the current model active
           // Ask the user for analysis specifications
-          indivDialog = new IndivParamSensAnalysisDialog(model,this);
+          indivDialog = new IndivParamSensAnalysisDialog(mModel,this);
           dialogCodeSecondDialog = indivDialog->exec();
       }
       // If the user pressed the "Ok" button, get the user inputs
@@ -132,7 +130,7 @@ void OMSensDialog::runIndivSensAnalysis()
             resultsFolderPathDir.mkpath(".");
           }
           // Run individual sens analysis
-          QString indivAnalysisScriptPath = "/home/omsens/Documents/omsens/individual_sens_calculator.py" ;
+          QString indivAnalysisScriptPath = "/home/omsens/Documents/OMSens/individual_sens_calculator.py" ;
           QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
           QString scriptDestPathFlag = "--dest_folder_path";
           QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
@@ -154,7 +152,6 @@ void OMSensDialog::runIndivSensAnalysis()
           jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
           val = jsonPathsQFile.readAll();
           jsonPathsQFile.close();
-          qWarning() << val;
           // Parse string into json document
           QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
           // Initialize results instance with JSON document
@@ -182,7 +179,7 @@ void OMSensDialog::runMultiParameterSweep()
   bool isThereAnActiveModel = true;
   if(isThereAnActiveModel){
       // Get the OMSens model from the OMEdit information abount the open model
-      MultiParamSweepDialog *sweepDialog = new MultiParamSweepDialog(model,this);
+      MultiParamSweepDialog *sweepDialog = new MultiParamSweepDialog(mModel,this);
       int dialogCode  = sweepDialog->exec();
       if(dialogCode == QDialog::Accepted)
       {   // Get user inputs from dialog
@@ -215,7 +212,7 @@ void OMSensDialog::runMultiParameterSweep()
             resultsFolderPathDir.mkpath(".");
           }
           // Run sweep
-          QString scriptPath = "/home/omsens/Documents/omsens/multiparam_sweep.py" ;
+          QString scriptPath = "/home/omsens/Documents/OMSens/multiparam_sweep.py" ;
           QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
           QString scriptDestPathFlag = "--dest_folder_path";
           QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
@@ -259,7 +256,7 @@ void OMSensDialog::runVectorialSensAnalysis()
   bool isThereAnActiveModel = true;
   if(isThereAnActiveModel){
       // Get the OMSens model from the OMEdit information abount the open model
-      VectorialSensAnalysisDialog *vectDialog = new VectorialSensAnalysisDialog(model,this);
+      VectorialSensAnalysisDialog *vectDialog = new VectorialSensAnalysisDialog(mModel,this);
       int dialogCode  = vectDialog->exec();
       if(dialogCode == QDialog::Accepted)
       {   // Get user inputs from dialog
@@ -292,7 +289,7 @@ void OMSensDialog::runVectorialSensAnalysis()
             resultsFolderPathDir.mkpath(".");
           }
           // Run vectorial analysis
-          QString scriptPath = "/home/omsens/Documents/omsens/vectorial_analysis.py" ;
+          QString scriptPath = "/home/omsens/Documents/OMSens/vectorial_analysis.py" ;
           QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
           QString scriptDestPathFlag = "--dest_folder_path";
           QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
@@ -401,21 +398,4 @@ void OMSensDialog::openSensAnalysisImage()
   }
   // open sens analysis Image
 //ADAPTAR^
-}
-
-
-QList<QString> OMSensDialog::getComponentsMatching(QList<Component*> pModelComponents, const char *variability, const char *causality, const char *className)
-{
-    QList<QString> componentNames;
-    foreach (Component* component, pModelComponents) {
-        ComponentInfo *componentInfo = component->getComponentInfo();
-        QString componentVariability = componentInfo->getVariablity();
-        QString componentCausality   = componentInfo->getCausality();
-        QString componentClassName   = componentInfo->getClassName();
-        if(componentVariability == variability && componentCausality ==causality && componentClassName == className )
-        {
-            componentNames.append(componentInfo->getName());
-        }
-    }
-    return componentNames;
 }

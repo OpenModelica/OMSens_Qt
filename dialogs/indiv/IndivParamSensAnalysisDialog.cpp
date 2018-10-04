@@ -1,6 +1,5 @@
 #include "IndivParamSensAnalysisDialog.h"
 
-#include "Util/Utilities.h"
 #include <QMessageBox>
 #include <QLabel>
 #include <QFrame>
@@ -8,11 +7,11 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-#include "OMSens/model.h"
-#include "OMSens/tabs/VariablesTab.h"
-#include "OMSens/tabs/ParametersSimpleTab.h"
-#include "OMSens/tabs/SimulationTab.h"
-#include "OMSens/tabs/HelpTab.h"
+#include "model.h"
+#include "tabs/VariablesTab.h"
+#include "tabs/ParametersSimpleTab.h"
+#include "tabs/SimulationTab.h"
+#include "tabs/HelpTab.h"
 
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(QJsonDocument jsonSpecsDocument, QWidget *pParent)
   : QDialog(pParent)
@@ -61,20 +60,20 @@ void IndivParamSensAnalysisDialog::initializeDialogWithData(QList<QString> varia
     QString helpText = readHelpText();
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/indiv_sens_results";
-    mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath,this);
-    mpVariablesTab          = new VariablesTab(variables,this);
-    mpParametersTab         = new ParametersSimpleTab(parameters, percentage,this);
-    mpHelpTab               = new HelpTab(helpText,this);
+    mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
+    mpVariablesTab          = new VariablesTab(variables);
+    mpParametersTab         = new ParametersSimpleTab(parameters, percentage);
+    mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
-    mpTabWidget = new QTabWidget(this);
+    mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpSimulationSettingsTab , tr("Simulation"));
     mpTabWidget->addTab(mpVariablesTab          , tr("Variables"));
     mpTabWidget->addTab(mpParametersTab         , tr("Parameters"));
     mpTabWidget->addTab(mpHelpTab               , tr("Help"));
 
     //Buttons
-    mpButtonBox = new QDialogButtonBox(this);
+    mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Run Analysis", QDialogButtonBox::AcceptRole);
     mpButtonBox->addButton("Cancel"      , QDialogButtonBox::RejectRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &IndivParamSensAnalysisDialog::runIndivParamSensAnalysis);
@@ -83,7 +82,7 @@ void IndivParamSensAnalysisDialog::initializeDialogWithData(QList<QString> varia
     // Dialog settings
     setWindowTitle("Run Individual Sensitivity Analysis");
     // Layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpTabWidget);
     mainLayout->addWidget(mpButtonBox);
     setLayout(mainLayout);

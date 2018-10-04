@@ -27,7 +27,7 @@ ImageViewerDialog::ImageViewerDialog(QString filePath, QWidget *parent)
     loadFile(filePath);
 
     // New layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout();
     // Assign table view to layout
     mainLayout->addWidget(scrollArea);
     // Set Dialog layout

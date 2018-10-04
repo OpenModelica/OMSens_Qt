@@ -11,22 +11,22 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QWidget *parent) : QW
         mpVariablesComboBox->addItem(var_name);
     }
     // Goal
-    mpGoalButtonGroup = new QButtonGroup(this);
-    mpMinRadio = new QRadioButton(tr("Minimize"),this);
+    mpGoalButtonGroup = new QButtonGroup(this); // Has to have "this" as parent because it's never assigned to anything
+    mpMinRadio = new QRadioButton(tr("Minimize"));
     mpMinRadio->toggle(); //This index start selected by default
-    mpMaxRadio = new QRadioButton(tr("Maximize"),this);
+    mpMaxRadio = new QRadioButton(tr("Maximize"));
     mpGoalButtonGroup->addButton(mpMinRadio, mMinimizeButtonId);
     mpGoalButtonGroup->addButton(mpMaxRadio, mMaximizeButtonId);
     // Epsilon
-    mpEpsilonLabel = new QLabel(tr("Epsilon"),this);
-    mpEpsilonBox   = new QDoubleSpinBox(this);
+    mpEpsilonLabel = new QLabel(tr("Epsilon"));
+    mpEpsilonBox   = new QDoubleSpinBox;
     mpEpsilonBox->setRange(0,0.9);
     mpEpsilonBox->setValue(0.1);
     mpEpsilonBox->setSingleStep(0.001);
     mpEpsilonBox->setDecimals(12);
 
     // Layout
-    QGridLayout *pMainLayout = new QGridLayout(this);
+    QGridLayout *pMainLayout = new QGridLayout;
     pMainLayout->setAlignment(Qt::AlignTop | Qt::AlignLeft);
     // Variables
     pMainLayout->addWidget(mpVariablesLabel   ,0,0);

@@ -18,17 +18,17 @@ IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QW
     mpRelativeMethodTab = resultsTabForRelativeFromJSONObject(heatmapsJSONObject);
     mpRMSMethodTab      = resultsTabForRMSFromJSONObject(heatmapsJSONObject);
     // Initialize tabs container widget
-    mpTabWidget = new QTabWidget(this);
+    mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpRelativeMethodTab, tr("Relative"));
     mpTabWidget->addTab(mpRMSMethodTab      , tr("Root Mean Square (RMS)"));
     //Buttons
-    mpButtonBox = new QDialogButtonBox(this);
+    mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Ok", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &IndivSensResultsDialog::accept);
     // Dialog settings
     setWindowTitle("Individual Sensitivity Analysis Results");
     // Layout
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpTabWidget);
     mainLayout->addWidget(mpButtonBox);
     setLayout(mainLayout);
@@ -65,6 +65,6 @@ SensitivityMethodResultsTab* IndivSensResultsDialog::resultsTabForMethodFromJSON
     QString     heatmapPath              = methodHeatmapsJSONObject.value(QString("plot_path")).toString();
     QString     rowsIDsPath              = methodHeatmapsJSONObject.value(QString("index_mapping_file_path")).toString();
     QString     columnsIDsPath           = methodHeatmapsJSONObject.value(QString("cols_mapping_file_path")).toString();
-    SensitivityMethodResultsTab *pResultsTab =new SensitivityMethodResultsTab(description, matrixPath, heatmapPath, columnsIDsPath, rowsIDsPath,this);
+    SensitivityMethodResultsTab *pResultsTab =new SensitivityMethodResultsTab(description, matrixPath, heatmapPath, columnsIDsPath, rowsIDsPath);
     return pResultsTab;
 }

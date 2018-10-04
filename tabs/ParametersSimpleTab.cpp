@@ -13,14 +13,14 @@ ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double perce
     mpBriefDescriptionLabel = new QLabel("Each selected parameter is perturbed in isolation, one at a time",this);
 
     // Percentage
-    mpPercentageLabel = new QLabel(tr("Percentage (+ or -):"),this);
-    mpPercentageBox = new QDoubleSpinBox(this);
+    mpPercentageLabel = new QLabel(tr("Percentage (+ or -):"));
+    mpPercentageBox = new QDoubleSpinBox;
     mpPercentageBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     mpPercentageBox->setValue(percentage);
     mpPercentageBox->setSuffix("%");
 
     //Initialize table header
-    mpParametersTable = new QTableWidget(0, 2, this);
+    mpParametersTable = new QTableWidget(0, 2);
     const QList<QString> tableHeaders( QList<QString>()
                                      << "Parameter"
                                      << "Perturb?"
@@ -36,10 +36,10 @@ ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double perce
         mpParametersTable->insertRow(rowNum);
         // Fill blank row with values corresponding to this variable
         // Set parameter name
-        QLabel *paramNameWidget = new QLabel(param_name,this);
+        QLabel *paramNameWidget = new QLabel(param_name);
         mpParametersTable->setCellWidget(rowNum,paramColPos, paramNameWidget);
         // Set checkbox
-        QCheckBox *includeCheckBox = new QCheckBox(this);
+        QCheckBox *includeCheckBox = new QCheckBox;
         includeCheckBox->setChecked(true);
         mpParametersTable->setCellWidget(rowNum,cboxColPos,includeCheckBox);
     }
@@ -47,9 +47,9 @@ ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double perce
     // Resize columns to contents
     mpParametersTable->resizeColumnsToContents();
 
-    QFormLayout *mainLayout = new QFormLayout(this);
+    QFormLayout *mainLayout = new QFormLayout;
     // Percentage
-    QHBoxLayout *pHorizontalSubLayout = new QHBoxLayout(this);
+    QHBoxLayout *pHorizontalSubLayout = new QHBoxLayout;
     pHorizontalSubLayout->addWidget(mpPercentageLabel);
     pHorizontalSubLayout->addWidget(mpPercentageBox);
     mainLayout->addRow(pHorizontalSubLayout);

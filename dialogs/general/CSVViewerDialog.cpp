@@ -6,7 +6,7 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QHeaderView>
-#include "OMSens/TableItemDelegate.h"
+#include "TableItemDelegate.h"
 
 CSVViewerDialog::CSVViewerDialog(QString filePath, QWidget *parent) : QDialog(parent)
 {

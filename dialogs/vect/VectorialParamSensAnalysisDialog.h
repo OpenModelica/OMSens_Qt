@@ -11,11 +11,11 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QJsonObject>
-#include "OMSens/model.h"
-#include "OMSens/tabs/SimulationTab.h"
-#include "OMSens/tabs/ParametersSimpleTab.h"
-#include "OMSens/tabs/OptimizationTab.h"
-#include "OMSens/tabs/HelpTab.h"
+#include "model.h"
+#include "tabs/SimulationTab.h"
+#include "tabs/ParametersSimpleTab.h"
+#include "tabs/OptimizationTab.h"
+#include "tabs/HelpTab.h"
 
 class VectorialSensAnalysisDialog : public QDialog
 {

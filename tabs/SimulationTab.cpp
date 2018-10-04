@@ -11,34 +11,34 @@
 SimulationTab::SimulationTab(QString modelName, QString modelFilePath, double startTime, double stopTime, QString defaultResultsFolderPath, QWidget *pParent) : QWidget(pParent)
 {
     // Model name
-    mpModelNameLabel = new QLabel(tr("Model:"), this);
-    mpModelNameValue = new QLabel(modelName, this);
+    mpModelNameLabel = new QLabel(tr("Model:"));
+    mpModelNameValue = new QLabel(modelName);
     mpModelNameValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     // Model file path
-    mpModelPathLabel = new QLabel(tr("Model file:"), this);
+    mpModelPathLabel = new QLabel(tr("Model file:"));
     mpModelPathValue = new QLabel(modelFilePath);
     mpModelPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     // Results dest folder path
-    mpDestFolderPathLabel = new QLabel(tr("Analysis results destination folder:"), this);
-    mpDestFolderPathValue = new QLabel(defaultResultsFolderPath, this);
+    mpDestFolderPathLabel = new QLabel(tr("Analysis results destination folder:"));
+    mpDestFolderPathValue = new QLabel(defaultResultsFolderPath);
     mpDestFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    mpChooseDestFolderButton = new QPushButton("Choose folder", this);
+    mpChooseDestFolderButton = new QPushButton("Choose folder");
     mpChooseDestFolderButton->setAutoDefault(true);
     mpChooseDestFolderButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpChooseDestFolderButton, SIGNAL(clicked()), this, SLOT(launchChooseFolderDialog()));
 
     // Start time
-    mpStartTimeLabel = new QLabel(tr("Start time:"), this);
-    mpStartTimeBox = new QDoubleSpinBox(this);
+    mpStartTimeLabel = new QLabel(tr("Start time:"));
+    mpStartTimeBox = new QDoubleSpinBox;
     mpStartTimeBox->setRange(0, std::numeric_limits<double>::max());
     mpStartTimeBox->setValue(startTime);
     // Stop time
-    mpStopTimeLabel = new QLabel(tr("Stop time:"), this);
-    mpStopTimeBox = new QDoubleSpinBox(this);
+    mpStopTimeLabel = new QLabel(tr("Stop time:"));
+    mpStopTimeBox = new QDoubleSpinBox;
     mpStopTimeBox->setRange(0, std::numeric_limits<double>::max());
     mpStopTimeBox->setValue(stopTime);
 
-   QFormLayout *mainLayout = new QFormLayout(this);
+   QFormLayout *mainLayout = new QFormLayout;
    // Model name
    mainLayout->addRow(mpModelNameLabel);
    mainLayout->addRow(mpModelNameValue);
@@ -48,7 +48,7 @@ SimulationTab::SimulationTab(QString modelName, QString modelFilePath, double st
    // Results dest folder path: Label
    mainLayout->addRow(mpDestFolderPathLabel);
    // Results dest folder path: Value
-   QHBoxLayout *pDestFolderRowLayout = new QHBoxLayout(this);
+   QHBoxLayout *pDestFolderRowLayout = new QHBoxLayout;
    pDestFolderRowLayout->addWidget(mpDestFolderPathValue);
    pDestFolderRowLayout->addWidget(mpChooseDestFolderButton);
    mainLayout->addRow(pDestFolderRowLayout);

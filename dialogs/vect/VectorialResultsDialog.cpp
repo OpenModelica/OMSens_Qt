@@ -4,7 +4,7 @@
 #include <QStandardItemModel>
 #include <QFormLayout>
 
-#include "OMSens/TableItemDelegate.h"
+#include "TableItemDelegate.h"
 
 VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, QWidget *pParent) : QDialog(pParent)
 {
@@ -50,9 +50,9 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     }
 
     // x label
-    mpXLabel = new QLabel("x:",this);
+    mpXLabel = new QLabel("x:");
     // x table
-    mpXTable = new QTableView(this);
+    mpXTable = new QTableView;
     mpXTable->setModel(csvModel);
     // Resize columns to contents
     mpXTable->resizeColumnsToContents();
@@ -64,14 +64,14 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     mpXTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 
     // Initialize f(x)
-    mpFxLabel = new QLabel("f(x):",this);
-    mpFxValue = new QLabel(this);
+    mpFxLabel = new QLabel("f(x):");
+    mpFxValue = new QLabel;
     mpFxValue->setNum(mFx);
 
     // Set layout
-    QFormLayout *pMainLayout = new QFormLayout(this);
+    QFormLayout *pMainLayout = new QFormLayout;
     // f(x)
-    QHBoxLayout *pFxLayout = new QHBoxLayout(this);
+    QHBoxLayout *pFxLayout = new QHBoxLayout;
     pFxLayout->addWidget(mpFxLabel);
     pFxLayout->addWidget(mpFxValue);
     pFxLayout->addStretch();

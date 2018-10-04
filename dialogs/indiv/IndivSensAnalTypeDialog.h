@@ -4,7 +4,7 @@
 #include <QDialog>
 #include <QPushButton>
 #include <QLabel>
-#include "OMSens/model.h"
+#include "model.h"
 
 
 class IndivSensAnalTypeDialog : public QDialog

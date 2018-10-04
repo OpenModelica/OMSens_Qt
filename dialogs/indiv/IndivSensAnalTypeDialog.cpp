@@ -9,12 +9,12 @@ IndivSensAnalTypeDialog::IndivSensAnalTypeDialog(Model *pModel, QWidget *parent)
     // Dialog settings
     setMinimumWidth(400);
     // Initialize label
-    mpChooseAnalysisLabel = new QLabel("Choose between runnning a predefined analysis for World3 or a new one for the model currently active. ", this);
+    mpChooseAnalysisLabel = new QLabel("Choose between runnning a predefined analysis for World3 or a new one for the model currently active. ");
     // Initialize buttons
-    mpRunW3SampleButton    = new QPushButton("Run World3 Analysis Example", this);
+    mpRunW3SampleButton    = new QPushButton("Run World3 Analysis Example");
     mpRunW3SampleButton->setAutoDefault(true);
     mpRunW3SampleButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    mpRunOpenModelButton    = new QPushButton(this);
+    mpRunOpenModelButton    = new QPushButton;
     mpRunOpenModelButton->setAutoDefault(true);
     mpRunOpenModelButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     // Get model info (if any) for this dialog
@@ -41,11 +41,11 @@ IndivSensAnalTypeDialog::IndivSensAnalTypeDialog(Model *pModel, QWidget *parent)
     // Dialog settings
     setWindowTitle("Choose Analysis Specifications");
     // Layout
-    QFormLayout *mainLayout = new QFormLayout(this);
+    QFormLayout *mainLayout = new QFormLayout;
     // Add label
     mainLayout->addWidget(mpChooseAnalysisLabel);
     // Add buttons
-    QHBoxLayout *buttonsLayout = new QHBoxLayout(this);
+    QHBoxLayout *buttonsLayout = new QHBoxLayout;
     buttonsLayout->addWidget(mpRunW3SampleButton);
     buttonsLayout->addWidget(mpRunOpenModelButton);
     mainLayout->addRow(buttonsLayout);

@@ -5,7 +5,7 @@
 #include <QJsonDocument>
 #include <QDialogButtonBox>
 #include <QTabWidget>
-#include "OMSens/tabs/SensitivityMethodResultsTab.h"
+#include "tabs/SensitivityMethodResultsTab.h"
 
 class IndivSensResultsDialog : public QDialog
 {

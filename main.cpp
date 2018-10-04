@@ -9,34 +9,44 @@
 #include <QTableWidget>
 #include <QStandardItem>
 #include <QStandardItemModel>
+#include <QTemporaryDir>
 
+
+// Model example to be used when OMSens is used as standalone
+// (main function below example)
 Model modelExample()
 {
-  const QList<QString> inputVariables( QList<QString>()
-                                   << "population"
-                                   << "nr_resources"
-                                   << "human_welfare_index");
+  // Define model data
+  const QList<QString> inputVariables;
   const QList<QString> parameters( QList<QString>()
-                                   << "laborForceDistribution"
-                                   << "capitalDistribution"
-                                   << "totalCapital"
-                                   << "alfa"
-                                   << "techProgressModifier"
-                                   << "population_last_year");
+                                   << "realParam1"
+                                   << "realParam2"
+                                   << "realParam3");
   const QList<QString> outputVariables( QList<QString>()
-                                   << "secGNP"
-                                   << "outVar2");
-  const QList<QString> auxVariables( QList<QString>()
-                                   << "laborForce"
-                                   << "secTotalSalaries"
-                                   << "secCapital"
-                                   << "grossSecGNP");
-  //Aux
-  Model model(inputVariables, outputVariables, auxVariables, parameters);
+                                   << "outvar1"
+                                   << "outvar2"
+                                   << "outvar3");
+  const QList<QString> auxVariables;
+
+  // Model name
+  QString modelName = "ModelWithVariousParams";
+  // Model path in Qt resources
+  QString fileResourcePath = ":/ModelWithVariousParams.mo";
+  // Model file name to be used when written to disk
+  QString tempModelName = "ModelWithVariousParams.mo";
+  // Temp dir where to write Model
+  QTemporaryDir tempDir;
+  // Disable auto remove so the user can check the model
+  tempDir.setAutoRemove(false);
+  QString  filePath=  QDir::cleanPath(tempDir.path() + QDir::separator() + tempModelName);
+  if (tempDir.isValid()) {
+    QFile::copy(fileResourcePath, filePath);
+  }
+  // Initialize model
+  Model model(inputVariables, outputVariables, auxVariables, parameters, filePath, modelName);
+
   return model;
 }
-
-
 
 int main(int argc, char *argv[])
 {
@@ -47,7 +57,7 @@ int main(int argc, char *argv[])
     // Initialize OMSens Dialog
     OMSensDialog dialog(model);
     // Show OMSens Dialog
-    dialog.show();
+    dialog.exec();
     // Run and end Qt Application
     return a.exec();
 }

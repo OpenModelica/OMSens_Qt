@@ -4,7 +4,7 @@
 #include <QJsonObject>
 #include <QFormLayout>
 #include <QPushButton>
-#include "OMSens/dialogs/general/ImageViewerDialog.h"
+#include "dialogs/general/ImageViewerDialog.h"
 
 SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pParent) : QDialog(pParent)
 {
@@ -17,12 +17,12 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pPar
     mVariables = mVarNameToPlotMap.keys();
 
     // Initialize GUI members
-    mpVariablesLabel = new QLabel("Plots:", this);
-    mpVariablesComboBox = new QComboBox(this);
+    mpVariablesLabel = new QLabel("Plots:");
+    mpVariablesComboBox = new QComboBox;
     foreach(const QString& var_name, mVariables) {
         mpVariablesComboBox->addItem(var_name);
     }
-    mpOpenPlotButton = new QPushButton("Open", this);
+    mpOpenPlotButton = new QPushButton("Open");
     mpOpenPlotButton->setAutoDefault(true);
     mpOpenPlotButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpOpenPlotButton, SIGNAL(clicked()), this, SLOT(openSelectedVarPlot()));
@@ -30,11 +30,11 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pPar
     // Dialog settings
     setWindowTitle("Multiparameter sweep result");
     // Layout
-    QHBoxLayout *pVarsLayout = new QHBoxLayout(this);
+    QHBoxLayout *pVarsLayout = new QHBoxLayout;
     pVarsLayout->addWidget(mpVariablesLabel);
     pVarsLayout->addWidget(mpVariablesComboBox);
     pVarsLayout->addWidget(mpOpenPlotButton);
-    QFormLayout *mainLayout = new QFormLayout(this);
+    QFormLayout *mainLayout = new QFormLayout;
     mainLayout->addRow(pVarsLayout);
     // Layout settings
     setLayout(mainLayout);

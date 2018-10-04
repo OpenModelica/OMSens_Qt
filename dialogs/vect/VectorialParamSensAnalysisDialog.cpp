@@ -1,6 +1,5 @@
 #include "VectorialParamSensAnalysisDialog.h"
 
-#include "Util/Utilities.h"
 #include <QMessageBox>
 #include <QLabel>
 #include <QFrame>
@@ -76,26 +75,26 @@ void VectorialSensAnalysisDialog::initializeDialogWithData(QList<QString> variab
             "<p>Arrays of any type are not supported either.</p>";
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/vectorial_analysis";
-    mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath,this);
-    mpParametersTab         = new ParametersSimpleTab(parameters, percentage,this);
-    mpOptimizationTab       = new OptimizationTab(variables,this);
-    mpHelpTab               = new HelpTab(helpText,this);
+    mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
+    mpParametersTab         = new ParametersSimpleTab(parameters, percentage);
+    mpOptimizationTab       = new OptimizationTab(variables);
+    mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
-    mpTabWidget = new QTabWidget(this);
+    mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpSimulationSettingsTab, tr("Simulation"));
     mpTabWidget->addTab(mpParametersTab, tr("Parameters"));
     mpTabWidget->addTab(mpOptimizationTab, tr("Optimization"));
     mpTabWidget->addTab(mpHelpTab, tr("Help"));
 
     //Buttons
-    mpButtonBox = new QDialogButtonBox(this);
+    mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Run analysis", QDialogButtonBox::AcceptRole);
     mpButtonBox->addButton("Cancel"      , QDialogButtonBox::RejectRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &VectorialSensAnalysisDialog::runVectorialParamSensAnalysis);
     connect(mpButtonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-    QVBoxLayout *mainLayout = new QVBoxLayout(this);
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpTabWidget);
     mainLayout->addWidget(mpButtonBox);
     setLayout(mainLayout);
