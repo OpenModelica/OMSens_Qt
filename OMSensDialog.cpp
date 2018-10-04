@@ -154,8 +154,6 @@ void OMSensDialog::runIndivSensAnalysis()
   if(dialogCodeFirstDialog == QDialog::Rejected) {
       // Cancel button clicked
   }
-  // Close OMSens dialog
-  accept();
 }
 void OMSensDialog::runMultiParameterSweep()
 {
@@ -228,9 +226,6 @@ void OMSensDialog::runMultiParameterSweep()
   if(dialogCode == QDialog::Rejected) {
       // Cancel button clicked
   }
-
-  // Close OMSens dialog
-  accept();
 }
 void OMSensDialog::runVectorialSensAnalysis()
 {
@@ -304,8 +299,6 @@ void OMSensDialog::runVectorialSensAnalysis()
   if(dialogCode == QDialog::Rejected) {
       // Cancel button clicked
   }
-  // Close OMSens dialog
-  accept();
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:
