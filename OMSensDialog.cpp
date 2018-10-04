@@ -2,22 +2,21 @@
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFileDialog>
-#include "OMSens/model.h"
-#include "OMSens/dialogs/indiv/IndivSensAnalTypeDialog.h"
-#include "OMSens/dialogs/indiv/IndivParamSensAnalysisDialog.h"
-#include "OMSens/dialogs/indiv/IndivSensResultsDialog.h"
-#include "OMSens/dialogs/sweep/MultiParamSweepDialog.h"
-#include "OMSens/dialogs/sweep/SweepResultDialog.h"
-#include "OMSens/dialogs/vect/VectorialParamSensAnalysisDialog.h"
-#include "OMSens/dialogs/vect/VectorialResultsDialog.h"
-#include "OMSens/dialogs/general/ImageViewerDialog.h"
-#include "OMSens/dialogs/general/CSVViewerDialog.h"
-#include "Modeling/ModelWidgetContainer.h"
+#include "model.h"
+#include "dialogs/indiv/IndivSensAnalTypeDialog.h"
+#include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
+#include "dialogs/indiv/IndivSensResultsDialog.h"
+#include "dialogs/sweep/MultiParamSweepDialog.h"
+#include "dialogs/sweep/SweepResultDialog.h"
+#include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
+#include "dialogs/vect/VectorialResultsDialog.h"
+#include "dialogs/general/ImageViewerDialog.h"
+#include "dialogs/general/CSVViewerDialog.h"
 
-OMSensDialog::OMSensDialog(ModelWidget* currentModelWidget, QWidget *parent) : QDialog(parent)
+OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent)
 {
     // Save args
-    mpCurrentModelWidget = currentModelWidget;
+    model = model;
 
     // Dialog settings
     setMinimumWidth(400);
@@ -48,79 +47,16 @@ OMSensDialog::OMSensDialog(ModelWidget* currentModelWidget, QWidget *parent) : Q
     setLayout(mainLayout);
 }
 
-Model OMSensDialog::currentModelOpen()
-{
-    // Get the ModelWidget instance for the model currently open
-    // Create OMSens Model from ModelWidget information. The following code should be moved in the future to a Model
-    //  constructor
-// Model meta data
-    QString filePath = mpCurrentModelWidget->getLibraryTreeItem()->getFileName();
-    QString modelName = mpCurrentModelWidget->getLibraryTreeItem()->getNameStructure();
-    // Model data
-    // Get components to get the Model information
-    QList<Component*>  pModelComponents = mpCurrentModelWidget->getDiagramGraphicsView()->getComponentsList();
-//    foreach (Component* component, pModelComponents) {
-//        ComponentInfo *componentInfo = component->getComponentInfo();
-//        QString componentDefinedInClass = mpCurrentModelWidget->getLibraryTreeItem()->getNameStructure();
-//        QString value = componentInfo->getParameterValue(mpOMCProxy, componentDefinedInClass);
-//        std:cout << componentInfo->getVariablity().toUtf8().constData() << " " << componentInfo->getClassName().toUtf8().constData()  << " " << componentInfo->getName().toUtf8().constData() << " = " << value.toUtf8().constData() << "'" << componentInfo->getComment().toUtf8().constData() << "'" << std::endl;
-//    }
-    // Variable input Real continua:
-    //   getVariability() == ""
-    //   getCausality() == "input"
-    //   getClassName() == "Real"
-    QList<QString> inputVariables1 = getComponentsMatching(pModelComponents, "", "input", "Real");
-    // Variable input Real continua usando output y Real:
-    //   getVariability() == ""
-    //   getCausality() == "input"
-    //   getClassName() == "Modelica.Blocks.Interfaces.RealInput"
-    QList<QString> inputVariables2 = getComponentsMatching(pModelComponents, "", "input", "Modelica.Blocks.Interfaces.RealInput");
-    // Variable output Real continua usando output y Real:
-    //   getVariability() == ""
-    //   getCausality() == "output
-    //   getClassName() == "Real"
-    QList<QString> outputVariables1 =getComponentsMatching(pModelComponents, "", "output", "Real");
-    // Variable output Real continua usando Modelica blocks interfaces:
-    //   getVariability() == ""
-    //   getCausality() == "output
-    //   getClassName() == "Modelica.Blocks.Interfaces.RealOutput"
-    QList<QString> outputVariables2 =getComponentsMatching(pModelComponents, "", "output", "Modelica.Blocks.Interfaces.RealOutput");
-    // Variable aux Real continua:
-    //   getVariability() == ""
-    //   getCausality() == ""
-    //   getClassName() == "Real"
-    QList<QString> auxVariables =getComponentsMatching(pModelComponents, "", "", "Real");
-    // Parameter Real :
-    //   getVariability() == "parameter"
-    //   getCausality() == ""
-    //   getClassName() == "Real"
-    QList<QString> parameters = getComponentsMatching(pModelComponents, "parameter", "", "Real");
-    // Join output variables
-    QList<QString> outputVariables = outputVariables1 + outputVariables2;
-    // Join input variables
-    QList<QString> inputVariables = inputVariables1 + inputVariables2;
-    Model model(inputVariables, outputVariables, auxVariables, parameters, filePath, modelName);
-
-    return model;
-}
-
-bool OMSensDialog::checkIfActiveModel()
-{
-    bool isThereAnActiveModel = mpCurrentModelWidget != 0;
-    return isThereAnActiveModel;
-}
-
 void OMSensDialog::runIndivSensAnalysis()
 {
   // Hide this dialog before opening the new one
   hide();
   // Check if there's an active model in the OMEdit editor
-  bool isThereAnActiveModel = checkIfActiveModel();
+  bool isThereAnActiveModel = true;
   Model *pModel; // Needs to be added to the heap
   IndivSensAnalTypeDialog *analysisTypeDialog; // needs to be extracted from the "if" and freed at the end of the function
   if(isThereAnActiveModel){
       // Get the OMSens model from the OMEdit information abount the open model
-      Model model = currentModelOpen();
       pModel = &model;
       analysisTypeDialog = new IndivSensAnalTypeDialog(pModel,this);
   }
@@ -160,9 +96,6 @@ void OMSensDialog::runIndivSensAnalysis()
       else
       {
           // Give the user the option to run an analysis from the current model active
-          // Quickfix: get the current model again for now so we don't have to store it in the heap
-          Model model = currentModelOpen();
-
           // Ask the user for analysis specifications
           indivDialog = new IndivParamSensAnalysisDialog(model,this);
           dialogCodeSecondDialog = indivDialog->exec();
@@ -246,10 +179,9 @@ void OMSensDialog::runMultiParameterSweep()
   // Hide this dialog before opening the new one
   hide();
   // Check if there's an active model in the OMEdit editor
-  bool isThereAnActiveModel = checkIfActiveModel();
+  bool isThereAnActiveModel = true;
   if(isThereAnActiveModel){
       // Get the OMSens model from the OMEdit information abount the open model
-      Model model = currentModelOpen();
       MultiParamSweepDialog *sweepDialog = new MultiParamSweepDialog(model,this);
       int dialogCode  = sweepDialog->exec();
       if(dialogCode == QDialog::Accepted)
@@ -324,10 +256,9 @@ void OMSensDialog::runVectorialSensAnalysis()
   // Hide this dialog before opening the new one
   hide();
   // Check if there's an active model in the OMEdit editor
-  bool isThereAnActiveModel = checkIfActiveModel();
+  bool isThereAnActiveModel = true;
   if(isThereAnActiveModel){
       // Get the OMSens model from the OMEdit information abount the open model
-      Model model = currentModelOpen();
       VectorialSensAnalysisDialog *vectDialog = new VectorialSensAnalysisDialog(model,this);
       int dialogCode  = vectDialog->exec();
       if(dialogCode == QDialog::Accepted)

@@ -3,26 +3,22 @@
 
 #include <QWidget>
 #include <QDialog>
-#include "OMSens/model.h"
-#include <Component/Component.h>
+#include "model.h"
 
 class OMSensDialog : public QDialog
 {
     Q_OBJECT
 public:
-    explicit OMSensDialog(ModelWidget* currentModelWidget, QWidget *parent = nullptr);
+    explicit OMSensDialog(Model model, QWidget *parent = nullptr);
 
 private:
     // Data
-    ModelWidget* mpCurrentModelWidget;
+    Model model;
     // GUI
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;
     QPushButton *mpVectButton;
     // Auxs
-    QList<QString> getComponentsMatching(QList<Component*> pModelComponents, const char *variability, const char *causality, const char *className);
-    Model currentModelOpen();
-    bool checkIfActiveModel();
 
 signals:
 
