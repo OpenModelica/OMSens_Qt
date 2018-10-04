@@ -326,44 +326,7 @@ void OMSensDialog::runVectorialSensAnalysis()
   // Close OMSens dialog
   accept();
 }
-void OMSensDialog::runPythonScript()
-{
-//ADAPTAR:
-QString filePath;
-filePath = QFileDialog::getOpenFileName(this,tr("Open Python Script"), "", tr("Python script(*.py)"));
-QString pythonBinPath = "/home/adanos/anaconda3/bin/python";
-QString command = QString(pythonBinPath) + " " + filePath;
-QFileInfo fileNameFileInfo = QFileInfo(filePath);
-QDir      fileDir          = fileNameFileInfo.canonicalPath();
-QString fileDirPath        = fileDir.canonicalPath();
-bool currentDirChangeSuccessful = QDir::setCurrent(fileDirPath);
-if (currentDirChangeSuccessful)
-{
-    system(qPrintable(command));
-}
-//ADAPTAR^
-}
-void OMSensDialog::runCURVITestFile()
-{
-	// BORRAR ESTA FUNCION
 
-	// VIEJO!
-//    QString testFilePath = QFileDialog::getOpenFileName(this,tr("Open Vectorial Sensitivity Script"), "", tr("Vectorial Sensitivity script(*.txt)"));
-//    QString curviSensOutputPath = QString("/tmp/vectorialSensOutput_omedit.csv");
-//    // Ofi
-//    //QString curviSensBinPath = "/home/adanos/Documents/repos/tesis-work/modelica_scripts/fortran/curvi";
-//    // Casa
-//    QString curviSensBinPath = "/home/adanos/Documents/TPs/tesis/repos/modelica_scripts/fortran/curvi";
-//    QString command = QString(curviSensBinPath) + " " + testFilePath + " " + curviSensOutputPath;
-//    QFileInfo curviSensFileInfo = QFileInfo(curviSensBinPath);
-//    QDir      fileDir          = curviSensFileInfo.canonicalPath();
-//    QString fileDirPath        = fileDir.canonicalPath();
-//    bool currentDirChangeSuccessful = QDir::setCurrent(fileDirPath);
-//    if (currentDirChangeSuccessful)
-//    {
-//        system(qPrintable(command));
-//    }
-}
 void OMSensDialog::openSensAnalysisResult()
 {
 //ADAPTAR:

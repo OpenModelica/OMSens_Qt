@@ -26,8 +26,6 @@ public slots:
   void runIndivSensAnalysis();
   void runMultiParameterSweep();
   void runVectorialSensAnalysis();
-  void runPythonScript();
-  void runCURVITestFile();
   void openSensAnalysisResult();
   void openSensAnalysisImage();
 };
