@@ -22,6 +22,16 @@ that the model is not as robust as previously thought.</p>
      values the optimization algorithm has to test.</li>
    <li>The system: number of processors, disk speeds, etc.</li>
 </ul>
+<!-- IMPORTANTE. Faltaría:-->
+<!-- 1) Decir que si un parámetro no tiene efecto sobre la variable, entonces su resultado
+     "óptimo" es mentiroso, porque en verdad la rutina de optimización puede devolver cualquier cosa
+     para ese parámetro dado que es indefinido su valor óptimo-->
+<!-- 2) Recomendar, como heurística para el 1), usar indiv sens para ver qué parámetros tienen efecto
+     sobre la variable si se los perturba de forma aislada.
+     NOTA: a) puede que haya parámetros que no afecten a la variable si se los perturba aislados.
+           b) Puede que haya parámetros que afecten mucho a la variable de forma aislada pero no tanto
+              si se perturban otros.-->
 <p><strong>Known limitations</strong></p>
 <p>Only parameters and variables of type Real are recognized. Not even renamings of the sort of 'type MyType = Real' are supported.</p>
 <p>Arrays of any type are not supported either.</p>
+
