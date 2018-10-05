@@ -68,7 +68,8 @@ HEADERS += \
     TableItemDelegate.h
 
 DISTFILES += \
-    resource/ModelWithVariousParams.mo
+    resource/ModelWithVariousParams.mo \
+    OMSens_Qt_plugin.pri
 
 RESOURCES += \
     resources.qrc
