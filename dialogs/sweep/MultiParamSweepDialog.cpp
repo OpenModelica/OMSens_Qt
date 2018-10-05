@@ -5,6 +5,7 @@
 #include <QSizePolicy>
 #include <QJsonArray>
 #include <QCheckBox>
+#include <QTextStream>
 
 #include "../../model.h"
 #include "../../tabs/ParametersExtendedTab.h"
@@ -31,37 +32,7 @@ void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, Q
     initializeWindowSettings();
 
     // Help text description
-    QString helpText = "<p><strong>Multiparameter sweep</strong></p>"
-            "<p>Launches several simulations covering all the possible combinations of parameters values as indicated by the user. If, for example, our model has 2 parameters with the following <br>"
-            "default values, p1= 10 and p2 = 100; and we want to perturb them as:</p>"
-            "<ul>"
-            "<li>p1: 2 iterations of &plusmn;5% perturbation"
-            "<ul>"
-            "<li>10*(1-5/100) = 9.5</li>"
-            "<li>10*(1+5/100) = 10.5</li>"
-            "</ul>"
-            "</li>"
-            "<li>p2: 3 iterations of &plusmn;10% perturbation"
-            "<ul>"
-            "<li>100*(1-10/100) = 95</li>"
-            "<li>100</li>"
-            "<li>100 *(1+10/100) = 110</li>"
-            "</ul>"
-            "</li>"
-            "</ul>"
-            "<p>Then, this will result in 6 iterations (2 possible values for p1 and 3 for p2). The corresponding simulations will be:</p>"
-            "<ul>"
-            "<li>Simulation 1: p1 = 9.5, p2 = 90</li>"
-            "<li>Simulation 2: p1 = 9.5, p2 = 100</li>"
-            "<li>Simulation 3: p1 = 9.5, p2 = 110</li>"
-            "<li>Simulation 4: p1 = 10.5, p2 = 90</li>"
-            "<li>Simulation 5: p1 = 10.5, p2 = 100</li>"
-            "<li>Simulation 6: p1 = 10.5, p2 = 110</li>"
-            "<li>Simulation 7: p1 = 10, p2 = 100 (a standard run is always included)</li>"
-            "</ul>"
-            "<p><strong>Known limitations</strong></p>"
-            "<p>Only parameters and variables of type Real are recognized. Not even renamings of the sort of 'type MyType = Real' are supported.</p>"
-            "<p>Arrays of any type are not supported either.</p>";
+    QString helpText = readHelpText();
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
@@ -174,4 +145,20 @@ void MultiParamSweepDialog::runMultiParamSweep()
     mRunSpecifications["parameters_to_sweep"] = parametersToPerturb;
     // "Return" the run specifications (it has to be read by the caller of the dialog)
     accept();
+}
+
+QString MultiParamSweepDialog::readHelpText()
+{
+    // Make QFile from class member variable
+    QFile helpTextFile(helpTextPath);
+    // Read file into variable
+    QString helpText;
+    if (helpTextFile.open(QFile::ReadOnly | QFile::Text))
+    {
+        QTextStream in(&helpTextFile);
+        helpText = in.readAll();
+        helpTextFile.close();
+    }
+
+    return helpText;
 }

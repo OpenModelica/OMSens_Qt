@@ -1,0 +1,27 @@
+<p>This routine uses an optimization algorithm to find the values of a set of
+parameters that maximize/minimize a chosen variable. It's able to do this by
+characterizing the dynamic models as nonlinear programming problems.</p>
+<p>It can be used to analyze how a set of parameters behave when perturbed
+together, instead of analyzing isolated perturbations. This further increases
+the chances of finding, for example, a combination of small parameter
+perturbations that has a non-negligible effect on a variable, possibly showing
+that the model is not as robust as previously thought.</p>
+<p>Nevertheless, this analysis may take several minutes, maybe hours, depending on the following:</p>
+<ul>
+   <li>The complexity of the model. Simpler models take less time to
+     simulate.</li>
+   <li>The number of parameters to analyze. Each parameter has to be combined with
+     all the others. This means that no matter how effective the underlying
+     optimization algorithm is, in the worst case scenario the analysis time
+     is affected exponentially by the number of parameters to analyze.</li>
+   <li>The simulation time. The shorter the internal simulation time then the
+     shorter the execution time of the simulations.</li>
+   <li>The epsilon. A smaller epsilon may find a better solution but at the
+     expense of longer analysis time.</li>
+   <li>The bounds percentage. The larger the bounds of the parameters, the more
+     values the optimization algorithm has to test.</li>
+   <li>The system: number of processors, disk speeds, etc.</li>
+</ul>
+<p><strong>Known limitations</strong></p>
+<p>Only parameters and variables of type Real are recognized. Not even renamings of the sort of 'type MyType = Real' are supported.</p>
+<p>Arrays of any type are not supported either.</p>

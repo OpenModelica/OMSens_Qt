@@ -40,38 +40,12 @@ private:
     QJsonObject mRunSpecifications;
     QString     mpDestFolderPath;
 
-//    // Model information members
-//    Model model;
-//    // GUI members
-//    Label *mpHeading;
-//    QFrame *mpHorizontalLine;
-//    Label *mpLowerBoundLabel;
-//    QDoubleSpinBox *mpLowerBoundBox;
-//    Label *mpUpperBoundLabel;
-//    QDoubleSpinBox *mpUpperBoundBox;
-//    Label *mpVariableLabel;
-//    QComboBox *mpVariableComboBox;
-//    QButtonGroup *mpOptimTypeButtonGroup;
-//    QRadioButton *mpMaxRadio;
-//    QRadioButton *mpMinRadio;
-//    Label *mpParameterLabel;
-//    DualLists *mpParametersDualLists;
-//    Label *mpTimeLabel;
-//    QDoubleSpinBox *mpTimeBox;
-//    QPushButton *mpRunButton;
+    // Conventions
+    QString helpTextPath = ":/OMSens/vect/help.html";
 
     // Aux functions
     void initializeWindowSettings();
-//    void initializeFormInputsAndLabels(const double maxTargetTime, const double maxPerturbationPercentage, const double defaultTime, const double minPerturbationPercentage);
-//    void initializeButton();
-//    QGridLayout * initializeLayout();
-//    void addWidgetsToLayout(QGridLayout *pMainLayout);
-//    void initializeVarForms();
-//    void initializeParameterForms();
-//    void initializeTimeForms(const double defaultTime, const double maxTargetTime);
-//    void initializeUpperAndLowerBoundsForms(const double minPerturbationPercentage, const double maxPerturbationPercentage);
-//
-signals:
+    QString readHelpText();
 
 private slots:
     void runVectorialParamSensAnalysis();

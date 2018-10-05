@@ -40,8 +40,12 @@ private:
     QJsonObject mRunSpecifications;
     QString     mpDestFolderPath;
 
+    // Conventions
+    QString helpTextPath = ":/OMSens/sweep/help.html";
+
     // Auxs:
     void initializeWindowSettings();
+    QString readHelpText();
 
 private slots:
     void runMultiParamSweep();

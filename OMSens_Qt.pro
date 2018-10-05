@@ -70,7 +70,9 @@ HEADERS += \
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
     OMSens_Qt_plugin.pri \
-    dialogs/indiv/help.html
+    dialogs/indiv/help.html \
+    dialogs/sweep/help.html \
+    dialogs/vect/help.html
 
 RESOURCES += \
     resources.qrc
