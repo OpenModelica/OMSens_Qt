@@ -32,6 +32,16 @@ that the model is not as robust as previously thought.</p>
      NOTA: a) puede que haya parámetros que no afecten a la variable si se los perturba aislados.
            b) Puede que haya parámetros que afecten mucho a la variable de forma aislada pero no tanto
               si se perturban otros.-->
+<!-- 3) Curvi no es perfecto. No busca el máximo global, y si la "función" (simulación para una 
+        variable y tiempo) tiene muchos mínimos locales alrededor del default de un parámetro a
+        analizar, entonces puede que se quede en un mínimo local.
+        Ejemplo: BouncingBall, stoptime 2, parámetro "e", variable "h". Subir "e" en el principio
+        no implica que la pelota esté más alta en tiempo 2, dado que justo puede estar por rebotar, 
+        puede acabar de rebotar, etc. Si subimos "e" entonces la pelota está más tiempo en el aire
+        durante toda la simulación pero no en un tiempo específico. En este caso, si perturbamos e con
+        un +10%, la pelota en tiempo 2 da más alto que is perturbamos con un 1%, pero Curvi se queda en
+        el mínimo global de 1%
+      -->
 <p><strong>Known limitations</strong></p>
 <p>Only parameters and variables of type Real are recognized. Not even renamings of the sort of 'type MyType = Real' are supported.</p>
 <p>Arrays of any type are not supported either.</p>
