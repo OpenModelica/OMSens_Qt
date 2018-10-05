@@ -24,7 +24,7 @@ Model modelExample()
   // Model name
   QString modelName = "ModelWithVariousParams";
   // Model path in Qt resources
-  QString fileResourcePath = ":/ModelWithVariousParams.mo";
+  QString fileResourcePath = ":/OMSens/ModelWithVariousParams.mo";
   // Model file name to be used when written to disk
   QString tempModelName = "ModelWithVariousParams.mo";
   // Temp dir where to write Model

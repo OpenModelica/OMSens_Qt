@@ -6,6 +6,7 @@
 #include <QGridLayout>
 #include <QJsonArray>
 #include <QJsonDocument>
+#include <QTextStream>
 
 #include "../../model.h"
 #include "../../tabs/VariablesTab.h"
@@ -174,28 +175,16 @@ void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
 
 QString IndivParamSensAnalysisDialog::readHelpText()
 {
-    // Temp version that has the text hardcoded
-    QString helpText = "<p><strong>Individual Sensitivity Analysis</strong></p>"
-                "<p>Perturbs parameters individually, one at a time and by the same percentage.</p>"
-                "<p>This type of analysis is useful to find to which parameters a variable of the model is most sensitive to.</p>"
-                "<p>The number of simulations will be equal to the number of parameters to analyze plus one, the simulation corresponding to the standard run.</p>"
-                "<p><strong>Known limitations</strong></p>"
-                "<p>Only parameters and variables of type Real are recognized. Not even renamings of the sort of 'type MyType = Real' are supported.</p>"
-                "<p>Arrays of any type are not supported either.</p>";
-    // TEMP VERSION ^
-
-    // VERSION THAT READS FROM FILE:
-    // // Make QFile from class member variable
-    // QFile helpTextFile(helpTextPath);
-    // // Read file into variable
-    // QString helpText;
-    // if (helpTextFile.open(QFile::ReadOnly | QFile::Text))
-    // {
-    //     QTextStream in(&helpTextFile);
-    //     helpText = in.readAll();
-    //     helpTextFile.close();
-    // }
-    // VERSION THAT READS FROM FILE^
+    // Make QFile from class member variable
+    QFile helpTextFile(helpTextPath);
+    // Read file into variable
+    QString helpText;
+    if (helpTextFile.open(QFile::ReadOnly | QFile::Text))
+    {
+        QTextStream in(&helpTextFile);
+        helpText = in.readAll();
+        helpTextFile.close();
+    }
 
     return helpText;
 }

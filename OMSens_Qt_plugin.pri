@@ -39,3 +39,6 @@ SOURCES +=  $$PWD/dialogs/general/CSVViewerDialog.cpp \
     $$PWD/DualLists.cpp \
     $$PWD/model.cpp \
     $$PWD/OMSensDialog.cpp
+
+RESOURCES += \
+    $$PWD/resources.qrc

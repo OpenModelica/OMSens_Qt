@@ -42,7 +42,7 @@ private:
     QString     destFolderPath;
 
     // Conventions
-    QString helpTextPath = "./help.html";
+    QString helpTextPath = ":/OMSens/indiv/help.html";
 
     // Auxs
     void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);

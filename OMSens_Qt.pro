@@ -69,7 +69,8 @@ HEADERS += \
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
-    OMSens_Qt_plugin.pri
+    OMSens_Qt_plugin.pri \
+    dialogs/indiv/help.html
 
 RESOURCES += \
     resources.qrc
