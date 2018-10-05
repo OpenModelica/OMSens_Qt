@@ -6,10 +6,9 @@
 #include <QJsonArray>
 #include <QCheckBox>
 
-#include "DualLists.h"
-#include "model.h"
-#include "tabs/ParametersExtendedTab.h"
-#include "tabs/HelpTab.h"
+#include "../../model.h"
+#include "../../tabs/ParametersExtendedTab.h"
+#include "../../tabs/HelpTab.h"
 
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     QDialog(pParent)

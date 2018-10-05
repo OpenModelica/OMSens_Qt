@@ -1,10 +1,10 @@
 #ifndef INDIVPARAMSENSANALYSISDIALOG_H
 #define INDIVPARAMSENSANALYSISDIALOG_H
-#include "model.h"
-#include "tabs/VariablesTab.h"
-#include "tabs/ParametersSimpleTab.h"
-#include "tabs/SimulationTab.h"
-#include "tabs/HelpTab.h"
+#include "../../model.h"
+#include "../../tabs/VariablesTab.h"
+#include "../../tabs/ParametersSimpleTab.h"
+#include "../../tabs/SimulationTab.h"
+#include "../../tabs/HelpTab.h"
 #include <QDialog>
 #include <QFrame>
 #include <QDoubleSpinBox>

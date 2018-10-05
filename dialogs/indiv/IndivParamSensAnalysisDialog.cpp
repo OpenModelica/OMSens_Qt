@@ -7,11 +7,11 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 
-#include "model.h"
-#include "tabs/VariablesTab.h"
-#include "tabs/ParametersSimpleTab.h"
-#include "tabs/SimulationTab.h"
-#include "tabs/HelpTab.h"
+#include "../../model.h"
+#include "../../tabs/VariablesTab.h"
+#include "../../tabs/ParametersSimpleTab.h"
+#include "../../tabs/SimulationTab.h"
+#include "../../tabs/HelpTab.h"
 
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(QJsonDocument jsonSpecsDocument, QWidget *pParent)
   : QDialog(pParent)

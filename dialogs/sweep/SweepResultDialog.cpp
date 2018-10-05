@@ -4,7 +4,7 @@
 #include <QJsonObject>
 #include <QFormLayout>
 #include <QPushButton>
-#include "dialogs/general/ImageViewerDialog.h"
+#include "../../dialogs/general/ImageViewerDialog.h"
 
 SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pParent) : QDialog(pParent)
 {

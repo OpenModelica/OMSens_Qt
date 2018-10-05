@@ -4,7 +4,7 @@
 #include <QStandardItemModel>
 #include <QFormLayout>
 
-#include "TableItemDelegate.h"
+#include "../../TableItemDelegate.h"
 
 VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, QWidget *pParent) : QDialog(pParent)
 {
