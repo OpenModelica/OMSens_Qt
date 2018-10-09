@@ -9,9 +9,11 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
 {
     // Initialize tabs
     mpOptimParamsTab = new OptimizationResultParametersTab(vectorialResults);
+    mpOptimOtherTab = new OptimizationResultOtherTab(vectorialResults);
     // Initialize tabs container widget
     mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpOptimParamsTab, tr("Parameters"));
+    mpTabWidget->addTab(mpOptimOtherTab, tr("Other"));
 
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;

@@ -9,6 +9,7 @@
 #include <QTabWidget>
 
 #include "../../tabs/optim_result/OptimizationResultParametersTab.h"
+#include "../../tabs/optim_result/OptimizationResultOtherTab.h"
 
 class VectorialResultsDialog : public QDialog
 {
@@ -19,6 +20,7 @@ private:
     // GUI
     QTabWidget            *mpTabWidget;
     OptimizationResultParametersTab* mpOptimParamsTab;
+    OptimizationResultOtherTab*      mpOptimOtherTab;
 //    // OLD:
 //    // GUI members
 //    // x

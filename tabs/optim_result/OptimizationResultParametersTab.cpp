@@ -49,10 +49,10 @@ OptimizationResultParametersTab::OptimizationResultParametersTab(QJsonDocument v
         optimumItem->setData(QVariant(optimumValue),Qt::DisplayRole);
         // Check if the optimum value ended up being 0
         QVariant changeVariant;
-        if (optimumValue != 0)
+        if (defaultValue != 0)
         {
             // If we can divide, define change as follows
-            double change = (1 - (defaultValue/optimumValue))*100;
+            double change = ((optimumValue/defaultValue)-1)*100;
             changeVariant = QVariant(change);
         }
         else
