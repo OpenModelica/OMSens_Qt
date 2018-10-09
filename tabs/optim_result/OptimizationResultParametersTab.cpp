@@ -73,14 +73,15 @@ OptimizationResultParametersTab::OptimizationResultParametersTab(QJsonDocument v
     // x table
     mpXTable = new QTableView;
     mpXTable->setModel(csvModel);
-    // Resize columns to contents
-    mpXTable->resizeColumnsToContents();
+    // Enable sorting
     mpXTable->setSortingEnabled(true);
     // Set item delegate to format doubles in specified precision
     TableItemDelegate *decDelegate = new TableItemDelegate(this);
     mpXTable->setItemDelegate(decDelegate);
     // Set table as readonly
     mpXTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // Resize columns to contents
+    mpXTable->resizeColumnsToContents();
 
     // Set layout
     QHBoxLayout *pMainLayout = new QHBoxLayout;
