@@ -6,30 +6,30 @@
 #include <QTableWidget>
 #include <QJsonDocument>
 #include <QJsonObject>
+#include <QTabWidget>
+
+#include "../../tabs/optim_result/OptimizationResultParametersTab.h"
 
 class VectorialResultsDialog : public QDialog
 {
     Q_OBJECT
 public:
     VectorialResultsDialog(QJsonDocument vectorialResults, QWidget *pParent = 0);
-
-    // Conventions:
-    //   Columns ordering
-    int nameColPos    = 0;
-    int optimumColPos = 1;
-    int defaultColPos = 2;
-    int diffColPos    = 3;
 private:
-    // GUI members
-    // x
-    QLabel     *mpXLabel;
-    QTableView *mpXTable;
-    // f(x)
-    QLabel  *mpFxLabel;
-    QLabel  *mpFxValue;
-    // Data members
-    QJsonObject mXOptMap;
-    double mFx;
+    // GUI
+    QTabWidget            *mpTabWidget;
+    OptimizationResultParametersTab* mpOptimParamsTab;
+//    // OLD:
+//    // GUI members
+//    // x
+//    QLabel     *mpXLabel;
+//    QTableView *mpXTable;
+//    // f(x)
+//    QLabel  *mpFxLabel;
+//    QLabel  *mpFxValue;
+//    // Data members
+//    QJsonObject mXOptMap;
+//    double mFx;
 
 };
 

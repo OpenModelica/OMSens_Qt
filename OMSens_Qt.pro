@@ -43,7 +43,8 @@ SOURCES += \
     DualLists.cpp \
     main.cpp \
     model.cpp \
-    OMSensDialog.cpp
+    OMSensDialog.cpp \
+    tabs/optim_result/OptimizationResultParametersTab.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -65,7 +66,8 @@ HEADERS += \
     DualLists.h \
     model.h \
     OMSensDialog.h \
-    TableItemDelegate.h
+    TableItemDelegate.h \
+    tabs/optim_result/OptimizationResultParametersTab.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
