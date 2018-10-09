@@ -3,7 +3,7 @@
 #include <QStandardItemModel>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QGridLayout>
+#include <QFormLayout>
 #include <QHeaderView>
 
 #include "../../TableItemDelegate.h"
@@ -92,10 +92,14 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
 
 
     // Set layout
-    QGridLayout  *pMainLayout = new QGridLayout;
+    QFormLayout  *pMainLayout = new QFormLayout;
     // f(x)
-    pMainLayout->addWidget(mpFxLabel,0,0);
-    pMainLayout->addWidget(mpFxTable,1,0);
+    pMainLayout->addRow(mpFxLabel);
+    QHBoxLayout  *pTableLayout = new QHBoxLayout;
+    pTableLayout->addStretch();
+    pTableLayout->addWidget(mpFxTable);
+    pTableLayout->addStretch();
+    pMainLayout->addRow(pTableLayout);
     // Stop time
     //mpModelNameValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
