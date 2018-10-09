@@ -1,6 +1,7 @@
 #ifndef OPTIMIZATIONRESULTOTHERTAB_H
 #define OPTIMIZATIONRESULTOTHERTAB_H
 
+#include <QLabel>
 #include <QTableView>
 #include <QTabWidget>
 #include <QString>
@@ -14,6 +15,7 @@ public:
 
 private:
     // GUI members
+    QLabel     *mpFxLabel;
     QTableView *mpFxTable;
     // Data members
     double m_f_x_opt;

@@ -3,7 +3,8 @@
 #include <QStandardItemModel>
 #include <QJsonDocument>
 #include <QJsonObject>
-#include <QFormLayout>
+#include <QGridLayout>
+#include <QHeaderView>
 
 #include "../../TableItemDelegate.h"
 
@@ -67,21 +68,34 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     csvModel->insertRow(csvModel->rowCount(), standardItemsList);
 
     // f(x) table
+    mpFxLabel = new QLabel("Variable:");
     mpFxTable = new QTableView;
     mpFxTable->setModel(csvModel);
-    // Resize columns to contents
-    mpFxTable->resizeColumnsToContents();
-    mpFxTable->setSortingEnabled(true);
+    // Disable row label
+    mpFxTable->verticalHeader()->setVisible(false);
+    // Disable scrollbars
+    mpFxTable->setVerticalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
+    mpFxTable->setHorizontalScrollBarPolicy(Qt::ScrollBarAlwaysOff);
     // Set item delegate to format doubles in specified precision
     TableItemDelegate *decDelegate = new TableItemDelegate(this);
     mpFxTable->setItemDelegate(decDelegate);
     // Set table as readonly
     mpFxTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
+    // Resize columns to contents
+    mpFxTable->resizeColumnsToContents();
+    // Set fixed width and height for whole table
+    int width  = mpFxTable->horizontalHeader()->length();
+    int height = mpFxTable->verticalHeader()->length()   + mpFxTable->horizontalHeader()->height();
+    mpFxTable->setFixedSize(width, height);
+    // Disable column resize
+    mpFxTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
+
 
     // Set layout
-    QFormLayout *pMainLayout = new QFormLayout;
+    QGridLayout  *pMainLayout = new QGridLayout;
     // f(x)
-    pMainLayout->addRow(mpFxTable);
+    pMainLayout->addWidget(mpFxLabel,0,0);
+    pMainLayout->addWidget(mpFxTable,1,0);
     // Stop time
     //mpModelNameValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
