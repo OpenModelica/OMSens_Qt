@@ -22,6 +22,11 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     // variable
     mVariable = vectorialResultsObject.value(QString("variable")).toString();
 
+    // Stop time
+    mpStopTimeLabel = new QLabel("Stop time:");
+    mpStopTimeValue = new QLabel(QString::number(mStopTime));
+    //mpStopTimeValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+
     // Initialize f(x) table
     const QList<QString> columnNames( QList<QString>()
                                      << "Variable"
@@ -93,6 +98,8 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
 
     // Set layout
     QFormLayout  *pMainLayout = new QFormLayout;
+    // stoptime
+    pMainLayout->addRow(mpStopTimeLabel,mpStopTimeValue);
     // f(x)
     pMainLayout->addRow(mpFxLabel);
     QHBoxLayout  *pTableLayout = new QHBoxLayout;
@@ -100,8 +107,6 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     pTableLayout->addWidget(mpFxTable);
     pTableLayout->addStretch();
     pMainLayout->addRow(pTableLayout);
-    // Stop time
-    //mpModelNameValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
     // Layout settings
     setLayout(pMainLayout);

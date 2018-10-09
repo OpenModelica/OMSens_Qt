@@ -15,8 +15,12 @@ public:
 
 private:
     // GUI members
+    // f(x)
     QLabel     *mpFxLabel;
     QTableView *mpFxTable;
+    // stoptime
+    QLabel *mpStopTimeLabel;
+    QLabel *mpStopTimeValue;
     // Data members
     double m_f_x_opt;
     double m_f_x0;

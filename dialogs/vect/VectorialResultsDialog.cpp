@@ -22,7 +22,7 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
 
     // Windows settings
     this->setMinimumHeight(600);
-    this->setMinimumWidth(600);
+    this->setMinimumWidth(450);
 
     // OLD:
 //    // Parse JSON
