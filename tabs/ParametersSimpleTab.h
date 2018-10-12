@@ -11,7 +11,7 @@ class ParametersSimpleTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ParametersSimpleTab(QList<QString> parameters, double percentage, QWidget *parent = 0);
+    explicit ParametersSimpleTab(QList<QString> parameters, double percentage, QString quickExplanation, QWidget *parent = 0);
     // Getters
     QTableWidget *getParametersTable() const;
     double  getPercentageValue() const;

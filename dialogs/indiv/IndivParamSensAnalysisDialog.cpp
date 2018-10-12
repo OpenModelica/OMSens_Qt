@@ -63,7 +63,8 @@ void IndivParamSensAnalysisDialog::initializeDialogWithData(QList<QString> varia
     QString defaultResultsFolderPath = "/home/omsens/Documents/indiv_sens_results";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(variables);
-    mpParametersTab         = new ParametersSimpleTab(parameters, percentage);
+    QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
+    mpParametersTab         = new ParametersSimpleTab(parameters, percentage, parametersQuickExplanation);
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget

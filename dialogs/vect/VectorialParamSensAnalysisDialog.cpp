@@ -39,7 +39,8 @@ void VectorialSensAnalysisDialog::initializeDialogWithData(QList<QString> variab
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/vectorial_analysis";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
-    mpParametersTab         = new ParametersSimpleTab(parameters, percentage);
+    QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
+    mpParametersTab         = new ParametersSimpleTab(parameters, percentage, parametersQuickExplanation);
     mpOptimizationTab       = new OptimizationTab(variables);
     mpHelpTab               = new HelpTab(helpText);
 

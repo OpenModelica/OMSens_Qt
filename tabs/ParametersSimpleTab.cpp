@@ -7,10 +7,10 @@
 #include <QCheckBox>
 #include <QFormLayout>
 
-ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double percentage, QWidget *parent) : QWidget(parent)
+ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double percentage, QString quickExplanation, QWidget *parent) : QWidget(parent)
 {
     // Initialize label with brief description of the analysis
-    mpBriefDescriptionLabel = new QLabel("Each selected parameter is perturbed in isolation, one at a time",this);
+    mpBriefDescriptionLabel = new QLabel(quickExplanation,this);
 
     // Percentage
     mpPercentageLabel = new QLabel(tr("Percentage (+ or -):"));
