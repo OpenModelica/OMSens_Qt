@@ -358,9 +358,11 @@ void OMSensDialog::runVectorialSensAnalysis()
   hide();
   // Initialize and execute dialog
   BaseRunSpecsDialog *runSpecsDialog;
-  if (runType == Vectorial)
+  switch (runType)
   {
-      runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
+      case Vectorial:
+         runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
+         break;
   }
   int dialogCode  = runSpecsDialog->exec();
   // If the dialog was accepted by the user, run the analysis
@@ -381,9 +383,11 @@ void OMSensDialog::runVectorialSensAnalysis()
           QJsonDocument jsonPathsDocument = readJsonFile(resultsFolderPath);
           // Initialize results instance with JSON document
           BaseResultsDialog *resultsDialog;
-          if (runType == Vectorial)
+          switch (runType)
           {
-              resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+              case Vectorial:
+                 resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+                 break;
           }
           resultsDialog->show();
       }
