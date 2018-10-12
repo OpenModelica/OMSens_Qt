@@ -4,7 +4,7 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 
-IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QWidget *pParent) : QDialog(pParent)
+IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QWidget *pParent) : BaseResultsDialog(pParent)
 {
     // Parse JSON
     // Get the "main" object of the json document

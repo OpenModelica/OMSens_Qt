@@ -5,9 +5,11 @@
 #include <QJsonDocument>
 #include <QDialogButtonBox>
 #include <QTabWidget>
-#include "../../tabs/SensitivityMethodResultsTab.h"
 
-class IndivSensResultsDialog : public QDialog
+#include "../../tabs/SensitivityMethodResultsTab.h"
+#include "../BaseResultsDialog.h"
+
+class IndivSensResultsDialog : public BaseResultsDialog
 {
     Q_OBJECT
 public:

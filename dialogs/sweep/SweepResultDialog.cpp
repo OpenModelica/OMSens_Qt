@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include "../../dialogs/general/ImageViewerDialog.h"
 
-SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pParent) : QDialog(pParent)
+SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pParent) : BaseResultsDialog(pParent)
 {
     // Parse JSON
     // Get the "main" object of the json document

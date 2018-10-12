@@ -7,7 +7,9 @@
 #include <QComboBox>
 #include <QLabel>
 
-class SweepResultsDialog: public QDialog
+#include "../BaseResultsDialog.h"
+
+class SweepResultsDialog: public BaseResultsDialog
 {
     Q_OBJECT
 public:
