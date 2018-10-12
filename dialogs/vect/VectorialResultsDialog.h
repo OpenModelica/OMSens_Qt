@@ -10,8 +10,9 @@
 
 #include "../../tabs/optim_result/OptimizationResultParametersTab.h"
 #include "../../tabs/optim_result/OptimizationResultOtherTab.h"
+#include "../BaseResultsDialog.h"
 
-class VectorialResultsDialog : public QDialog
+class VectorialResultsDialog : public BaseResultsDialog
 {
     Q_OBJECT
 public:
@@ -21,18 +22,6 @@ private:
     QTabWidget            *mpTabWidget;
     OptimizationResultParametersTab* mpOptimParamsTab;
     OptimizationResultOtherTab*      mpOptimOtherTab;
-//    // OLD:
-//    // GUI members
-//    // x
-//    QLabel     *mpXLabel;
-//    QTableView *mpXTable;
-//    // f(x)
-//    QLabel  *mpFxLabel;
-//    QLabel  *mpFxValue;
-//    // Data members
-//    QJsonObject mXOptMap;
-//    double mFx;
-
 };
 
 #endif // VECTORIALRESULTSDIALOG_H

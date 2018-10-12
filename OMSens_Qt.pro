@@ -70,7 +70,8 @@ HEADERS += \
     TableItemDelegate.h \
     tabs/optim_result/OptimizationResultParametersTab.h \
     tabs/optim_result/OptimizationResultOtherTab.h \
-    dialogs/BaseRunSpecsDialog.h
+    dialogs/BaseRunSpecsDialog.h \
+    dialogs/BaseResultsDialog.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

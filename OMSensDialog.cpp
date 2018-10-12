@@ -16,6 +16,7 @@
 #include "dialogs/general/ImageViewerDialog.h"
 #include "dialogs/general/CSVViewerDialog.h"
 #include "dialogs/BaseRunSpecsDialog.h"
+#include "dialogs/BaseResultsDialog.h"
 
 // Enum so we can refactor the run and results dialog common behaviour between the types of runs
 enum RunType {Individual, Sweep, Vectorial};
@@ -379,7 +380,11 @@ void OMSensDialog::runVectorialSensAnalysis()
           // Read JSON in results folder with the paths to the results of the script
           QJsonDocument jsonPathsDocument = readJsonFile(resultsFolderPath);
           // Initialize results instance with JSON document
-          VectorialResultsDialog *resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+          BaseResultsDialog *resultsDialog;
+          if (runType == Vectorial)
+          {
+              resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+          }
           resultsDialog->show();
       }
   }

@@ -2,7 +2,6 @@
 #define BASERUNSPECSDIALOG_H
 
 #include <QDialog>
-#include "../model.h"
 
 class BaseRunSpecsDialog : public QDialog
 {
