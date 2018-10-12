@@ -12,7 +12,7 @@
 #include "../../tabs/HelpTab.h"
 
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
-    QDialog(pParent)
+    BaseRunSpecsDialog(pParent)
 {
     // Get Model information necessary for the dialog
     QList<QString> variables  = model.getAuxVariables()+model.getOutputVariables();

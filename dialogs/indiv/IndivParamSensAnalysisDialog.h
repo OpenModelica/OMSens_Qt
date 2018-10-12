@@ -5,6 +5,8 @@
 #include "../../tabs/ParametersSimpleTab.h"
 #include "../../tabs/SimulationTab.h"
 #include "../../tabs/HelpTab.h"
+#include "../BaseRunSpecsDialog.h"
+
 #include <QDialog>
 #include <QFrame>
 #include <QDoubleSpinBox>
@@ -16,7 +18,7 @@
 #include <QJsonObject>
 #include <QDialogButtonBox>
 
-class IndivParamSensAnalysisDialog : public QDialog
+class IndivParamSensAnalysisDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:

@@ -363,6 +363,12 @@ void OMSensDialog::runVectorialSensAnalysis()
       case Vectorial:
          runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
          break;
+      case Sweep:
+         runSpecsDialog = new MultiParamSweepDialog(mModel,this);
+         break;
+      case Individual:
+         runSpecsDialog = new MultiParamSweepDialog(mModel,this);
+         break;
   }
   int dialogCode  = runSpecsDialog->exec();
   // If the dialog was accepted by the user, run the analysis

@@ -15,7 +15,7 @@
 #include "../../tabs/HelpTab.h"
 
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(QJsonDocument jsonSpecsDocument, QWidget *pParent)
-  : QDialog(pParent)
+  : BaseRunSpecsDialog(pParent)
 {
     // Get main object from document
     QJsonObject jsonSpecs = jsonSpecsDocument.object();
@@ -38,7 +38,7 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(QJsonDocument jsonSpe
 }
 
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget *pParent)
-  : QDialog(pParent)
+  : BaseRunSpecsDialog(pParent)
 {
     // Get Model information necessary for the dialog
     QList<QString> variables  = model.getAuxVariables()+model.getOutputVariables();

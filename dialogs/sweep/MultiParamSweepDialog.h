@@ -16,8 +16,9 @@
 #include "../../tabs/HelpTab.h"
 #include "../../DualLists.h"
 #include "../../model.h"
+#include "../BaseRunSpecsDialog.h"
 
-class MultiParamSweepDialog : public QDialog
+class MultiParamSweepDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:
