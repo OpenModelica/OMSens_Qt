@@ -19,7 +19,12 @@ HEADERS +=  $$PWD/dialogs/general/CSVViewerDialog.h \
     $$PWD/DualLists.h \
     $$PWD/model.h \
     $$PWD/OMSensDialog.h \
+    $$PWD/dialogs/BaseResultsDialog.h \
+    $$PWD/dialogs/BaseRunSpecsDialog.h \
+    $$PWD/tabs/optim_result/OptimizationResultOtherTab.h \
+    $$PWD/tabs/optim_result/OptimizationResultParametersTab.h \
     $$PWD/TableItemDelegate.h
+
 SOURCES +=  $$PWD/dialogs/general/CSVViewerDialog.cpp \
     $$PWD/dialogs/general/ImageViewerDialog.cpp \
     $$PWD/dialogs/indiv/IndivParamSensAnalysisDialog.cpp \
@@ -38,7 +43,9 @@ SOURCES +=  $$PWD/dialogs/general/CSVViewerDialog.cpp \
     $$PWD/tabs/VariablesTab.cpp \
     $$PWD/DualLists.cpp \
     $$PWD/model.cpp \
-    $$PWD/OMSensDialog.cpp
+    $$PWD/OMSensDialog.cpp \
+    $$PWD/tabs/optim_result/OptimizationResultOtherTab.cpp \
+    $$PWD/tabs/optim_result/OptimizationResultParametersTab.cpp
 
 RESOURCES += \
     $$PWD/resources.qrc
