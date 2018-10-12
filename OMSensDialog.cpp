@@ -276,37 +276,48 @@ void OMSensDialog::runVectorialSensAnalysis()
       QFileInfo scriptFileInfo = QFileInfo(scriptPath);
       QDir      scriptDir          = scriptFileInfo.canonicalPath();
       QString scriptDirPath        = scriptDir.canonicalPath();
-      bool currentDirChangeSuccessful = QDir::setCurrent(scriptDirPath);
-      if (currentDirChangeSuccessful)
-      {
-          QProcess pythonSriptProcess;
-          QProgressDialog *dialog = new QProgressDialog("Running python script...", "Cancel", 0, 0, this);
-          dialog->setAttribute(Qt::WA_DeleteOnClose);
-          // Connect command "close" with dialog close
-          connect(&pythonSriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
-          // Connect dialog "cancel"  with command kill
-          connect(dialog, SIGNAL(canceled()), &pythonSriptProcess, SLOT(kill()));
 
-          pythonSriptProcess.start(command);
-          dialog->exec();
-          // Wait for it to finish in the case that we cancel the process and it doesn't have time to finish correctly
-          pythonSriptProcess.waitForFinished(3000);
+      QProcess pythonScriptProcess;
+      // Set working dir path
+      pythonScriptProcess.setWorkingDirectory(scriptDirPath);
+      // Initialize dialog showing progress
+      QProgressDialog *dialog = new QProgressDialog("Running python script...", "Cancel", 0, 0, this);
+      dialog->setAttribute(Qt::WA_DeleteOnClose);
+      // Connect command "close" with dialog close
+      connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
+      // Connect dialog "cancel"  with command kill
+      connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
+
+      // Start process
+      pythonScriptProcess.start(command);
+      // Show dialog with progress
+      dialog->exec();
+      // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
+      pythonScriptProcess.waitForFinished(3000);
+
+      // See if the process ended correctly
+      QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
+      int exitCode = pythonScriptProcess.exitCode();
+
+      bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+      if (processEndedCorrectly)
+      {
+          // Read JSON in results folder with the paths to the results of the script
+          QString resultsFileName = "optim_results.json";
+          QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
+          // Read JSON file into string
+          QString val;
+          QFile jsonPathsQFile;
+          jsonPathsQFile.setFileName(analysisResultsJSONPath);
+          jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
+          val = jsonPathsQFile.readAll();
+          jsonPathsQFile.close();
+          // Parse string into json document
+          QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
+          // Initialize results instance with JSON document
+          VectorialResultsDialog *resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+          resultsDialog->show();
       }
-      // Read JSON in results folder with the paths to the results of the script
-      QString resultsFileName = "optim_results.json";
-      QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
-      // Read JSON file into string
-      QString val;
-      QFile jsonPathsQFile;
-      jsonPathsQFile.setFileName(analysisResultsJSONPath);
-      jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-      val = jsonPathsQFile.readAll();
-      jsonPathsQFile.close();
-      // Parse string into json document
-      QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
-      // Initialize results instance with JSON document
-      VectorialResultsDialog *resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
-      resultsDialog->show();
   }
   // If the user pressed the "Cancel" button, do nothing for now
   if(dialogCode == QDialog::Rejected) {
