@@ -1,4 +1,6 @@
 #include "OMSensDialog.h"
+#include <QProcess>
+#include <QProgressDialog>
 #include <QVBoxLayout>
 #include <QPushButton>
 #include <QFileDialog>
@@ -277,7 +279,18 @@ void OMSensDialog::runVectorialSensAnalysis()
       bool currentDirChangeSuccessful = QDir::setCurrent(scriptDirPath);
       if (currentDirChangeSuccessful)
       {
-          system(qPrintable(command));
+          QProcess pythonSriptProcess;
+          QProgressDialog *dialog = new QProgressDialog("Running python script...", "Cancel", 0, 0, this);
+          dialog->setAttribute(Qt::WA_DeleteOnClose);
+          // Connect command "close" with dialog close
+          connect(&pythonSriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
+          // Connect dialog "cancel"  with command kill
+          connect(dialog, SIGNAL(canceled()), &pythonSriptProcess, SLOT(kill()));
+
+          pythonSriptProcess.start(command);
+          dialog->exec();
+          // Wait for it to finish in the case that we cancel the process and it doesn't have time to finish correctly
+          pythonSriptProcess.waitForFinished(3000);
       }
       // Read JSON in results folder with the paths to the results of the script
       QString resultsFileName = "optim_results.json";
