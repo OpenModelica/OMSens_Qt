@@ -100,13 +100,25 @@ QJsonDocument OMSensDialog::readJsonFile(QString resultsFolderPath)
     return jsonPathsDocument;
 }
 
+QString OMSensDialog::progressDialogTextForCurrentTime()
+{
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString date = currentTime.toString("dd/MM/yyyy");
+    QString h_m_s = currentTime.toString("H:m:s");
+    QString scriptRunStartString = "(started on " + date + " at " + h_m_s + ")";
+    QString progressDialogText = "Running python script... " + scriptRunStartString;
+
+    return progressDialogText;
+}
+
 bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
 {
     QProcess pythonScriptProcess;
     // Set working dir path
     pythonScriptProcess.setWorkingDirectory(scriptDirPath);
     // Initialize dialog showing progress
-    QProgressDialog *dialog = new QProgressDialog("Running python script...", "Cancel", 0, 0, this);
+    QString progressDialogText = progressDialogTextForCurrentTime();
+    QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
     // Connect command "close" with dialog close
     connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));

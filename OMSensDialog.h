@@ -34,6 +34,8 @@ public:
     
     void runOMSensFeature(RunType runType, QString scriptPath);
     
+    QString progressDialogTextForCurrentTime();
+
 private:
     // Data
     Model mModel;
