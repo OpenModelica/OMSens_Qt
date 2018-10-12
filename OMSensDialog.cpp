@@ -52,113 +52,29 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
 
 void OMSensDialog::runIndivSensAnalysis()
 {
+  QString scriptPath = "/home/omsens/Documents/OMSens/individual_sens_calculator.py" ;
+  RunType runType = Individual;
   // Hide this dialog before opening the new one
-  hide();
-  IndivSensAnalTypeDialog * analysisTypeDialog = new IndivSensAnalTypeDialog(mModel,this);
-  // Ask the user if they want to run a sample or define an analysis by themselves
-  int dialogCodeFirstDialog = analysisTypeDialog->exec();
-  if(dialogCodeFirstDialog == QDialog::Accepted)
-  {
-      // The user chose to run some kind of analysis
-      bool choseW3InsteadOfOpenModel = analysisTypeDialog->choseW3InsteadOfOpenModel;
-      IndivParamSensAnalysisDialog *indivDialog;
-      int dialogCodeSecondDialog;
-      if (choseW3InsteadOfOpenModel)
-      {
-          // Initialize the Dialog with a predefined analysis
-          // Read JSON with W3 specs
-          QString jsonSpecsName = "exp_01_paper_fig_2_heatmap.json";
-          QString experimentsFolderPath = "/home/omsens/Documents/OMSens/resource/experiments/individual/";
-          QString jsonSpecsPath = QDir::cleanPath(experimentsFolderPath + QDir::separator() + jsonSpecsName);
-          // Reed analysis specifications from disk
-          QString fileContents;
-          QFile file(jsonSpecsPath);
-          file.open(QIODevice::ReadOnly | QIODevice::Text);
-          fileContents = file.readAll();
-          file.close();
-          // Initialize Qt JSON document with file contents
-          QJsonDocument jsonSpecsDocument = QJsonDocument::fromJson(fileContents.toUtf8());
-          // Initialize dialog with JSON specs
-          indivDialog = new IndivParamSensAnalysisDialog(jsonSpecsDocument,this);
-          dialogCodeSecondDialog = indivDialog->exec();;
-      }
-      else
-      {
-          // Give the user the option to run an analysis from the current model active
-          // Ask the user for analysis specifications
-          indivDialog = new IndivParamSensAnalysisDialog(mModel,this);
-          dialogCodeSecondDialog = indivDialog->exec();
-      }
-      // If the user pressed the "Ok" button, get the user inputs
-      if(dialogCodeSecondDialog == QDialog::Accepted)
-      {   // Get user inputs from dialog
-          QJsonObject runSpecifications = indivDialog->getRunSpecifications();
-          QString destFolderPath = indivDialog->getDestFolderPath();
-          // Make timestamp subfolder in dest folder path
-          QDateTime currentTime = QDateTime::currentDateTime();
-          QString date = currentTime.toString("dd-MM-yyyy");
-          QString h_m_s = currentTime.toString("H_m_s");
-          QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
-          QDir timestampFolderPathDir(timeStampFolderPath);
-          if (!timestampFolderPathDir.exists()){
-            timestampFolderPathDir.mkpath(".");
-          }
-          // Write JSON to disk
-          QString jsonSpecsName = "experiment_specs.json";
-          QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
-          // Save analysis specifications to disk
-          QJsonDocument runSpecificationsDoc(runSpecifications);
-          QFile runSpecificationsFile(jsonSpecsPath);
-          if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
-          {
-              runSpecificationsFile.write(runSpecificationsDoc.toJson());
-              runSpecificationsFile.close();
-          }
-          // Make sub-folder where the results will be written
-          QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
-          QDir resultsFolderPathDir(resultsFolderPath);
-          if (!resultsFolderPathDir.exists()){
-            resultsFolderPathDir.mkpath(".");
-          }
-          // Run individual sens analysis
-          QString indivAnalysisScriptPath = "/home/omsens/Documents/OMSens/individual_sens_calculator.py" ;
-          QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
-          QString scriptDestPathFlag = "--dest_folder_path";
-          QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
-          QString command = pythonBinPath + " " + indivAnalysisScriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
-          QFileInfo fileNameFileInfo = QFileInfo(indivAnalysisScriptPath);
-          QDir      fileDir          = fileNameFileInfo.canonicalPath();
-          QString fileDirPath        = fileDir.canonicalPath();
-          bool currentDirChangeSuccessful = QDir::setCurrent(fileDirPath);
-          if (currentDirChangeSuccessful)
-          {
-              system(qPrintable(command));
-          }
-          // Read JSON in results folder with the paths to all the matrices, heatmaps, etc
-          QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + "paths.json");
-          // Read JSON file into string
-          QString val;
-          QFile jsonPathsQFile;
-          jsonPathsQFile.setFileName(analysisResultsJSONPath);
-          jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-          val = jsonPathsQFile.readAll();
-          jsonPathsQFile.close();
-          // Parse string into json document
-          QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
-          // Initialize results instance with JSON document
-          IndivSensResultsDialog *resultsDialog = new IndivSensResultsDialog(jsonPathsDocument,this);
-          resultsDialog->show();
-      }
-      // If the user pressed the "Cancel" button, do nothing for now
-      if(dialogCodeSecondDialog == QDialog::Rejected) {
-          // Cancel button clicked
-      }
+  runOMSensFeature(runType, scriptPath);
 
-  }
-  // If the user pressed the "Cancel" button on the first dialog, do nothing for now
-  if(dialogCodeFirstDialog == QDialog::Rejected) {
-      // Cancel button clicked
-  }
+ // RUN PREDEFINED EXP. NEEDS TO BE ADAPTED
+//          // Initialize the Dialog with a predefined analysis
+//          // Read JSON with W3 specs
+//          QString jsonSpecsName = "exp_01_paper_fig_2_heatmap.json";
+//          QString experimentsFolderPath = "/home/omsens/Documents/OMSens/resource/experiments/individual/";
+//          QString jsonSpecsPath = QDir::cleanPath(experimentsFolderPath + QDir::separator() + jsonSpecsName);
+//          // Reed analysis specifications from disk
+//          QString fileContents;
+//          QFile file(jsonSpecsPath);
+//          file.open(QIODevice::ReadOnly | QIODevice::Text);
+//          fileContents = file.readAll();
+//          file.close();
+//          // Initialize Qt JSON document with file contents
+//          QJsonDocument jsonSpecsDocument = QJsonDocument::fromJson(fileContents.toUtf8());
+//          // Initialize dialog with JSON specs
+//          indivDialog = new IndivParamSensAnalysisDialog(jsonSpecsDocument,this);
+//          dialogCodeSecondDialog = indivDialog->exec();;
+
 }
 void OMSensDialog::runMultiParameterSweep()
 {
@@ -297,7 +213,7 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptPath)
            runSpecsDialog = new MultiParamSweepDialog(mModel,this);
            break;
         case Individual:
-           runSpecsDialog = new MultiParamSweepDialog(mModel,this);
+           runSpecsDialog = new IndivParamSensAnalysisDialog(mModel,this);
            break;
     }
     int dialogCode  = runSpecsDialog->exec();
