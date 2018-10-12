@@ -15,6 +15,10 @@
 #include "dialogs/vect/VectorialResultsDialog.h"
 #include "dialogs/general/ImageViewerDialog.h"
 #include "dialogs/general/CSVViewerDialog.h"
+#include "dialogs/BaseRunSpecsDialog.h"
+
+// Enum so we can refactor the run and results dialog common behaviour between the types of runs
+enum RunType {Individual, Sweep, Vectorial};
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
 {
@@ -229,91 +233,151 @@ void OMSensDialog::runMultiParameterSweep()
       // Cancel button clicked
   }
 }
+QJsonDocument OMSensDialog::readJsonFile(QString resultsFolderPath)
+{
+    QString resultsFileName = "optim_results.json";
+    QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
+    // Read JSON file into string
+    QString val;
+    QFile jsonPathsQFile;
+    jsonPathsQFile.setFileName(analysisResultsJSONPath);
+    jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    val = jsonPathsQFile.readAll();
+    jsonPathsQFile.close();
+    // Parse string into json document
+    QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
+
+    return jsonPathsDocument;
+}
+
+bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
+{
+    QProcess pythonScriptProcess;
+    // Set working dir path
+    pythonScriptProcess.setWorkingDirectory(scriptDirPath);
+    // Initialize dialog showing progress
+    QProgressDialog *dialog = new QProgressDialog("Running python script...", "Cancel", 0, 0, this);
+    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    // Connect command "close" with dialog close
+    connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
+    // Connect dialog "cancel"  with command kill
+    connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
+
+    // Start process
+    pythonScriptProcess.start(command);
+    // Show dialog with progress
+    dialog->exec();
+    // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
+    pythonScriptProcess.waitForFinished(3000);
+
+    // See if the process ended correctly
+    QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
+    int exitCode = pythonScriptProcess.exitCode();
+
+    bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+
+    return processEndedCorrectly;
+}
+
+QString OMSensDialog::createTimestampDir(QString destFolderPath)
+{
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString date = currentTime.toString("dd-MM-yyyy");
+    QString h_m_s = currentTime.toString("H_m_s");
+    QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
+    QDir timestampFolderPathDir(timeStampFolderPath);
+    if (!timestampFolderPathDir.exists()){
+      timestampFolderPathDir.mkpath(".");
+    }
+
+    return timeStampFolderPath;
+}
+
+QString OMSensDialog::writeJsonToDisk(QString timeStampFolderPath, QJsonObject runSpecifications)
+{
+    QString jsonSpecsName = "experiment_specs.json";
+    QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
+    // Save analysis specifications to disk
+    QJsonDocument runSpecificationsDoc(runSpecifications);
+    QFile runSpecificationsFile(jsonSpecsPath);
+    if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
+    {
+        runSpecificationsFile.write(runSpecificationsDoc.toJson());
+        runSpecificationsFile.close();
+    }
+
+    return jsonSpecsPath;
+}
+
+QString OMSensDialog::createResultsFolder(QString timeStampFolderPath)
+{
+    QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
+    QDir resultsFolderPathDir(resultsFolderPath);
+    if (!resultsFolderPathDir.exists()){
+      resultsFolderPathDir.mkpath(".");
+    }
+
+    return resultsFolderPath;
+}
+
+QString OMSensDialog::dirPathForFilePath(QString scriptPath)
+{
+    QFileInfo scriptFileInfo = QFileInfo(scriptPath);
+    QDir      scriptDir          = scriptFileInfo.canonicalPath();
+    QString scriptDirPath        = scriptDir.canonicalPath();
+
+    return scriptDirPath;
+}
+
+QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath)
+{
+    QString scriptDestPathFlag = "--dest_folder_path";
+    QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
+    QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
+
+    return command;
+}
+
+bool OMSensDialog::defineAndRunCommand(QString timeStampFolderPath, QString scriptDirPath, QJsonObject runSpecifications, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
+{
+    QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecifications);
+    QString command = commandCallFromPaths(scriptPath, pythonBinPath, jsonSpecsPath, resultsFolderPath);
+    bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command);
+
+    return processEndedCorrectly;
+}
+
 void OMSensDialog::runVectorialSensAnalysis()
 {
+  QString scriptPath = "/home/omsens/Documents/OMSens/vectorial_analysis.py" ;
+  QString scriptDirPath = dirPathForFilePath(scriptPath);
+  QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
+  RunType runType = Vectorial;
   // Hide this dialog before opening the new one
   hide();
-  // Check if there's an active model in the OMEdit editor
-  // Get the OMSens model from the OMEdit information abount the open model
-  VectorialSensAnalysisDialog *vectDialog = new VectorialSensAnalysisDialog(mModel,this);
-  int dialogCode  = vectDialog->exec();
+  // Initialize and execute dialog
+  BaseRunSpecsDialog *runSpecsDialog;
+  if (runType == Vectorial)
+  {
+      runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
+  }
+  int dialogCode  = runSpecsDialog->exec();
+  // If the dialog was accepted by the user, run the analysis
   if(dialogCode == QDialog::Accepted)
   {   // Get user inputs from dialog
-      QJsonObject runSpecifications = vectDialog->getRunSpecifications();
-      QString destFolderPath = vectDialog->getDestFolderPath();
+      QJsonObject runSpecifications = runSpecsDialog->getRunSpecifications();
+      QString destFolderPath = runSpecsDialog->getDestFolderPath();
       // Make timestamp subfolder in dest folder path
-      QDateTime currentTime = QDateTime::currentDateTime();
-      QString date = currentTime.toString("dd-MM-yyyy");
-      QString h_m_s = currentTime.toString("H_m_s");
-      QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
-      QDir timestampFolderPathDir(timeStampFolderPath);
-      if (!timestampFolderPathDir.exists()){
-        timestampFolderPathDir.mkpath(".");
-      }
-      // Write JSON to disk
-      QString jsonSpecsName = "experiment_specs.json";
-      QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
-      // Save analysis specifications to disk
-      QJsonDocument runSpecificationsDoc(runSpecifications);
-      QFile runSpecificationsFile(jsonSpecsPath);
-      if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
-      {
-          runSpecificationsFile.write(runSpecificationsDoc.toJson());
-          runSpecificationsFile.close();
-      }
+      QString timeStampFolderPath = createTimestampDir(destFolderPath);
       // Make sub-folder where the results will be written
-      QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
-      QDir resultsFolderPathDir(resultsFolderPath);
-      if (!resultsFolderPathDir.exists()){
-        resultsFolderPathDir.mkpath(".");
-      }
-      // Run vectorial analysis
-      QString scriptPath = "/home/omsens/Documents/OMSens/vectorial_analysis.py" ;
-      QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
-      QString scriptDestPathFlag = "--dest_folder_path";
-      QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
-      QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
-      QFileInfo scriptFileInfo = QFileInfo(scriptPath);
-      QDir      scriptDir          = scriptFileInfo.canonicalPath();
-      QString scriptDirPath        = scriptDir.canonicalPath();
-
-      QProcess pythonScriptProcess;
-      // Set working dir path
-      pythonScriptProcess.setWorkingDirectory(scriptDirPath);
-      // Initialize dialog showing progress
-      QProgressDialog *dialog = new QProgressDialog("Running python script...", "Cancel", 0, 0, this);
-      dialog->setAttribute(Qt::WA_DeleteOnClose);
-      // Connect command "close" with dialog close
-      connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
-      // Connect dialog "cancel"  with command kill
-      connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
-
-      // Start process
-      pythonScriptProcess.start(command);
-      // Show dialog with progress
-      dialog->exec();
-      // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
-      pythonScriptProcess.waitForFinished(3000);
-
-      // See if the process ended correctly
-      QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
-      int exitCode = pythonScriptProcess.exitCode();
-
-      bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+      QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
+      // Run command
+      bool processEndedCorrectly = defineAndRunCommand(timeStampFolderPath, scriptDirPath, runSpecifications, resultsFolderPath, scriptPath, pythonBinPath);
+      // If the process ended correctly, show the results dialog
       if (processEndedCorrectly)
       {
           // Read JSON in results folder with the paths to the results of the script
-          QString resultsFileName = "optim_results.json";
-          QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
-          // Read JSON file into string
-          QString val;
-          QFile jsonPathsQFile;
-          jsonPathsQFile.setFileName(analysisResultsJSONPath);
-          jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-          val = jsonPathsQFile.readAll();
-          jsonPathsQFile.close();
-          // Parse string into json document
-          QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
+          QJsonDocument jsonPathsDocument = readJsonFile(resultsFolderPath);
           // Initialize results instance with JSON document
           VectorialResultsDialog *resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
           resultsDialog->show();

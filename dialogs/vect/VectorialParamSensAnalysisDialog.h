@@ -16,8 +16,9 @@
 #include "../../tabs/ParametersSimpleTab.h"
 #include "../../tabs/OptimizationTab.h"
 #include "../../tabs/HelpTab.h"
+#include "../BaseRunSpecsDialog.h"
 
-class VectorialSensAnalysisDialog : public QDialog
+class VectorialSensAnalysisDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:

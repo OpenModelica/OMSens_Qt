@@ -69,7 +69,8 @@ HEADERS += \
     OMSensDialog.h \
     TableItemDelegate.h \
     tabs/optim_result/OptimizationResultParametersTab.h \
-    tabs/optim_result/OptimizationResultOtherTab.h
+    tabs/optim_result/OptimizationResultOtherTab.h \
+    dialogs/BaseRunSpecsDialog.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

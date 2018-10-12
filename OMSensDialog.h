@@ -11,6 +11,24 @@ class OMSensDialog : public QDialog
 public:
     OMSensDialog(Model model, QWidget *parent = nullptr);
 
+    QJsonDocument readJsonFile(QString resultsFolderPath);
+    
+    bool runProcessAndShowProgress(QString scriptDirPath, QString command);
+    
+    QString createTimestampDir(QString destFolderPath);
+    
+    QString writeJsonToDisk(QString timeStampFolderPath, QJsonObject runSpecifications);
+    
+    QString createResultsFolder(QString timeStampFolderPath);
+    
+    QString dirPathForFilePath(QString scriptPath);
+    
+    QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
+    
+    bool defineAndRunCommand(QString jsonSpecsPath, QString scriptPath, QString pythonBinPath, QString scriptDirPath, QString resultsFolderPath);
+    
+    bool defineAndRunCommand(QString timeStampFolderPath, QString scriptDirPath, QJsonObject runSpecifications, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
+    
 private:
     // Data
     Model mModel;
