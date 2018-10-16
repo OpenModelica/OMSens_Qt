@@ -32,13 +32,14 @@ public:
     
     bool defineAndRunCommand(QString timeStampFolderPath, QString scriptDirPath, QJsonObject runSpecifications, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
     
-    void runOMSensFeature(RunType runType, QString scriptPath);
+    void runOMSensFeature(RunType runType, QString scriptFileName);
     
     QString progressDialogTextForCurrentTime();
 
 private:
     // Data
     Model mModel;
+    QString mOMSensPath;
     // GUI
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;

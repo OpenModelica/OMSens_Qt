@@ -25,6 +25,9 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     setMinimumWidth(400);
     setWindowTitle("OMSens");
 
+    // OMSens python backend path
+    mOMSensPath = "/home/omsens/Documents/OMSens/" ;
+
     // Initialize buttons
     mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"));
     mpIndivButton->setAutoDefault(true);
@@ -52,10 +55,10 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
 
 void OMSensDialog::runIndivSensAnalysis()
 {
-  QString scriptPath = "/home/omsens/Documents/OMSens/individual_sens_calculator.py" ;
+  QString scriptFileName = "individual_sens_calculator.py" ;
   RunType runType = Individual;
   // Hide this dialog before opening the new one
-  runOMSensFeature(runType, scriptPath);
+  runOMSensFeature(runType, scriptFileName);
 
  // RUN PREDEFINED EXP. NEEDS TO BE ADAPTED
 //          // Initialize the Dialog with a predefined analysis
@@ -78,10 +81,10 @@ void OMSensDialog::runIndivSensAnalysis()
 }
 void OMSensDialog::runMultiParameterSweep()
 {
-  QString scriptPath = "/home/omsens/Documents/OMSens/multiparam_sweep.py" ;
+  QString scriptFileName = "multiparam_sweep.py" ;
   RunType runType = Sweep;
   // Hide this dialog before opening the new one
-  runOMSensFeature(runType, scriptPath);
+  runOMSensFeature(runType, scriptFileName);
 }
 QJsonDocument OMSensDialog::readJsonFile(QString resultsFolderPath)
 {
@@ -209,8 +212,11 @@ bool OMSensDialog::defineAndRunCommand(QString timeStampFolderPath, QString scri
     return processEndedCorrectly;
 }
 
-void OMSensDialog::runOMSensFeature(RunType runType, QString scriptPath)
+void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
 {
+    // Get script path from OMSens dir and script file name
+    QString scriptPath = QDir::cleanPath(mOMSensPath + QDir::separator() + scriptFileName);
+
     // Hardcoded for now:
     QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
     hide();
@@ -271,10 +277,9 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptPath)
 
 void OMSensDialog::runVectorialSensAnalysis()
 {
-  QString scriptPath = "/home/omsens/Documents/OMSens/vectorial_analysis.py" ;
+  QString scriptFileName = "vectorial_analysis.py" ;
   RunType runType = Vectorial;
-  // Hide this dialog before opening the new one
-  runOMSensFeature(runType, scriptPath);
+  runOMSensFeature(runType, scriptFileName);
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:
