@@ -21,13 +21,12 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     QString modelFilePath     = model.getFilePath();
 
     // Default settings
-    double percentage = 5;
     double startTime  = 0;
     double stopTime   = 1;
     // Initialize the dialog with this info
-    initializeDialogWithData(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
+    initializeDialogWithData(variables, parameters, modelName, modelFilePath, startTime, stopTime);
 }
-void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime)
     {
     initializeWindowSettings();
 
