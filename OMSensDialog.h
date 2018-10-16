@@ -3,6 +3,7 @@
 
 #include <QWidget>
 #include <QDialog>
+#include <QLabel>
 #include "model.h"
 
 // Enum so we can refactor the run and results dialog common behaviour between the types of runs
@@ -41,6 +42,10 @@ private:
     Model mModel;
     QString mOMSensPath;
     // GUI
+    QLabel      *mpOMSensPathLabel;
+    QLabel      *mpOMSensPathValue;
+    QPushButton *mpOMSensPathBrowseButton;
+    QFrame      *mpHorizontalLine;
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;
     QPushButton *mpVectButton;
@@ -54,6 +59,7 @@ public slots:
   void runVectorialSensAnalysis();
   void openSensAnalysisResult();
   void openSensAnalysisImage();
+  void launchOMSensBackendChooseFolderDialog();
 };
 
 #endif // OMSENSDIALOG_H

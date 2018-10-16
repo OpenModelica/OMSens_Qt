@@ -28,6 +28,21 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     // OMSens python backend path
     mOMSensPath = "/home/omsens/Documents/OMSens/" ;
 
+    // Initialize paths
+    mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
+    mpOMSensPathValue = new QLabel(mOMSensPath);
+    mpOMSensPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    mpOMSensPathBrowseButton = new QPushButton("Browse");
+    mpOMSensPathBrowseButton->setAutoDefault(true);
+    mpOMSensPathBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpOMSensPathBrowseButton, SIGNAL(clicked()), this, SLOT(launchOMSensBackendChooseFolderDialog()));
+
+    // Division between paths and buttons
+    mpHorizontalLine = new QFrame;
+    mpHorizontalLine->setFrameShape(QFrame::HLine);
+    mpHorizontalLine->setFrameShadow(QFrame::Sunken);
+
+
     // Initialize buttons
     mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"));
     mpIndivButton->setAutoDefault(true);
@@ -46,6 +61,15 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
 
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
+    // OMSens folder
+    mainLayout->addWidget(mpOMSensPathLabel, 0, Qt::AlignLeft);
+    QHBoxLayout *pOMSensValueLayout = new QHBoxLayout;
+    pOMSensValueLayout->addWidget(mpOMSensPathValue);
+    pOMSensValueLayout->addWidget(mpOMSensPathBrowseButton);
+    mainLayout->addLayout(pOMSensValueLayout);
+    // Division
+    mainLayout->addWidget(mpHorizontalLine);
+    // Buttons
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
@@ -317,4 +341,18 @@ void OMSensDialog::openSensAnalysisImage()
   }
   // open sens analysis Image
 //ADAPTAR^
+}
+
+void OMSensDialog::launchOMSensBackendChooseFolderDialog()
+{
+    // Launch dialog
+    QString destFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
+                                                 "/home",
+                                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if(!destFolderPath.isEmpty() && !destFolderPath.isNull())
+    {
+        // Save path into member variable
+        mOMSensPath = destFolderPath;
+        mpOMSensPathValue->setText(mOMSensPath);
+    }
 }
