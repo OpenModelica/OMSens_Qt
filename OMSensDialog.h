@@ -41,10 +41,14 @@ private:
     // Data
     Model mModel;
     QString mOMSensPath;
+    QString mPythonBinPath;
     // GUI
     QLabel      *mpOMSensPathLabel;
     QLabel      *mpOMSensPathValue;
     QPushButton *mpOMSensPathBrowseButton;
+    QLabel      *mpPythonBinLabel;
+    QLabel      *mpPythonBinValue;
+    QPushButton *mpPythonBinBrowseButton;
     QFrame      *mpHorizontalLine;
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;
@@ -60,6 +64,7 @@ public slots:
   void openSensAnalysisResult();
   void openSensAnalysisImage();
   void launchOMSensBackendChooseFolderDialog();
+  void launchPythonBinChooseFolderDialog();
 };
 
 #endif // OMSENSDIALOG_H

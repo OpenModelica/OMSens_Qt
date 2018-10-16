@@ -27,6 +27,8 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
 
     // OMSens python backend path
     mOMSensPath = "/home/omsens/Documents/OMSens/" ;
+    // Python executable path
+    mPythonBinPath = "/home/omsens/anaconda3/bin/python";
 
     // Initialize paths
     mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
@@ -36,6 +38,14 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpOMSensPathBrowseButton->setAutoDefault(true);
     mpOMSensPathBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpOMSensPathBrowseButton, SIGNAL(clicked()), this, SLOT(launchOMSensBackendChooseFolderDialog()));
+
+    mpPythonBinLabel = new QLabel("Python executable:");
+    mpPythonBinValue = new QLabel(mPythonBinPath);
+    mpPythonBinValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    mpPythonBinBrowseButton = new QPushButton("Browse");
+    mpPythonBinBrowseButton->setAutoDefault(true);
+    mpPythonBinBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpPythonBinBrowseButton, SIGNAL(clicked()), this, SLOT(launchPythonBinChooseFolderDialog()));
 
     // Division between paths and buttons
     mpHorizontalLine = new QFrame;
@@ -67,6 +77,12 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     pOMSensValueLayout->addWidget(mpOMSensPathValue);
     pOMSensValueLayout->addWidget(mpOMSensPathBrowseButton);
     mainLayout->addLayout(pOMSensValueLayout);
+    // Python bin
+    mainLayout->addWidget(mpPythonBinLabel, 0, Qt::AlignLeft);
+    QHBoxLayout *pPythonBinValueLayout = new QHBoxLayout;
+    pPythonBinValueLayout->addWidget(mpPythonBinValue);
+    pPythonBinValueLayout->addWidget(mpPythonBinBrowseButton);
+    mainLayout->addLayout(pPythonBinValueLayout);
     // Division
     mainLayout->addWidget(mpHorizontalLine);
     // Buttons
@@ -241,8 +257,9 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
     // Get script path from OMSens dir and script file name
     QString scriptPath = QDir::cleanPath(mOMSensPath + QDir::separator() + scriptFileName);
 
-    // Hardcoded for now:
-    QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
+    // python executable path from class member
+    QString pythonBinPath = mPythonBinPath;
+
     hide();
     // Initialize and execute dialog
     BaseRunSpecsDialog *runSpecsDialog;
@@ -346,13 +363,26 @@ void OMSensDialog::openSensAnalysisImage()
 void OMSensDialog::launchOMSensBackendChooseFolderDialog()
 {
     // Launch dialog
-    QString destFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
+    QString path = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
                                                  "/home",
                                                  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-    if(!destFolderPath.isEmpty() && !destFolderPath.isNull())
+    if(!path.isEmpty() && !path.isNull())
     {
         // Save path into member variable
-        mOMSensPath = destFolderPath;
+        mOMSensPath = path;
         mpOMSensPathValue->setText(mOMSensPath);
+    }
+}
+
+void OMSensDialog::launchPythonBinChooseFolderDialog()
+{
+    // Launch dialog
+    QString path = QFileDialog::getOpenFileName(this, tr("Choose python interpreter"),
+                                                 "/home",
+                                                 tr("Python interpreter(*)"));
+    {
+        // Save path into member variable
+        mPythonBinPath = path;
+        mpPythonBinValue->setText(mPythonBinPath);
     }
 }
