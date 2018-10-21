@@ -6,7 +6,7 @@
 #include <QPushButton>
 #include "../../dialogs/general/ImageViewerDialog.h"
 
-SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pParent) : BaseResultsDialog(pParent)
+SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent) : BaseResultsDialog(pParent)
 {
     // Parse JSON
     // Get the "main" object of the json document
@@ -26,6 +26,12 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pPar
     mpOpenPlotButton->setAutoDefault(true);
     mpOpenPlotButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpOpenPlotButton, SIGNAL(clicked()), this, SLOT(openSelectedVarPlot()));
+    mpResultsFolderPathLabel = new QLabel("Results can be found in:");
+    mpResultsFolderPathValue = new QLabel(resultsFolderPath);
+    mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
+
 
     // Dialog settings
     setWindowTitle("Multiparameter sweep result");
@@ -36,6 +42,10 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QWidget *pPar
     pVarsLayout->addWidget(mpOpenPlotButton);
     QFormLayout *mainLayout = new QFormLayout;
     mainLayout->addRow(pVarsLayout);
+
+    mainLayout->addRow(mpResultsFolderPathLabel);
+    mainLayout->addRow(mpResultsFolderPathValue);
+
     // Layout settings
     setLayout(mainLayout);
 }

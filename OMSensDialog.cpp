@@ -298,13 +298,13 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
             switch (runType)
             {
                 case Vectorial:
-                   resultsDialog = new VectorialResultsDialog(jsonPathsDocument,this);
+                   resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
                    break;
                 case Sweep:
-                   resultsDialog = new SweepResultsDialog(jsonPathsDocument,this);
+                   resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
                    break;
                 case Individual:
-                   resultsDialog = new IndivSensResultsDialog(jsonPathsDocument,this);
+                   resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
                    break;
             }
             resultsDialog->show();

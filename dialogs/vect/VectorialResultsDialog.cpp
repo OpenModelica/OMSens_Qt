@@ -5,7 +5,7 @@
 #include <QFormLayout>
 
 
-VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, QWidget *pParent) : BaseResultsDialog(pParent)
+VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, QString resultsFolderPath, QWidget *pParent) : BaseResultsDialog(pParent)
 {
     // Initialize tabs
     mpOptimParamsTab = new OptimizationResultParametersTab(vectorialResults);

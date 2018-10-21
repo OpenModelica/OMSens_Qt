@@ -13,12 +13,14 @@ class SweepResultsDialog: public BaseResultsDialog
 {
     Q_OBJECT
 public:
-    SweepResultsDialog(QJsonDocument sweepResults, QWidget *pParent = 0);
+    SweepResultsDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
     // GUI members
-    QLabel    *mpVariablesLabel;
-    QComboBox *mpVariablesComboBox;
+    QLabel      *mpVariablesLabel;
+    QComboBox   *mpVariablesComboBox;
     QPushButton *mpOpenPlotButton;
+    QLabel      *mpResultsFolderPathLabel;
+    QLabel      *mpResultsFolderPathValue;
     // Data members
     QJsonObject mVarNameToPlotMap;
     QList<QString> mVariables;

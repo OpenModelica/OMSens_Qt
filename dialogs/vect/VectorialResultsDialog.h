@@ -16,7 +16,7 @@ class VectorialResultsDialog : public BaseResultsDialog
 {
     Q_OBJECT
 public:
-    VectorialResultsDialog(QJsonDocument vectorialResults, QWidget *pParent = 0);
+    VectorialResultsDialog(QJsonDocument vectorialResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
     // GUI
     QTabWidget            *mpTabWidget;

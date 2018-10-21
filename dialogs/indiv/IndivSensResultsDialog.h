@@ -13,7 +13,7 @@ class IndivSensResultsDialog : public BaseResultsDialog
 {
     Q_OBJECT
 public:
-    explicit IndivSensResultsDialog(QJsonDocument analysisResults, QWidget *pParent = 0);
+    explicit IndivSensResultsDialog(QJsonDocument analysisResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
     // GUI
     SensitivityMethodResultsTab *mpRelativeMethodTab;
