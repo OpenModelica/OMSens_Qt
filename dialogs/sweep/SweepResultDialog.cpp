@@ -16,7 +16,7 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     // Get the list of variables
     mVariables = mVarNameToPlotMap.keys();
 
-    // Initialize GUI members
+    // GUI: plots chooser
     mpVariablesLabel = new QLabel("Plots:");
     mpVariablesComboBox = new QComboBox;
     foreach(const QString& var_name, mVariables) {
@@ -26,12 +26,11 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     mpOpenPlotButton->setAutoDefault(true);
     mpOpenPlotButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpOpenPlotButton, SIGNAL(clicked()), this, SLOT(openSelectedVarPlot()));
+    // GUI: Results folder
     mpResultsFolderPathLabel = new QLabel("Results can be found in:");
     mpResultsFolderPathValue = new QLabel(resultsFolderPath);
     mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
-
-
 
     // Dialog settings
     setWindowTitle("Multiparameter sweep result");

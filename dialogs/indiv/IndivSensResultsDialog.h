@@ -20,6 +20,8 @@ private:
     SensitivityMethodResultsTab *mpRMSMethodTab;
     QTabWidget                  *mpTabWidget;
     QDialogButtonBox   *mpButtonBox;
+    QLabel      *mpResultsFolderPathLabel;
+    QLabel      *mpResultsFolderPathValue;
     // Aux
     SensitivityMethodResultsTab* resultsTabForRelativeFromJSONObject(QJsonObject heatmapsJSONObject);
     SensitivityMethodResultsTab* resultsTabForRMSFromJSONObject(QJsonObject heatmapsJSONObject);
