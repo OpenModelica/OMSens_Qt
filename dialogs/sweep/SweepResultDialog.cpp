@@ -13,19 +13,24 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     // Get the <var name> to <plot path> mapper
     mVarNameToPlotMap = sweepResultsObject.value(QString("sweep_plots")).toObject();
 
-    // Initialize tabs
+    // Tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
     mpVariablesResultTab = new SweepResultVariableTab(mVarNameToPlotMap);
 
-    // Initialize tabs container widget
+    // Tabs container
     mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpVariablesResultTab, tr("Variables"));
 
-    // GUI: Results folder
+    // Results folder
     mpResultsFolderPathLabel = new QLabel("Results can be found in:");
     mpResultsFolderPathValue = new QLabel(resultsFolderPath);
     mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
+
+    // Buttons
+    mpButtonBox = new QDialogButtonBox;
+    mpButtonBox->addButton("Ok", QDialogButtonBox::AcceptRole);
+    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &SweepResultsDialog::accept);
 
     // Dialog settings
     setWindowTitle("Multiparameter sweep result");
@@ -34,10 +39,12 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     // Tabs group
     mainLayout->addWidget(mpTabWidget);
 
-
     // Results folder path
     mainLayout->addRow(mpResultsFolderPathLabel);
     mainLayout->addRow(mpResultsFolderPathValue);
+
+    // Accept button
+    mainLayout->addWidget(mpButtonBox);
 
     // Layout settings
     setLayout(mainLayout);

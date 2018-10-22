@@ -47,11 +47,8 @@ IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QS
     // Accept button
     mainLayout->addWidget(mpButtonBox);
 
-
     // Layout settings
     setLayout(mainLayout);
-
-
 }
 
 // Auxs
