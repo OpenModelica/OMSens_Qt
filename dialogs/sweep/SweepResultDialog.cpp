@@ -33,7 +33,7 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &SweepResultsDialog::accept);
 
     // Dialog settings
-    setWindowTitle("Multiparameter sweep result");
+    setWindowTitle("Multiparameter Sweep Results");
     // Layout
     QFormLayout *mainLayout = new QFormLayout;
     // Tabs group
