@@ -26,6 +26,9 @@ private:
     QLabel      *mpResultsFolderPathLabel;
     QLabel      *mpResultsFolderPathValue;
     QDialogButtonBox   *mpButtonBox;
+
+    // Aux functions
+    void initializeWindowSettings();
 };
 
 #endif // VECTORIALRESULTSDIALOG_H

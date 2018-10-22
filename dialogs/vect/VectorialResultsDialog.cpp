@@ -42,6 +42,12 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     setLayout(mainLayout);
 
     // Windows settings
-    this->setMinimumHeight(300);
-    this->setMinimumWidth(450);
+    initializeWindowSettings();
+}
+
+void VectorialResultsDialog::initializeWindowSettings()
+{
+    setMinimumHeight(300);
+    setMinimumWidth(450);
+    setWindowTitle("Vectorial Analysis Results");
 }
