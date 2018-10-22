@@ -22,6 +22,8 @@ private:
     QTabWidget            *mpTabWidget;
     OptimizationResultParametersTab* mpOptimParamsTab;
     OptimizationResultOtherTab*      mpOptimOtherTab;
+    QLabel      *mpResultsFolderPathLabel;
+    QLabel      *mpResultsFolderPathValue;
 };
 
 #endif // VECTORIALRESULTSDIALOG_H
