@@ -380,6 +380,7 @@ void OMSensDialog::launchPythonBinChooseFolderDialog()
     QString path = QFileDialog::getOpenFileName(this, tr("Choose python interpreter"),
                                                  "/home",
                                                  tr("Python interpreter(*)"));
+    if(!path.isEmpty() && !path.isNull())
     {
         // Save path into member variable
         mPythonBinPath = path;
