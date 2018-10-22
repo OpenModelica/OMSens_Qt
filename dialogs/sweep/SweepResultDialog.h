@@ -22,17 +22,12 @@ private:
     QTabWidget *mpTabWidget;
     SweepResultVariableTab *mpVariablesResultTab;
     // GUI members
-//    QLabel      *mpVariablesLabel;
-//    QComboBox   *mpVariablesComboBox;
-//    QPushButton *mpOpenPlotButton;
     QLabel      *mpResultsFolderPathLabel;
     QLabel      *mpResultsFolderPathValue;
     // Data members
     QJsonObject mVarNameToPlotMap;
     QList<QString> mVariables;
 
-//private slots:
-//    void openSelectedVarPlot();
 };
 
 #endif // SWEEPRESULTDIALOG_H
