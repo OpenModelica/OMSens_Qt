@@ -14,7 +14,6 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     mVarNameToPlotMap = sweepResultsObject.value(QString("sweep_plots")).toObject();
 
     // Tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
     mpVariablesResultTab = new SweepResultVariableTab(mVarNameToPlotMap);
 
     // Tabs container
