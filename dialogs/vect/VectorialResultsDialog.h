@@ -7,6 +7,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QTabWidget>
+#include <QDialogButtonBox>
 
 #include "../../tabs/optim_result/OptimizationResultParametersTab.h"
 #include "../../tabs/optim_result/OptimizationResultOtherTab.h"
@@ -24,6 +25,7 @@ private:
     OptimizationResultOtherTab*      mpOptimOtherTab;
     QLabel      *mpResultsFolderPathLabel;
     QLabel      *mpResultsFolderPathValue;
+    QDialogButtonBox   *mpButtonBox;
 };
 
 #endif // VECTORIALRESULTSDIALOG_H

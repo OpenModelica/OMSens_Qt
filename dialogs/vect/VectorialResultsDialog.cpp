@@ -21,14 +21,22 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
     mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
 
+    // Buttons
+    mpButtonBox = new QDialogButtonBox;
+    mpButtonBox->addButton("Ok", QDialogButtonBox::AcceptRole);
+    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &VectorialResultsDialog::accept);
+
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpTabWidget);
-    // Add results folder
+    // Results folder path
     QFormLayout *resultsFolderLayout = new QFormLayout;
     resultsFolderLayout->addRow(mpResultsFolderPathLabel);
     resultsFolderLayout->addRow(mpResultsFolderPathValue);
     mainLayout->addLayout(resultsFolderLayout);
+
+    // Accept button
+    mainLayout->addWidget(mpButtonBox);
 
     // Layout settings
     setLayout(mainLayout);
