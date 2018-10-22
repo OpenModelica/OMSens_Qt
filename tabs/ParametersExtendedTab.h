@@ -5,6 +5,7 @@
 #include <QTableWidget>
 #include <QLabel>
 
+
 class ParametersExtendedTab : public QWidget
 {
     Q_OBJECT
@@ -14,16 +15,27 @@ public:
     QTableWidget *getParametersTable() const;
     // Conventions:
     //   Columns ordering
-    int paramColPos    = 0;
-    int nItersColPos   = 1;
-    int pertPercColPos = 2;
-    int cboxColPos     = 3;
+    int paramColPos      = 0;
+    int pertTypeColPos   = 1;
+    int nItersColPos     = 2;
+    int pertRangeColPos  = 3;
+    int fixedValueColPos = 4;
+    // Perturbation types
+    int NoPerturbationId    = 0;
+    int SweepPerturbationId = 1;
+    int FixedPerturbationId = 2;
+
 
 private:
     // Description
     QLabel *mpBriefDescriptionLabel;
     // Table
     QTableWidget *mpParametersTable;
+    // Auxs
+    void enableOrDisableCellsOnRow(int rowNum);
+    void disablePertRangeCellInRow(int rowNum);
+    void disableFixedValueCellInRow(int rowNum);
+    void disableNumberOfItersCellInRow(int rowNum);
 
 signals:
 

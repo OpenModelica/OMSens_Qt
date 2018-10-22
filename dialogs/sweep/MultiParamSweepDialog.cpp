@@ -113,7 +113,7 @@ void MultiParamSweepDialog::runMultiParamSweep()
     for(int i_row = 0; i_row < pParamsTable->rowCount(); i_row++)
     {
         // Get boolean value if include or not
-        const int perturbCBoxPos = mpParametersTab->cboxColPos;
+        const int perturbCBoxPos = mpParametersTab->fixedValueColPos;
         QCheckBox *perturbCBox= qobject_cast<QCheckBox *>(pParamsTable->cellWidget(i_row,perturbCBoxPos));
         bool perturb_or_not_param = perturbCBox->isChecked();
 
@@ -129,7 +129,7 @@ void MultiParamSweepDialog::runMultiParamSweep()
             QSpinBox *paramNItersSpinBox= qobject_cast<QSpinBox *>(pParamsTable->cellWidget(i_row,paramNItersColPos));
             int paramNIters = paramNItersSpinBox->value();
             // Param perturbation percentage
-            const int paramPerturbationPercColPos = mpParametersTab->pertPercColPos;
+            const int paramPerturbationPercColPos = mpParametersTab->pertRangeColPos;
             QDoubleSpinBox *paramPertPercSpinBox= qobject_cast<QDoubleSpinBox *>(pParamsTable->cellWidget(i_row,paramPerturbationPercColPos));
             double paramPertPerc = paramPertPercSpinBox->value();
             // Create JSON object from info
