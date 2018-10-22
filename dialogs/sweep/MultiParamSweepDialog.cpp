@@ -6,6 +6,7 @@
 #include <QJsonArray>
 #include <QCheckBox>
 #include <QTextStream>
+#include <QComboBox>
 
 #include "../../model.h"
 #include "../../tabs/ParametersExtendedTab.h"
@@ -108,18 +109,20 @@ void MultiParamSweepDialog::runMultiParamSweep()
     }
     mRunSpecifications["vars_to_analyze"] = varsToAnalize;
     // Parameters to perturb
-    QJsonArray parametersToPerturb;
+    QJsonArray parametersToSweep;
+    QJsonArray parametersToSetFixedValue;
     QTableWidget *pParamsTable = mpParametersTab->getParametersTable();
     for(int i_row = 0; i_row < pParamsTable->rowCount(); i_row++)
     {
-        // Get boolean value if include or not
-        const int perturbCBoxPos = mpParametersTab->fixedValueColPos;
-        QCheckBox *perturbCBox= qobject_cast<QCheckBox *>(pParamsTable->cellWidget(i_row,perturbCBoxPos));
-        bool perturb_or_not_param = perturbCBox->isChecked();
+        // Get type of perturbation
+        const int pertTypeColPos = mpParametersTab->pertTypeColPos;
+        QComboBox *rowComboBox = qobject_cast<QComboBox *>(pParamsTable->cellWidget(i_row,pertTypeColPos));
+        QVariant perturbationTypeQVariant = rowComboBox->itemData(rowComboBox->currentIndex());
+        int perturbationTypeInt = perturbationTypeQVariant.toInt();
 
-        if(perturb_or_not_param)
+        if(perturbationTypeInt == mpParametersTab->SweepPerturbationId)
         {
-            // If the user included this param, add it to the list
+            // If the user wants to sweep this param, add it to the sweep list
             // Get param name
             const int paramColPos = mpParametersTab->paramColPos;
             QLabel *paramNameLabel= qobject_cast<QLabel *>(pParamsTable->cellWidget(i_row,paramColPos));
@@ -133,15 +136,33 @@ void MultiParamSweepDialog::runMultiParamSweep()
             QDoubleSpinBox *paramPertPercSpinBox= qobject_cast<QDoubleSpinBox *>(pParamsTable->cellWidget(i_row,paramPerturbationPercColPos));
             double paramPertPerc = paramPertPercSpinBox->value();
             // Create JSON object from info
-            QJsonObject param_info;
-            param_info["name"]              = paramNameStr;
-            param_info["iterations"]        = paramNIters;
-            param_info["delta_percentage"]  = paramPertPerc;
+            QJsonObject sweep_info;
+            sweep_info["name"]              = paramNameStr;
+            sweep_info["iterations"]        = paramNIters;
+            sweep_info["delta_percentage"]  = paramPertPerc;
             // Add it to the list
-            parametersToPerturb.append(param_info);
+            parametersToSweep.append(sweep_info);
+        }
+        else if (perturbationTypeInt == mpParametersTab->FixedPerturbationId)
+        {
+            // Get param name
+            const int paramColPos = mpParametersTab->paramColPos;
+            QLabel *paramNameLabel= qobject_cast<QLabel *>(pParamsTable->cellWidget(i_row,paramColPos));
+            QString paramNameStr = paramNameLabel->text();
+            // Get value to set to param
+            const int fixedValueColPos = mpParametersTab->fixedValueColPos;
+            QDoubleSpinBox *pFixedValueSpinbox = qobject_cast<QDoubleSpinBox *>(pParamsTable->cellWidget(i_row,fixedValueColPos));
+            double paramValue = pFixedValueSpinbox->value();
+            // Create JSON object from info
+            QJsonObject fixed_val_info;
+            fixed_val_info["name"]  = paramNameStr;
+            fixed_val_info["value"] = paramValue;
+            // Add it to the list
+            parametersToSetFixedValue.append(fixed_val_info);
         }
     }
-    mRunSpecifications["parameters_to_sweep"] = parametersToPerturb;
+    mRunSpecifications["parameters_to_sweep"] = parametersToSweep;
+    mRunSpecifications["fixed_val_params"]    = parametersToSetFixedValue;
     // "Return" the run specifications (it has to be read by the caller of the dialog)
     accept();
 }

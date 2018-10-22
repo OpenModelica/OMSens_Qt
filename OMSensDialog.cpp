@@ -243,9 +243,8 @@ QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBin
     return command;
 }
 
-bool OMSensDialog::defineAndRunCommand(QString timeStampFolderPath, QString scriptDirPath, QJsonObject runSpecifications, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
+bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
 {
-    QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecifications);
     QString command = commandCallFromPaths(scriptPath, pythonBinPath, jsonSpecsPath, resultsFolderPath);
     bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command);
 
@@ -285,9 +284,11 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
         QString timeStampFolderPath = createTimestampDir(destFolderPath);
         // Make sub-folder where the results will be written
         QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
+        // Write JSON to disk
+        QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecifications);
         // Run command
         QString scriptDirPath = dirPathForFilePath(scriptPath);
-        bool processEndedCorrectly = defineAndRunCommand(timeStampFolderPath, scriptDirPath, runSpecifications, resultsFolderPath, scriptPath, pythonBinPath);
+        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, jsonSpecsPath, resultsFolderPath, scriptPath, pythonBinPath);
         // If the process ended correctly, show the results dialog
         if (processEndedCorrectly)
         {

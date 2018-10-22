@@ -29,9 +29,7 @@ public:
     
     QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
     
-    bool defineAndRunCommand(QString jsonSpecsPath, QString scriptPath, QString pythonBinPath, QString scriptDirPath, QString resultsFolderPath);
-    
-    bool defineAndRunCommand(QString timeStampFolderPath, QString scriptDirPath, QJsonObject runSpecifications, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
+    bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
     
     void runOMSensFeature(RunType runType, QString scriptFileName);
     
