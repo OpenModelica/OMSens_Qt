@@ -36,6 +36,10 @@ private:
     void disablePertRangeCellInRow(int rowNum);
     void disableFixedValueCellInRow(int rowNum);
     void disableNumberOfItersCellInRow(int rowNum);
+    void enableAllCells(int rowNum);
+
+private slots:
+    void pertTypeChanged(int ignoreMe);
 
 signals:
 

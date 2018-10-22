@@ -33,9 +33,11 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
         mpParametersTable->setCellWidget(rowNum,paramColPos, paramNameWidget);
         // Set perturbation type
         QComboBox *pTypeComboBox = new QComboBox;
+        pTypeComboBox->setProperty("row", (int) rowNum);
         pTypeComboBox->addItem("None",  QVariant(NoPerturbationId));
         pTypeComboBox->addItem("Sweep", QVariant(SweepPerturbationId));
         pTypeComboBox->addItem("Fixed", QVariant(FixedPerturbationId));
+        connect(pTypeComboBox, SIGNAL(currentIndexChanged(int)),this, SLOT(pertTypeChanged(int)));
         mpParametersTable->setCellWidget(rowNum,pertTypeColPos, pTypeComboBox);
         // #iters spinbox
         QSpinBox *pIterationsSpinBox = new QSpinBox;
@@ -52,8 +54,8 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
         mpParametersTable->setCellWidget(rowNum,pertRangeColPos,pPercentageBox);
         // Set fixed value
         QDoubleSpinBox *fixedValueSpinBox = new QDoubleSpinBox;
-        pPercentageBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-        pPercentageBox->setValue(42);
+        fixedValueSpinBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+        fixedValueSpinBox->setValue(0);
         mpParametersTable->setCellWidget(rowNum,fixedValueColPos,fixedValueSpinBox);
 
         // Enable/disable cells for this row depending on perturbation type
@@ -94,6 +96,16 @@ void ParametersExtendedTab::disableNumberOfItersCellInRow(int rowNum)
     pIterationsSpinbox->setEnabled(false);
 }
 
+void ParametersExtendedTab::enableAllCells(int rowNum)
+{
+    QDoubleSpinBox *pPertRangeSpinbox= qobject_cast<QDoubleSpinBox *>(mpParametersTable->cellWidget(rowNum,pertRangeColPos));
+    pPertRangeSpinbox->setEnabled(true);
+    QSpinBox *pIterationsSpinbox= qobject_cast<QSpinBox *>(mpParametersTable->cellWidget(rowNum,nItersColPos));
+    pIterationsSpinbox->setEnabled(true);
+    QDoubleSpinBox *pFixedValueSpinbox = qobject_cast<QDoubleSpinBox *>(mpParametersTable->cellWidget(rowNum,fixedValueColPos));
+    pFixedValueSpinbox->setEnabled(true);
+}
+
 void ParametersExtendedTab::enableOrDisableCellsOnRow(int rowNum)
 {
     // Depending on the perturbation type, some cells will be enabled and others disabled
@@ -104,6 +116,7 @@ void ParametersExtendedTab::enableOrDisableCellsOnRow(int rowNum)
     //   enums are tedious to use in qvariants
     if (perturbationTypeInt == NoPerturbationId)
     {
+        enableAllCells(rowNum);
         // If no perturbation was selected for this param, disable all the other columns
         disableNumberOfItersCellInRow(rowNum);
         disablePertRangeCellInRow(rowNum);
@@ -111,13 +124,24 @@ void ParametersExtendedTab::enableOrDisableCellsOnRow(int rowNum)
     }
     else if (perturbationTypeInt == SweepPerturbationId)
     {
+        enableAllCells(rowNum);
         // If this parameter is to be swept, disable the fixed value cell
-        disableNumberOfItersCellInRow(rowNum);
-        disablePertRangeCellInRow(rowNum);
+        disableFixedValueCellInRow(rowNum);
     }
     else if (perturbationTypeInt == FixedPerturbationId)
     {
+        enableAllCells(rowNum);
         // If this parameter is to be fixed to a value in all simulations, disable the sweep columns
-        disableFixedValueCellInRow(rowNum);
+        disableNumberOfItersCellInRow(rowNum);
+        disablePertRangeCellInRow(rowNum);
     }
+}
+
+void ParametersExtendedTab::pertTypeChanged(int ignoreMe)
+{
+    // Get row number of triggered combobox
+    int rowNum = sender()->property("row").toInt();
+    // Update cells state in row
+    enableOrDisableCellsOnRow(rowNum);
+
 }
