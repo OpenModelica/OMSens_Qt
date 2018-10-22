@@ -6,8 +6,11 @@
 #include <QJsonObject>
 #include <QComboBox>
 #include <QLabel>
+#include <QTabWidget>
 
 #include "../BaseResultsDialog.h"
+#include "../../tabs/sweep_result/SweepResultVariableTab.h"
+
 
 class SweepResultsDialog: public BaseResultsDialog
 {
@@ -15,18 +18,21 @@ class SweepResultsDialog: public BaseResultsDialog
 public:
     SweepResultsDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
+    // Tabs
+    QTabWidget *mpTabWidget;
+    SweepResultVariableTab *mpVariablesResultTab;
     // GUI members
-    QLabel      *mpVariablesLabel;
-    QComboBox   *mpVariablesComboBox;
-    QPushButton *mpOpenPlotButton;
+//    QLabel      *mpVariablesLabel;
+//    QComboBox   *mpVariablesComboBox;
+//    QPushButton *mpOpenPlotButton;
     QLabel      *mpResultsFolderPathLabel;
     QLabel      *mpResultsFolderPathValue;
     // Data members
     QJsonObject mVarNameToPlotMap;
     QList<QString> mVariables;
 
-private slots:
-    void openSelectedVarPlot();
+//private slots:
+//    void openSelectedVarPlot();
 };
 
 #endif // SWEEPRESULTDIALOG_H
