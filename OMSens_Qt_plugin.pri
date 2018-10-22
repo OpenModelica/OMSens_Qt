@@ -1,6 +1,10 @@
 # This file specifies what components of the project should be used when imported as a plugin
 
-HEADERS +=  $$PWD/dialogs/general/CSVViewerDialog.h \
+RESOURCES += \
+    $$PWD/resources.qrc
+
+HEADERS += \
+    $$PWD/dialogs/general/CSVViewerDialog.h \
     $$PWD/dialogs/general/ImageViewerDialog.h \
     $$PWD/dialogs/indiv/IndivParamSensAnalysisDialog.h \
     $$PWD/dialogs/indiv/IndivSensAnalTypeDialog.h \
@@ -9,6 +13,11 @@ HEADERS +=  $$PWD/dialogs/general/CSVViewerDialog.h \
     $$PWD/dialogs/sweep/SweepResultDialog.h \
     $$PWD/dialogs/vect/VectorialParamSensAnalysisDialog.h \
     $$PWD/dialogs/vect/VectorialResultsDialog.h \
+    $$PWD/dialogs/BaseResultsDialog.h \
+    $$PWD/dialogs/BaseRunSpecsDialog.h \
+    $$PWD/tabs/optim_result/OptimizationResultOtherTab.h \
+    $$PWD/tabs/optim_result/OptimizationResultParametersTab.h \
+    $$PWD/tabs/sweep_result/SweepResultVariableTab.h \
     $$PWD/tabs/HelpTab.h \
     $$PWD/tabs/OptimizationTab.h \
     $$PWD/tabs/ParametersExtendedTab.h \
@@ -16,16 +25,12 @@ HEADERS +=  $$PWD/dialogs/general/CSVViewerDialog.h \
     $$PWD/tabs/SensitivityMethodResultsTab.h \
     $$PWD/tabs/SimulationTab.h \
     $$PWD/tabs/VariablesTab.h \
-    $$PWD/DualLists.h \
     $$PWD/model.h \
     $$PWD/OMSensDialog.h \
-    $$PWD/dialogs/BaseResultsDialog.h \
-    $$PWD/dialogs/BaseRunSpecsDialog.h \
-    $$PWD/tabs/optim_result/OptimizationResultOtherTab.h \
-    $$PWD/tabs/optim_result/OptimizationResultParametersTab.h \
     $$PWD/TableItemDelegate.h
 
-SOURCES +=  $$PWD/dialogs/general/CSVViewerDialog.cpp \
+SOURCES += \
+    $$PWD/dialogs/general/CSVViewerDialog.cpp \
     $$PWD/dialogs/general/ImageViewerDialog.cpp \
     $$PWD/dialogs/indiv/IndivParamSensAnalysisDialog.cpp \
     $$PWD/dialogs/indiv/IndivSensAnalTypeDialog.cpp \
@@ -34,6 +39,9 @@ SOURCES +=  $$PWD/dialogs/general/CSVViewerDialog.cpp \
     $$PWD/dialogs/sweep/SweepResultDialog.cpp \
     $$PWD/dialogs/vect/VectorialParamSensAnalysisDialog.cpp \
     $$PWD/dialogs/vect/VectorialResultsDialog.cpp \
+    $$PWD/tabs/optim_result/OptimizationResultOtherTab.cpp \
+    $$PWD/tabs/optim_result/OptimizationResultParametersTab.cpp \
+    $$PWD/tabs/sweep_result/SweepResultVariableTab.cpp \
     $$PWD/tabs/HelpTab.cpp \
     $$PWD/tabs/OptimizationTab.cpp \
     $$PWD/tabs/ParametersExtendedTab.cpp \
@@ -41,11 +49,5 @@ SOURCES +=  $$PWD/dialogs/general/CSVViewerDialog.cpp \
     $$PWD/tabs/SensitivityMethodResultsTab.cpp \
     $$PWD/tabs/SimulationTab.cpp \
     $$PWD/tabs/VariablesTab.cpp \
-    $$PWD/DualLists.cpp \
     $$PWD/model.cpp \
-    $$PWD/OMSensDialog.cpp \
-    $$PWD/tabs/optim_result/OptimizationResultOtherTab.cpp \
-    $$PWD/tabs/optim_result/OptimizationResultParametersTab.cpp
-
-RESOURCES += \
-    $$PWD/resources.qrc
+    $$PWD/OMSensDialog.cpp
