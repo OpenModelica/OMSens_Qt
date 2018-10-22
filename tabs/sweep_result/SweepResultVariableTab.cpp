@@ -6,8 +6,11 @@
 #include "../../dialogs/general/ImageViewerDialog.h"
 
 
-SweepResultVariableTab::SweepResultVariableTab(QJsonObject mVarNameToPlotMap, QWidget *pParent) : QDialog(pParent)
+SweepResultVariableTab::SweepResultVariableTab(QJsonObject varNameToPlotMap, QWidget *pParent) : QDialog(pParent)
 {
+    // Save map between variable and plot pat
+    mVarNameToPlotMap = varNameToPlotMap;
+
     // Get the list of variables
     mVariables = mVarNameToPlotMap.keys();
 
