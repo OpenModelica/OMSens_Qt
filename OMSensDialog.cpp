@@ -404,5 +404,5 @@ void OMSensDialog::launchPythonBinChooseFolderDialog()
 
 void OMSensDialog::helpDialog()
 {
-    HelpBrowser::showPage("/home/omsens/Documents/OpenModelica/OMEdit/OMEdit/OMEditGUI/OMSens/OMSens_Qt/dialogs/sweep/help.html");
+    HelpBrowser::showPage(helpTextPath);
 }

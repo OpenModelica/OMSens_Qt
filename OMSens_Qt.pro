@@ -82,7 +82,8 @@ DISTFILES += \
     OMSens_Qt_plugin.pri \
     dialogs/indiv/help.html \
     dialogs/sweep/help.html \
-    dialogs/vect/help.html
+    dialogs/vect/help.html \
+    help.html
 
 RESOURCES += \
     resources.qrc

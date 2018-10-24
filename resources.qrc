@@ -1,8 +1,9 @@
 <RCC>
-    <qresource prefix="/">
-        <file alias="OMSens/ModelWithVariousParams.mo">resource/ModelWithVariousParams.mo</file>
-        <file alias="OMSens/indiv/help.html">dialogs/indiv/help.html</file>
-        <file alias="OMSens/sweep/help.html">dialogs/sweep/help.html</file>
-        <file alias="OMSens/vect/help.html">dialogs/vect/help.html</file>
+    <qresource prefix="/OMSens">
+        <file alias="ModelWithVariousParams.mo">resource/ModelWithVariousParams.mo</file>
+        <file alias="indiv/help.html">dialogs/indiv/help.html</file>
+        <file alias="sweep/help.html">dialogs/sweep/help.html</file>
+        <file alias="vect/help.html">dialogs/vect/help.html</file>
+        <file alias="help.html">help.html</file>
     </qresource>
 </RCC>

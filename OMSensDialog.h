@@ -53,6 +53,8 @@ private:
     QPushButton *mpVectButton;
     QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton;
+    // Conventions
+    QString helpTextPath = "qrc:/OMSens/help.html";
     // Auxs
 
 signals:
