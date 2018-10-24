@@ -162,7 +162,7 @@ void MultiParamSweepDialog::runMultiParamSweep()
         }
     }
     mRunSpecifications["parameters_to_sweep"] = parametersToSweep;
-    mRunSpecifications["fixed_val_params"]    = parametersToSetFixedValue;
+    mRunSpecifications["fixed_params"]    = parametersToSetFixedValue;
     // "Return" the run specifications (it has to be read by the caller of the dialog)
     accept();
 }
