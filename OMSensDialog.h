@@ -54,7 +54,7 @@ private:
     QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton;
     // Conventions
-    QString helpTextPath = "qrc:/OMSens/help.html";
+    QString helpTextPath = "qrc:/OMSens/help/help.html";
     // Auxs
 
 signals:
