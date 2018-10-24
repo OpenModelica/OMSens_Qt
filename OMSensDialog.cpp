@@ -49,12 +49,12 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     connect(mpPythonBinBrowseButton, SIGNAL(clicked()), this, SLOT(launchPythonBinChooseFolderDialog()));
 
     // Division between paths and buttons
-    mpHorizontalLine = new QFrame;
-    mpHorizontalLine->setFrameShape(QFrame::HLine);
-    mpHorizontalLine->setFrameShadow(QFrame::Sunken);
+    mpHorizontalLineOne= new QFrame;
+    mpHorizontalLineOne->setFrameShape(QFrame::HLine);
+    mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
 
 
-    // Initialize buttons
+    // Initialize features
     mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"));
     mpIndivButton->setAutoDefault(true);
     mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
@@ -69,6 +69,11 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpVectButton->setAutoDefault(true);
     mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
+
+    // Division between features and help
+    mpHorizontalLineTwo= new QFrame;
+    mpHorizontalLineTwo->setFrameShape(QFrame::HLine);
+    mpHorizontalLineTwo->setFrameShadow(QFrame::Sunken);
 
     mpHelpButton = new QPushButton(tr("Help"));
     mpHelpButton->setAutoDefault(true);
@@ -90,11 +95,12 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     pPythonBinValueLayout->addWidget(mpPythonBinBrowseButton);
     mainLayout->addLayout(pPythonBinValueLayout);
     // Division
-    mainLayout->addWidget(mpHorizontalLine);
+    mainLayout->addWidget(mpHorizontalLineOne);
     // Buttons
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
+    mainLayout->addWidget(mpHorizontalLineTwo);
     mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
     mainLayout->setAlignment(Qt::AlignCenter);
     setLayout(mainLayout);

@@ -47,10 +47,11 @@ private:
     QLabel      *mpPythonBinLabel;
     QLabel      *mpPythonBinValue;
     QPushButton *mpPythonBinBrowseButton;
-    QFrame      *mpHorizontalLine;
+    QFrame      *mpHorizontalLineOne;
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;
     QPushButton *mpVectButton;
+    QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton;
     // Auxs
 
