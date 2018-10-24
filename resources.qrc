@@ -4,6 +4,6 @@
         <file alias="indiv/help.html">dialogs/indiv/help.html</file>
         <file alias="sweep/help.html">dialogs/sweep/help.html</file>
         <file alias="vect/help.html">dialogs/vect/help.html</file>
-        <file alias="help.html">help.html</file>
+        <file alias="help.html">resource/help/help.html</file>
     </qresource>
 </RCC>

@@ -83,7 +83,7 @@ DISTFILES += \
     dialogs/indiv/help.html \
     dialogs/sweep/help.html \
     dialogs/vect/help.html \
-    help.html
+    resource/help/help.html
 
 RESOURCES += \
     resources.qrc
