@@ -51,6 +51,7 @@ private:
     QPushButton *mpIndivButton;
     QPushButton *mpSweepButton;
     QPushButton *mpVectButton;
+    QPushButton *mpHelpButton;
     // Auxs
 
 signals:
@@ -63,6 +64,7 @@ public slots:
   void openSensAnalysisImage();
   void launchOMSensBackendChooseFolderDialog();
   void launchPythonBinChooseFolderDialog();
+  void helpDialog();
 };
 
 #endif // OMSENSDIALOG_H

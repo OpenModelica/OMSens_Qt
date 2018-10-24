@@ -17,6 +17,7 @@
 #include "dialogs/general/CSVViewerDialog.h"
 #include "dialogs/BaseRunSpecsDialog.h"
 #include "dialogs/BaseResultsDialog.h"
+#include "dialogs/help/HelpBrowser.h"
 
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
@@ -69,6 +70,11 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
 
+    mpHelpButton = new QPushButton(tr("Help"));
+    mpHelpButton->setAutoDefault(true);
+    mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
+
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     // OMSens folder
@@ -89,6 +95,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
+    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
     mainLayout->setAlignment(Qt::AlignCenter);
     setLayout(mainLayout);
 }
@@ -387,4 +394,9 @@ void OMSensDialog::launchPythonBinChooseFolderDialog()
         mPythonBinPath = path;
         mpPythonBinValue->setText(mPythonBinPath);
     }
+}
+
+void OMSensDialog::helpDialog()
+{
+    HelpBrowser::showPage("/home/omsens/Documents/OpenModelica/OMEdit/OMEdit/OMEditGUI/OMSens/OMSens_Qt/dialogs/sweep/help.html");
 }
