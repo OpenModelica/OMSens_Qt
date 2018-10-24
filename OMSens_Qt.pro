@@ -46,7 +46,8 @@ SOURCES += \
     OMSensDialog.cpp \
     tabs/optim_result/OptimizationResultParametersTab.cpp \
     tabs/optim_result/OptimizationResultOtherTab.cpp \
-    tabs/sweep_result/SweepResultVariableTab.cpp
+    tabs/sweep_result/SweepResultVariableTab.cpp \
+    dialogs/help/HelpBrowser.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -73,7 +74,8 @@ HEADERS += \
     tabs/optim_result/OptimizationResultOtherTab.h \
     dialogs/BaseRunSpecsDialog.h \
     dialogs/BaseResultsDialog.h \
-    tabs/sweep_result/SweepResultVariableTab.h
+    tabs/sweep_result/SweepResultVariableTab.h \
+    dialogs/help/HelpBrowser.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
