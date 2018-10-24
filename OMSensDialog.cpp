@@ -404,5 +404,6 @@ void OMSensDialog::launchPythonBinChooseFolderDialog()
 
 void OMSensDialog::helpDialog()
 {
-    HelpBrowser::showPage(helpTextPath);
+    HelpBrowser *helpBrowser = new HelpBrowser(helpTextPath);
+    helpBrowser->show();
 }

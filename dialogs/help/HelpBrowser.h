@@ -1,29 +1,20 @@
 #ifndef HELPBROWSER_H
 #define HELPBROWSER_H
 
-#include <QObject>
-#include <QWidget>
+#include <QDialog>
 #include <QTextBrowser>
-#include <QPushButton>
 
-class HelpBrowser : public QWidget
+class HelpBrowser : public QDialog
 {
     Q_OBJECT
 
 public:
-    HelpBrowser(const QString &path, const QString &page,
-                QWidget *parent = 0);
-
-    static void showPage(const QString &page);
-
+    HelpBrowser(const QString &textPath, QWidget *parent = 0);
 private slots:
-    void updateWindowTitle();
 
 private:
+    // GUI
     QTextBrowser *textBrowser;
-    QPushButton *homeButton;
-    QPushButton *backButton;
-    QPushButton *closeButton;
 };
 
 #endif // HELPBROWSER_H
