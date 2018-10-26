@@ -26,9 +26,21 @@ private:
     QLabel      *mpResultsFolderPathLabel;
     QLabel      *mpResultsFolderPathValue;
     QDialogButtonBox   *mpButtonBox;
+    // Plot
+    QLabel      *mpFxPlotLabel;
+    QPushButton *mpOpenPlotButton;
+    // stoptime
+    QLabel *mpStopTimeLabel;
+    QLabel *mpStopTimeValue;
+    // Data
+    double mStopTime;
+    QString mPlotPath;
 
     // Aux functions
     void initializeWindowSettings();
+
+private slots:
+    void openPlot();
 };
 
 #endif // VECTORIALRESULTSDIALOG_H

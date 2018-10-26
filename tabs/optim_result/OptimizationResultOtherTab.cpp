@@ -7,7 +7,6 @@
 #include <QHeaderView>
 
 #include "../../TableItemDelegate.h"
-#include "../../dialogs/general/ImageViewerDialog.h"
 
 OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialResults, QWidget *pParent) : QTabWidget(pParent)
 {
@@ -17,9 +16,7 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     // Get the results
     m_f_x_opt = vectorialResultsObject.value(QString("f(x)_opt")).toDouble();
     m_f_x0 = vectorialResultsObject.value(QString("f(x0)")).toDouble();
-    mStopTime = vectorialResultsObject.value(QString("stop_time")).toDouble();
     mVariable = vectorialResultsObject.value(QString("variable")).toString();
-    mPlotPath = vectorialResultsObject.value(QString("plot_path")).toString();
 
 
     // Initialize f(x) table
@@ -89,18 +86,6 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     // Disable column resize
     mpFxTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
-    // Plot
-    mpFxPlotLabel = new QLabel("Plot:");
-    mpOpenPlotButton = new QPushButton("Open");
-    mpOpenPlotButton->setAutoDefault(true);
-    mpOpenPlotButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    connect(mpOpenPlotButton, SIGNAL(clicked()), this, SLOT(openPlot()));
-
-    // Stop time
-    mpStopTimeLabel = new QLabel("Stop time:");
-    mpStopTimeValue = new QLabel(QString::number(mStopTime));
-    //mpStopTimeValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-
     // Set layout
     QFormLayout  *pMainLayout = new QFormLayout;
     // f(x)
@@ -109,22 +94,8 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     pTableLayout->addWidget(mpFxTable);
     pTableLayout->addStretch();
     pMainLayout->addRow(pTableLayout);
-    // Plot
-    pMainLayout->addRow(mpFxPlotLabel,mpOpenPlotButton);
-    // stoptime
-    pMainLayout->addRow(mpStopTimeLabel,mpStopTimeValue);
 
 
     // Layout settings
     setLayout(pMainLayout);
-}
-
-
-// Slots
-void OptimizationResultOtherTab::openPlot()
-{
-    // Get path
-    // Launch image viewer dialog
-    ImageViewerDialog *pImageViewer = new ImageViewerDialog(mPlotPath,this);
-    pImageViewer->show();
 }

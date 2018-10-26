@@ -18,21 +18,10 @@ private:
     // GUI members
     // f(x)
     QTableView *mpFxTable;
-    // Plot
-    QLabel      *mpFxPlotLabel;
-    QPushButton *mpOpenPlotButton;
-    // stoptime
-    QLabel *mpStopTimeLabel;
-    QLabel *mpStopTimeValue;
     // Data members
+    QString mVariable;
     double m_f_x_opt;
     double m_f_x0;
-    double mStopTime;
-    QString mVariable;
-    QString mPlotPath;
-
-private slots:
-    void openPlot();
 };
 
 #endif // OPTIMIZATIONRESULTOTHERTAB_H
