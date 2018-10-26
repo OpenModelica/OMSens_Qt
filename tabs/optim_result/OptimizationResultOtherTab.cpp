@@ -7,25 +7,20 @@
 #include <QHeaderView>
 
 #include "../../TableItemDelegate.h"
+#include "../../dialogs/general/ImageViewerDialog.h"
 
 OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialResults, QWidget *pParent) : QTabWidget(pParent)
 {
     // Parse JSON
     // Get the "main" object of the json document
     QJsonObject vectorialResultsObject = vectorialResults.object();
-    // f(x_opt)
+    // Get the results
     m_f_x_opt = vectorialResultsObject.value(QString("f(x)_opt")).toDouble();
-    // f(x0)
     m_f_x0 = vectorialResultsObject.value(QString("f(x0)")).toDouble();
-    // stop time
     mStopTime = vectorialResultsObject.value(QString("stop_time")).toDouble();
-    // variable
     mVariable = vectorialResultsObject.value(QString("variable")).toString();
+    mPlotPath = vectorialResultsObject.value(QString("plot_path")).toString();
 
-    // Stop time
-    mpStopTimeLabel = new QLabel("Stop time:");
-    mpStopTimeValue = new QLabel(QString::number(mStopTime));
-    //mpStopTimeValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
     // Initialize f(x) table
     const QList<QString> columnNames( QList<QString>()
@@ -73,7 +68,6 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     csvModel->insertRow(csvModel->rowCount(), standardItemsList);
 
     // f(x) table
-    mpFxLabel = new QLabel("Variable:");
     mpFxTable = new QTableView;
     mpFxTable->setModel(csvModel);
     // Disable row label
@@ -95,19 +89,42 @@ OptimizationResultOtherTab::OptimizationResultOtherTab(QJsonDocument vectorialRe
     // Disable column resize
     mpFxTable->horizontalHeader()->setSectionResizeMode(QHeaderView::Fixed);
 
+    // Plot
+    mpFxPlotLabel = new QLabel("Plot:");
+    mpOpenPlotButton = new QPushButton("Open");
+    mpOpenPlotButton->setAutoDefault(true);
+    mpOpenPlotButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpOpenPlotButton, SIGNAL(clicked()), this, SLOT(openPlot()));
+
+    // Stop time
+    mpStopTimeLabel = new QLabel("Stop time:");
+    mpStopTimeValue = new QLabel(QString::number(mStopTime));
+    //mpStopTimeValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
     // Set layout
     QFormLayout  *pMainLayout = new QFormLayout;
-    // stoptime
-    pMainLayout->addRow(mpStopTimeLabel,mpStopTimeValue);
     // f(x)
-    pMainLayout->addRow(mpFxLabel);
     QHBoxLayout  *pTableLayout = new QHBoxLayout;
     pTableLayout->addStretch();
     pTableLayout->addWidget(mpFxTable);
     pTableLayout->addStretch();
     pMainLayout->addRow(pTableLayout);
+    // Plot
+    pMainLayout->addRow(mpFxPlotLabel,mpOpenPlotButton);
+    // stoptime
+    pMainLayout->addRow(mpStopTimeLabel,mpStopTimeValue);
+
 
     // Layout settings
     setLayout(pMainLayout);
+}
+
+
+// Slots
+void OptimizationResultOtherTab::openPlot()
+{
+    // Get path
+    // Launch image viewer dialog
+    ImageViewerDialog *pImageViewer = new ImageViewerDialog(mPlotPath,this);
+    pImageViewer->show();
 }

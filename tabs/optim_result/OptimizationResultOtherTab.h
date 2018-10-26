@@ -5,6 +5,7 @@
 #include <QTableView>
 #include <QTabWidget>
 #include <QString>
+#include <QPushButton>
 #include <QJsonDocument>
 
 class OptimizationResultOtherTab : public QTabWidget
@@ -16,8 +17,10 @@ public:
 private:
     // GUI members
     // f(x)
-    QLabel     *mpFxLabel;
     QTableView *mpFxTable;
+    // Plot
+    QLabel      *mpFxPlotLabel;
+    QPushButton *mpOpenPlotButton;
     // stoptime
     QLabel *mpStopTimeLabel;
     QLabel *mpStopTimeValue;
@@ -26,16 +29,10 @@ private:
     double m_f_x0;
     double mStopTime;
     QString mVariable;
+    QString mPlotPath;
 
-//    "f(x)_opt": 322.6798500000257,
-//    "f(x0)": 339.663,
-//    "stop_time": 3,
-//    "variable": "outvar1",
-
-
-signals:
-
-public slots:
+private slots:
+    void openPlot();
 };
 
 #endif // OPTIMIZATIONRESULTOTHERTAB_H
