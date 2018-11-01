@@ -2,7 +2,7 @@
 
 #include <QDoubleSpinBox>
 #include <QCheckBox>
-#include <QFormLayout>
+#include <QVBoxLayout>
 #include <QComboBox>
 
 
@@ -65,11 +65,11 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
     // Resize columns to contents
     mpParametersTable->resizeColumnsToContents();
 
-    QFormLayout *mainLayout = new QFormLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     // Parameters table/list
-    mainLayout->addRow(mpParametersTable);
+    mainLayout->addWidget(mpParametersTable);
     // Description
-    mainLayout->addRow(mpBriefDescriptionLabel);
+    mainLayout->addWidget(mpBriefDescriptionLabel);
     setLayout(mainLayout);
 }
 

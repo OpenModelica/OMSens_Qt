@@ -5,7 +5,7 @@
 #include <QHeaderView>
 #include <QLabel>
 #include <QCheckBox>
-#include <QFormLayout>
+#include <QVBoxLayout>
 
 ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double percentage, QString quickExplanation, QWidget *parent) : QWidget(parent)
 {
@@ -47,16 +47,16 @@ ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, double perce
     // Resize columns to contents
     mpParametersTable->resizeColumnsToContents();
 
-    QFormLayout *mainLayout = new QFormLayout;
+    QVBoxLayout *mainLayout = new QVBoxLayout;
     // Percentage
     QHBoxLayout *pHorizontalSubLayout = new QHBoxLayout;
     pHorizontalSubLayout->addWidget(mpPercentageLabel);
     pHorizontalSubLayout->addWidget(mpPercentageBox);
-    mainLayout->addRow(pHorizontalSubLayout);
+    mainLayout->addWidget(pHorizontalSubLayout);
     // Parameters table/list
-    mainLayout->addRow(mpParametersTable);
+    mainLayout->addWidget(mpParametersTable);
     // Description
-    mainLayout->addRow(mpBriefDescriptionLabel);
+    mainLayout->addWidget(mpBriefDescriptionLabel);
     setLayout(mainLayout);
 }
 
