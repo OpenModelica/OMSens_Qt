@@ -5,7 +5,7 @@
 PerturbationTab::PerturbationTab(double percentage, QWidget *parent) : QTabWidget(parent)
 {
     // Perturbation
-    mpPerturbationLabel = new QLabel(tr("Perturbation direction (choose + or -):"));
+    mpPerturbationLabel = new QLabel(tr("Perturbation (choose + or -):"));
     mpPerturbationBox = new QDoubleSpinBox;
     mpPerturbationBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
     mpPerturbationBox->setValue(percentage);
