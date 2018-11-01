@@ -61,17 +61,19 @@ void IndivParamSensAnalysisDialog::initializeDialogWithData(QList<QString> varia
     QString helpText = readHelpText();
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/indiv_sens_results";
+    QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(variables);
-    QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
-    mpParametersTab         = new ParametersSimpleTab(parameters, percentage, parametersQuickExplanation);
+    mpParametersTab         = new ParametersSimpleTab(parameters, parametersQuickExplanation);
     mpHelpTab               = new HelpTab(helpText);
+    mpPerturbationTab       = new PerturbationTab(percentage);
 
     // Initialize tabs container widget
     mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpSimulationSettingsTab , tr("Simulation"));
     mpTabWidget->addTab(mpVariablesTab          , tr("Variables"));
     mpTabWidget->addTab(mpParametersTab         , tr("Parameters"));
+    mpTabWidget->addTab(mpPerturbationTab       , tr("Perturbation"));
     mpTabWidget->addTab(mpHelpTab               , tr("Help"));
 
     //Buttons
@@ -147,7 +149,7 @@ void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
 
     mRunSpecifications["start_time"] = mpSimulationSettingsTab->getStartTimeValue();
     mRunSpecifications["stop_time"]  = mpSimulationSettingsTab->getStopTimeValue();
-    mRunSpecifications["percentage"] = mpParametersTab->getPercentageValue();
+    mRunSpecifications["percentage"] = mpPerturbationTab->getPerturbationValue();
     // Parameters to perturb
     QJsonArray parametersToPerturb;
     QTableWidget *pParamsTable = mpParametersTab->getParametersTable();

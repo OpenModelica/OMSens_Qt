@@ -5,6 +5,7 @@
 #include "../../tabs/ParametersSimpleTab.h"
 #include "../../tabs/SimulationTab.h"
 #include "../../tabs/HelpTab.h"
+#include "../../tabs/PerturbationTab.h"
 #include "../BaseRunSpecsDialog.h"
 
 #include <QDialog>
@@ -38,6 +39,7 @@ private:
     VariablesTab        *mpVariablesTab;
     ParametersSimpleTab *mpParametersTab;
     HelpTab             *mpHelpTab;
+    PerturbationTab     *mpPerturbationTab;
     QDialogButtonBox    *mpButtonBox;
     // Dialog "return" members
     QJsonObject mRunSpecifications;

@@ -2,7 +2,7 @@
 
 #include <QGridLayout>
 
-OptimizationTab::OptimizationTab(QList<QString> variables, QWidget *parent) : QWidget(parent)
+OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QWidget *parent) : QWidget(parent)
 {
     // Variables
     mpVariablesLabel = new QLabel(tr("Variable:"), this);
@@ -24,6 +24,13 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QWidget *parent) : QW
     mpEpsilonBox->setValue(0.1);
     mpEpsilonBox->setSingleStep(0.001);
     mpEpsilonBox->setDecimals(12);
+    // Boundaries
+    mpBoundariesLabel = new QLabel(tr("Perturbation boundaries:"));
+    mpBoundariesBox = new QDoubleSpinBox;
+    mpBoundariesBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+    mpBoundariesBox->setValue(percentage);
+    mpBoundariesBox->setPrefix("±");
+    mpBoundariesBox->setSuffix("%");
 
     // Layout
     QGridLayout *pMainLayout = new QGridLayout;
@@ -36,10 +43,16 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QWidget *parent) : QW
     // Epsilon
     pMainLayout->addWidget(mpEpsilonLabel,2,0);
     pMainLayout->addWidget(mpEpsilonBox  ,2,1);
+    // Boundaries
+    pMainLayout->addWidget(mpBoundariesLabel,3,0);
+    pMainLayout->addWidget(mpBoundariesBox  ,3,1);
+
     // Layout settings
     setLayout(pMainLayout);
 }
 
+
+// Getters
 double OptimizationTab::getEpsilon() const
 {
     return mpEpsilonBox->value();
@@ -53,4 +66,10 @@ QString OptimizationTab::getTargetVariable() const
 int OptimizationTab::getGoalId() const
 {
     return mpGoalButtonGroup->checkedId();
+}
+
+
+double OptimizationTab::getBoundariesValue() const
+{
+    return mpBoundariesBox->value();
 }

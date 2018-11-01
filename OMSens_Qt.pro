@@ -47,7 +47,8 @@ SOURCES += \
     tabs/optim_result/OptimizationResultParametersTab.cpp \
     tabs/optim_result/OptimizationResultOtherTab.cpp \
     tabs/sweep_result/SweepResultVariableTab.cpp \
-    dialogs/help/HelpBrowser.cpp
+    dialogs/help/HelpBrowser.cpp \
+    tabs/PerturbationTab.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -75,7 +76,8 @@ HEADERS += \
     dialogs/BaseRunSpecsDialog.h \
     dialogs/BaseResultsDialog.h \
     tabs/sweep_result/SweepResultVariableTab.h \
-    dialogs/help/HelpBrowser.h
+    dialogs/help/HelpBrowser.h \
+    tabs/PerturbationTab.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

@@ -40,8 +40,8 @@ void VectorialSensAnalysisDialog::initializeDialogWithData(QList<QString> variab
     QString defaultResultsFolderPath = "/home/omsens/Documents/vectorial_analysis";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
-    mpParametersTab         = new ParametersSimpleTab(parameters, percentage, parametersQuickExplanation);
-    mpOptimizationTab       = new OptimizationTab(variables);
+    mpParametersTab         = new ParametersSimpleTab(parameters, parametersQuickExplanation);
+    mpOptimizationTab       = new OptimizationTab(variables, percentage);
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
@@ -84,7 +84,7 @@ void VectorialSensAnalysisDialog::runVectorialParamSensAnalysis()
     mRunSpecifications["model_mo_path"]   = mpSimulationSettingsTab->getModelPath();
     mRunSpecifications["start_time"]      = mpSimulationSettingsTab->getStartTimeValue();
     mRunSpecifications["stop_time"]       = mpSimulationSettingsTab->getStopTimeValue();
-    mRunSpecifications["percentage"]      = mpParametersTab->getPercentageValue();
+    mRunSpecifications["percentage"]      = mpOptimizationTab->getBoundariesValue();
     mRunSpecifications["epsilon"]         = mpOptimizationTab->getEpsilon();
     mRunSpecifications["target_var_name"] = mpOptimizationTab->getTargetVariable();
     // Goal

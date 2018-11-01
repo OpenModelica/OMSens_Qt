@@ -12,15 +12,17 @@ class OptimizationTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit OptimizationTab(QList<QString> variables, QWidget *parent = nullptr);
+    explicit OptimizationTab(QList<QString> variables, double percentage, QWidget *parent = nullptr);
 
     // Conventions
     //   Columns ordering
     int mMinimizeButtonId = 0;
     int mMaximizeButtonId = 1;
+    // Getters
     double getEpsilon() const;
     QString getTargetVariable() const;
     int getGoalId() const;
+    double  getBoundariesValue() const;
 
 private:
     // Variable
@@ -32,6 +34,9 @@ private:
     // Epsilon
     QLabel         *mpEpsilonLabel;
     QDoubleSpinBox *mpEpsilonBox;
+    // Boundaries
+    QLabel *mpBoundariesLabel;
+    QDoubleSpinBox *mpBoundariesBox;
 
 signals:
 
