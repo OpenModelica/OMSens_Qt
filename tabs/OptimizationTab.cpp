@@ -27,7 +27,7 @@ OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QW
     // Boundaries
     mpBoundariesLabel = new QLabel(tr("Perturbation boundaries:"));
     mpBoundariesBox = new QDoubleSpinBox;
-    mpBoundariesBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
+    mpBoundariesBox->setRange(0.01, std::numeric_limits<double>::max());
     mpBoundariesBox->setValue(percentage);
     mpBoundariesBox->setPrefix("±");
     mpBoundariesBox->setSuffix("%");
