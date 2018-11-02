@@ -3,7 +3,7 @@
 
 #include <QTabWidget>
 #include <QLabel>
-#include <QDoubleSpinBox>
+#include "../DoubleSpinboxAdapted.h"
 
 
 class PerturbationTab : public QTabWidget
@@ -16,7 +16,7 @@ public:
 private:
     // Perturbation
     QLabel         *mpPerturbationLabel;
-    QDoubleSpinBox *mpPerturbationBox;
+    DoubleSpinboxAdapted *mpPerturbationBox;
 
 signals:
 

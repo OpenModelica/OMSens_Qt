@@ -77,7 +77,8 @@ HEADERS += \
     dialogs/BaseResultsDialog.h \
     tabs/sweep_result/SweepResultVariableTab.h \
     dialogs/help/HelpBrowser.h \
-    tabs/PerturbationTab.h
+    tabs/PerturbationTab.h \
+    DoubleSpinboxAdapted.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

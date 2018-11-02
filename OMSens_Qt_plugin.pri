@@ -26,6 +26,7 @@ HEADERS += \
     $$PWD/tabs/SensitivityMethodResultsTab.h \
     $$PWD/tabs/SimulationTab.h \
     $$PWD/tabs/VariablesTab.h \
+    $$PWD/DoubleSpinboxAdapted.h \
     $$PWD/DualLists.h \
     $$PWD/model.h \
     $$PWD/OMSensDialog.h \
