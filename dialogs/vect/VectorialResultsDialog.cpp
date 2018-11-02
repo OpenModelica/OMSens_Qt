@@ -2,7 +2,8 @@
 
 #include <QJsonObject>
 #include <QStandardItemModel>
-#include <QFormLayout>
+#include <QVBoxLayout>
+#include <QHBoxLayout>
 
 #include "../../dialogs/general/ImageViewerDialog.h"
 
@@ -48,19 +49,27 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &VectorialResultsDialog::accept);
 
     // Layout
-    QFormLayout *pMainLayout = new QFormLayout;
+    QVBoxLayout *pMainLayout = new QVBoxLayout;
     // Make the group tabs widget larger
     mpTabWidget->setMinimumHeight(200);
     mpTabWidget->setMinimumWidth(350);
 
-    pMainLayout->addRow(mpTabWidget);
+    pMainLayout->addWidget(mpTabWidget);
     // Plot
-    pMainLayout->addRow(mpFxPlotLabel,mpOpenPlotButton);
+    QHBoxLayout *pPlotLayout = new QHBoxLayout;
+    pPlotLayout->addWidget(mpFxPlotLabel);
+    pPlotLayout->addWidget(mpOpenPlotButton);
+    pPlotLayout->addStretch();
+    pMainLayout->addLayout(pPlotLayout);
     // stoptime
-    pMainLayout->addRow(mpStopTimeLabel,mpStopTimeValue);
+    QHBoxLayout *pStopTimeLayout = new QHBoxLayout;
+    pStopTimeLayout->addWidget(mpStopTimeLabel);
+    pStopTimeLayout->addWidget(mpStopTimeValue);
+    pStopTimeLayout->addStretch();
+    pMainLayout->addLayout(pStopTimeLayout);
     // Results folder path
-    pMainLayout->addRow(mpResultsFolderPathLabel);
-    pMainLayout->addRow(mpResultsFolderPathValue);
+    pMainLayout->addWidget(mpResultsFolderPathLabel);
+    pMainLayout->addWidget(mpResultsFolderPathValue);
 
     // Accept button
     pMainLayout->addWidget(mpButtonBox);
