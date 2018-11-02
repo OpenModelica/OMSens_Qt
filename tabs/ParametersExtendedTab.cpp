@@ -56,6 +56,7 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
         QDoubleSpinBox *fixedValueSpinBox = new QDoubleSpinBox;
         fixedValueSpinBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
         fixedValueSpinBox->setValue(0);
+        fixedValueSpinBox->setDecimals(4);
         mpParametersTable->setCellWidget(rowNum,fixedValueColPos,fixedValueSpinBox);
 
         // Enable/disable cells for this row depending on perturbation type
