@@ -22,6 +22,7 @@ HEADERS += \
     $$PWD/tabs/OptimizationTab.h \
     $$PWD/tabs/ParametersExtendedTab.h \
     $$PWD/tabs/ParametersSimpleTab.h \
+    $$PWD/tabs/PerturbationTab.h \
     $$PWD/tabs/SensitivityMethodResultsTab.h \
     $$PWD/tabs/SimulationTab.h \
     $$PWD/tabs/VariablesTab.h \
@@ -48,6 +49,7 @@ SOURCES += \
     $$PWD/tabs/OptimizationTab.cpp \
     $$PWD/tabs/ParametersExtendedTab.cpp \
     $$PWD/tabs/ParametersSimpleTab.cpp \
+    $$PWD/tabs/PerturbationTab.cpp \
     $$PWD/tabs/SensitivityMethodResultsTab.cpp \
     $$PWD/tabs/SimulationTab.cpp \
     $$PWD/tabs/VariablesTab.cpp \
