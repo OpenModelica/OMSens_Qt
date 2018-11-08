@@ -23,7 +23,7 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     // Initialize tabs container widget
     mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpOptimParamsTab, tr("Parameters"));
-    mpTabWidget->addTab(mpOptimOtherTab, tr("Variable"));
+    mpTabWidget->addTab(mpOptimOtherTab, tr("State Variable"));
 
     // Plot
     mpFxPlotLabel = new QLabel("Plot:");

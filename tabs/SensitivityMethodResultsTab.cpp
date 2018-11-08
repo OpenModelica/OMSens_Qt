@@ -21,10 +21,10 @@ SensitivityMethodResultsTab::SensitivityMethodResultsTab(QString description, QS
     mpOpenHeatmapButton    = new QPushButton("Heatmap");
     mpOpenHeatmapButton->setAutoDefault(true);
     mpOpenHeatmapButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    mpOpenColumnsIDsButton = new QPushButton("Variables IDs");
+    mpOpenColumnsIDsButton = new QPushButton("State Variable IDs");
     mpOpenColumnsIDsButton->setAutoDefault(true);
     mpOpenColumnsIDsButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    mpOpenRowsIDsButton    = new QPushButton("Parameters IDs");
+    mpOpenRowsIDsButton    = new QPushButton("Parameter IDs");
     mpOpenRowsIDsButton->setAutoDefault(true);
     mpOpenRowsIDsButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
 
