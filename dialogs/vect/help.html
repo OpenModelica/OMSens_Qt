@@ -1,12 +1,12 @@
 <p><strong>Vectorial Sensitivity Analysis</strong></p>
-<p>This routine uses an optimization algorithm to find the values of a set of
-parameters that maximize/minimize a chosen variable. It's able to do this by
-characterizing the dynamic models as nonlinear programming problems.</p>
-<p>It can be used to analyze how a set of parameters behave when perturbed
+<p>This method uses an optimization algorithm to find the values of a set of
+parameters that maximize/minimize a chosen variable. The method characterizes 
+a given dynamic model as a nonlinear programming problem.</p>
+<p>It can be used to analyze how a model reacts to a set of parameters when they perturbed
 together, instead of analyzing isolated perturbations. This further increases
 the chances of finding, for example, a combination of small parameter
-perturbations that has a non-negligible effect on a variable, possibly showing
-that the model is not as robust as previously thought.</p>
+perturbations that has a non-negligible effect on a variable. It can possibly reveal 
+that the model is not robust to some perturbation combinations even when the model is robust against perturbations of the same parameters but tested individually.</p>
 <p>Nevertheless, this analysis may take several minutes, maybe hours, depending on the following:</p>
 <ul>
    <li>The complexity of the model. Simpler models take less time to
@@ -15,19 +15,19 @@ that the model is not as robust as previously thought.</p>
      all the others. This means that no matter how effective the underlying
      optimization algorithm is, in the worst case scenario the analysis time
      is affected exponentially by the number of parameters to analyze.</li>
-   <li>The simulation time. The shorter the internal simulation time then the
-     shorter the execution time of the simulations.</li>
-   <li>The epsilon. A smaller epsilon may find a better solution but at the
-     expense of longer analysis time.</li>
-   <li>The bounds percentage. The larger the bounds of the parameters, the more
-     values the optimization algorithm has to test.</li>
+   <li>The simulation time. The shorter the internal simulation time the
+     shorter the execution of the simulations.</li>
+   <li>The epsilon value. A smaller epsilon may find a better solution but at the
+     expense of longer optimization analysis time.</li>
+   <li>The bounds percentages. The larger the bounds of the parameters, the more
+     values the optimization algorithm must test.</li>
    <li>The system: number of processors, disk speeds, etc.</li>
 </ul>
-<p>Also, take into account that if a parameter has no effect on the variable to study then its "optimum"
-value returned by this feature will be misleading. For each parameter to analyze, it's recommended to
-check beforehand if it has an effect on the variable. The Individual Sensitivity Analysis, also provided by OMSens, is an useful tool for this check.</p>
+<p>Also, take into account that if a parameter has no effect on the variable under study then its "optimum"
+value returned by this feature can be misleading. For each parameter to analyze, it's recommended to
+check beforehand if it has an effect on the variable. The Individual Sensitivity Analysis, also provided with OMSens, is an useful tool for this verification.</p>
 
 <p><strong>Known limitations</strong></p>
-<p>Only parameters and variables of type Real are recognized. Not even renamings of the sort of 'type MyType = Real' are supported.</p>
-<p>Arrays of any type are not supported either.</p>
+<p>Only parameters and variables of type Real are recognized. Renamings like 'type MyType = Real' are not supported either.</p>
+<p>Arrays of any type are also not yet supported.</p>
 
