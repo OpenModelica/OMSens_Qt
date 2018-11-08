@@ -20,7 +20,7 @@ IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QS
     mpRMSMethodTab      = resultsTabForRMSFromJSONObject(heatmapsJSONObject);
     // Initialize tabs container widget
     mpTabWidget = new QTabWidget;
-    mpTabWidget->addTab(mpRelativeMethodTab, tr("Relative"));
+    mpTabWidget->addTab(mpRelativeMethodTab, tr("Relative (REL)"));
     mpTabWidget->addTab(mpRMSMethodTab      , tr("Root Mean Square (RMS)"));
     //Buttons
     mpButtonBox = new QDialogButtonBox;

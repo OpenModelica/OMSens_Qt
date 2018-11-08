@@ -60,7 +60,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
 
-    mpSweepButton = new QPushButton(tr("Multi-parameter sweep"));
+    mpSweepButton = new QPushButton(tr("Multi-parameter Sweep"));
     mpSweepButton->setAutoDefault(true);
     mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
@@ -75,6 +75,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpHorizontalLineTwo->setFrameShape(QFrame::HLine);
     mpHorizontalLineTwo->setFrameShadow(QFrame::Sunken);
 
+    // Help
     mpHelpButton = new QPushButton(tr("Help"));
     mpHelpButton->setAutoDefault(true);
     mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
@@ -100,8 +101,11 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
-    mainLayout->addWidget(mpHorizontalLineTwo);
-    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+// Don't show the help for now
+//    mainLayout->addWidget(mpHorizontalLineTwo);
+//    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+
+    // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);
     setLayout(mainLayout);
 }
