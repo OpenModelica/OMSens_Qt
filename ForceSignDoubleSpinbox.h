@@ -3,7 +3,7 @@
 
 #include <QDoubleSpinBox>
 
-class DoubleSpinboxAdapted: public QDoubleSpinBox
+class ForceSignDoubleSpinbox: public QDoubleSpinBox
 {
 public:
     using QDoubleSpinBox::QDoubleSpinBox;
