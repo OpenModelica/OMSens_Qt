@@ -21,7 +21,7 @@ OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QW
     mpGoalButtonGroup->addButton(mpMaxRadio, mMaximizeButtonId);
     // Epsilon
     mpEpsilonLabel = new QLabel(tr("Epsilon"));
-    mpEpsilonBox = new SciNotDoubleSpinbox;
+    mpEpsilonBox = new SciNotationDoubleSpinbox;
     mpEpsilonBox->setRange(std::numeric_limits<double>::min(), 1-std::numeric_limits<double>::min());
     mpEpsilonBox->setValue(0.1);
     mpEpsilonBox->setSingleStep(0.01);

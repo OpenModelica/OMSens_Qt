@@ -4,18 +4,16 @@
 #include <QObject>
 #include <QDoubleSpinBox>
 
-class SciNotDoubleSpinbox : public QDoubleSpinBox
+class SciNotationDoubleSpinbox : public QDoubleSpinBox
 {
     Q_OBJECT
 public:
-    explicit SciNotDoubleSpinbox(QWidget *parent = 0) : QDoubleSpinBox(parent) {}
+    explicit SciNotationDoubleSpinbox(QWidget *parent = 0) : QDoubleSpinBox(parent) {}
 
     // Change the way we read the user input
     double valueFromText(const QString & text) const
     {
-        double numFromStr = text.toDouble();
-        return numFromStr;
-    }
+        double numFromStr = text.toDouble(); return numFromStr; }
 
     // Change the way we show the internal number
     QString textFromValue(double value) const
@@ -24,12 +22,12 @@ public:
     }
 
     // Change the way we validate user input (if validate => valueFromText)
-    QValidator::State validate(QString &text, int &pos) const
+    QValidator::State validate(QString &text, int&) const
     {
 
         // Try to convert the string to double
         bool ok;
-        double numFromStr = text.toDouble();
+        text.toDouble(&ok);
         // See if it's a valid Double
         QValidator::State validationState;
         if(ok)

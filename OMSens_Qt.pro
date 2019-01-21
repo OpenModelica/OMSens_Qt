@@ -78,8 +78,8 @@ HEADERS += \
     tabs/sweep_result/SweepResultVariableTab.h \
     dialogs/help/HelpBrowser.h \
     tabs/PerturbationTab.h \
-    SciNotDoubleSpinbox.h \
-    ForceSignDoubleSpinbox.h
+    ForceSignDoubleSpinbox.h \
+    SciNotationDoubleSpinbox.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
