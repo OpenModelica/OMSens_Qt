@@ -25,6 +25,7 @@ OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QW
     mpEpsilonBox->setRange(std::numeric_limits<double>::min(), 1-std::numeric_limits<double>::min());
     mpEpsilonBox->setValue(0.1);
     mpEpsilonBox->setSingleStep(0.01);
+    mpEpsilonHintLabel = new QLabel(tr("(0 < ε < 1)"));
     // Boundaries
     mpBoundariesLabel = new QLabel(tr("Perturbation boundaries:"));
     mpBoundariesBox = new QDoubleSpinBox;
@@ -42,8 +43,9 @@ OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QW
     pMainLayout->addWidget(mpMinRadio         ,0,2);
     pMainLayout->addWidget(mpMaxRadio         ,0,3);
     // Epsilon
-    pMainLayout->addWidget(mpEpsilonLabel  ,2,0);
-    pMainLayout->addWidget(mpEpsilonBox    ,2,1);
+    pMainLayout->addWidget(mpEpsilonLabel    ,2,0);
+    pMainLayout->addWidget(mpEpsilonBox      ,2,1);
+    pMainLayout->addWidget(mpEpsilonHintLabel,2,2);
     // Boundaries
     pMainLayout->addWidget(mpBoundariesLabel,3,0);
     pMainLayout->addWidget(mpBoundariesBox  ,3,1);

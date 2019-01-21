@@ -36,6 +36,7 @@ private:
     // Epsilon
     QLabel   *mpEpsilonLabel;
     SciNotationDoubleSpinbox *mpEpsilonBox;
+    QLabel   *mpEpsilonHintLabel;
     // Boundaries
     QLabel *mpBoundariesLabel;
     QDoubleSpinBox *mpBoundariesBox;
