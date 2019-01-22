@@ -18,6 +18,7 @@
 #include "dialogs/BaseRunSpecsDialog.h"
 #include "dialogs/BaseResultsDialog.h"
 #include "dialogs/help/HelpBrowser.h"
+#include "specs/RunSpecifications.h"
 
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
@@ -215,12 +216,11 @@ QString OMSensDialog::createTimestampDir(QString destFolderPath)
     return timeStampFolderPath;
 }
 
-QString OMSensDialog::writeJsonToDisk(QString timeStampFolderPath, QJsonObject runSpecifications)
+QString OMSensDialog::writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecificationsDoc)
 {
     QString jsonSpecsName = "experiment_specs.json";
     QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
     // Save analysis specifications to disk
-    QJsonDocument runSpecificationsDoc(runSpecifications);
     QFile runSpecificationsFile(jsonSpecsPath);
     if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
     {
@@ -295,14 +295,14 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
     // If the dialog was accepted by the user, run the analysis
     if(dialogCode == QDialog::Accepted)
     {   // Get user inputs from dialog
-        QJsonObject runSpecifications = runSpecsDialog->getRunSpecifications();
+        QJsonDocument runSpecs = runSpecsDialog->getRunSpecifications();
         QString destFolderPath = runSpecsDialog->getDestFolderPath();
         // Make timestamp subfolder in dest folder path
         QString timeStampFolderPath = createTimestampDir(destFolderPath);
         // Make sub-folder where the results will be written
         QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
         // Write JSON to disk
-        QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecifications);
+        QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecs);
         // Run command
         QString scriptDirPath = dirPathForFilePath(scriptPath);
         bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, jsonSpecsPath, resultsFolderPath, scriptPath, pythonBinPath);

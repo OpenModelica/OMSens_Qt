@@ -21,7 +21,7 @@ public:
     
     QString createTimestampDir(QString destFolderPath);
     
-    QString writeJsonToDisk(QString timeStampFolderPath, QJsonObject runSpecifications);
+    QString writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecifications);
     
     QString createResultsFolder(QString timeStampFolderPath);
     

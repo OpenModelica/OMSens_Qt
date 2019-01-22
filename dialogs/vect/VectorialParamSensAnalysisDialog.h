@@ -25,7 +25,7 @@ public:
     VectorialSensAnalysisDialog(Model model, QWidget *pParent = 0);
 
     // Getters
-    QJsonObject getRunSpecifications() const;
+    QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
 private:
     void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);

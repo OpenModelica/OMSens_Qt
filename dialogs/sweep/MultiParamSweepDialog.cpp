@@ -4,6 +4,7 @@
 #include <QHeaderView>
 #include <QSizePolicy>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QCheckBox>
 #include <QTextStream>
 #include <QComboBox>
@@ -60,9 +61,10 @@ void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, Q
     setLayout(mainLayout);
 }
 
-QJsonObject MultiParamSweepDialog::getRunSpecifications() const
+QJsonDocument MultiParamSweepDialog::getRunSpecifications() const
 {
-    return mRunSpecifications;
+
+    return QJsonDocument(mRunSpecifications);
 }
 
 QString MultiParamSweepDialog::getDestFolderPath() const
