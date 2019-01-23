@@ -52,7 +52,8 @@ private:
     QPushButton *mpSweepButton;
     QPushButton *mpVectButton;
     QFrame      *mpHorizontalLineTwo;
-    QPushButton *mpHelpButton;
+    QPushButton *mpHelpButton; // Not shown for now
+    QPushButton *mpLoadExperimentButton;
     // Conventions
     QString helpTextPath = "qrc:/OMSens/help/help.html";
     // Auxs
@@ -68,6 +69,7 @@ public slots:
   void launchOMSensBackendChooseFolderDialog();
   void launchPythonBinChooseFolderDialog();
   void helpDialog();
+  void loadExperimentFileDialog();
 };
 
 #endif // OMSENSDIALOG_H

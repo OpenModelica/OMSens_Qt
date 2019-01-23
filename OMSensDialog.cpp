@@ -18,7 +18,7 @@
 #include "dialogs/BaseRunSpecsDialog.h"
 #include "dialogs/BaseResultsDialog.h"
 #include "dialogs/help/HelpBrowser.h"
-#include "specs/RunSpecifications.h"
+#include "specs/IndivSpecs.h"
 
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
@@ -76,11 +76,17 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpHorizontalLineTwo->setFrameShape(QFrame::HLine);
     mpHorizontalLineTwo->setFrameShadow(QFrame::Sunken);
 
-    // Help
+    // Help (not shown for now)
     mpHelpButton = new QPushButton(tr("Help"));
     mpHelpButton->setAutoDefault(true);
     mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
+
+    // Load experiment
+    mpLoadExperimentButton = new QPushButton(tr("Load"));
+    mpLoadExperimentButton->setAutoDefault(true);
+    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -102,9 +108,10 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
+    mainLayout->addWidget(mpHorizontalLineTwo);
 // Don't show the help for now
-//    mainLayout->addWidget(mpHorizontalLineTwo);
 //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+    mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignRight);
 
     // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);
@@ -410,4 +417,35 @@ void OMSensDialog::helpDialog()
 {
     HelpBrowser *helpBrowser = new HelpBrowser(helpTextPath);
     helpBrowser->show();
+}
+
+
+void OMSensDialog::loadExperimentFileDialog()
+{
+    // Launch
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                            "/home",
+                                                            tr("Experiments (*.json)"));
+    if(!filePath.isEmpty() && !filePath.isNull())
+    {
+        // Load file
+        QFile jsonFile(filePath);
+        jsonFile.open(QFile::ReadOnly);
+        // Parse file into Json Document
+        QJsonDocument json_specs_doc = QJsonDocument().fromJson(jsonFile.readAll());
+        // Get object from top
+        QJsonObject json_specs = json_specs_doc.object();
+        // Check if contains key specifying analysis type
+        QString analysis_type_key = "analysis_type";
+        if(json_specs.contains(analysis_type_key))
+        {
+            // Get analysis type
+            QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
+            // Find the corresponding analysis type
+            BaseRunSpecsDialog *runSpecsDialog;
+            if (analysis_type == IndivSpecs::analysis_id_str) runSpecsDialog = new IndivParamSensAnalysisDialog(json_specs_doc,this);
+            // Launch analysis dialog
+            int dialogCode  = runSpecsDialog->exec();
+        }
+    }
 }

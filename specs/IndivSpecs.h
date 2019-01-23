@@ -15,6 +15,8 @@ public:
                QStringList vars_to_analyze);
     // Methods
     QJsonDocument toJson();
+    // Conventions
+    static const QString analysis_id_str; // Defined in .cpp
 private:
     // Specification info
     QString model_file_path;

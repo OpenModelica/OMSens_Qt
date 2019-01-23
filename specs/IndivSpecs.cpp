@@ -3,6 +3,8 @@
 #include <QJsonArray>
 #include <QList>
 
+// Conventions
+const QString IndivSpecs::analysis_id_str = "indiv";
 
 // Constructors
 IndivSpecs::IndivSpecs(QJsonDocument json_specs_doc)
@@ -15,7 +17,6 @@ IndivSpecs::IndivSpecs(QJsonDocument json_specs_doc)
     this->percentage      = json_specs.value(QString("percentage")).toDouble();
     this->start_time      = json_specs.value(QString("start_time")).toDouble();
     this->stop_time       = json_specs.value(QString("stop_time")).toDouble();
-    QStringList vars_to_analyze;
     // Get variables QVariant list
     QList<QVariant> variablesQVariant = json_specs.value(QString("vars_to_analyze")).toArray().toVariantList();
     // Transform from list of QVariant to list of QString
@@ -42,6 +43,8 @@ QJsonDocument IndivSpecs::toJson()
 {
     // Initialize JSON root object
     QJsonObject json_specs;
+    // Specify analysis type
+    json_specs["analysis_type"]         = this->analysis_id_str;
     // Add specs to json
     json_specs["model_name"]            = this->model_name;
     json_specs["model_mo_path"]         = this->model_file_path;
