@@ -204,7 +204,7 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
 QString OMSensDialog::createTimestampDir(QString destFolderPath)
 {
     QDateTime currentTime = QDateTime::currentDateTime();
-    QString date = currentTime.toString("dd-MM-yyyy");
+    QString date = currentTime.toString("yyyy-MM-dd");
     QString h_m_s = currentTime.toString("H_m_s");
     QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
     QDir timestampFolderPathDir(timeStampFolderPath);
