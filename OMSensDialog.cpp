@@ -118,6 +118,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     setLayout(mainLayout);
 }
 
+
 void OMSensDialog::runIndivSensAnalysis()
 {
   RunType runType = Individual;
@@ -128,6 +129,12 @@ void OMSensDialog::runMultiParameterSweep()
   RunType runType = Sweep;
   runNewOMSensAnalysis(runType);
 }
+void OMSensDialog::runVectorialSensAnalysis()
+{
+  RunType runType = Vectorial;
+  runNewOMSensAnalysis(runType);
+}
+
 QJsonDocument OMSensDialog::readJsonFile(QString resultsFolderPath)
 {
     QString resultsFileName = "result.json";
@@ -254,6 +261,8 @@ bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsP
 
 void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType)
 {
+    // Hide this dialog before opening the new one
+    hide();
     int dialogCode  = runSpecsDialog->exec();
     // If the dialog was accepted by the user, run the analysis
     if(dialogCode == QDialog::Accepted)
@@ -305,9 +314,7 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
 
 void OMSensDialog::runNewOMSensAnalysis(RunType runType)
 {
-    // Hide this dialog before opening the new one
-    hide();
-    // Initialize and execute dialog
+    // Initialize dialog
     BaseRunSpecsDialog *runSpecsDialog;
     switch (runType)
     {
@@ -322,12 +329,6 @@ void OMSensDialog::runNewOMSensAnalysis(RunType runType)
            break;
     }
     runAnalysisAndShowResult(runSpecsDialog, runType);
-}
-
-void OMSensDialog::runVectorialSensAnalysis()
-{
-  RunType runType = Vectorial;
-  runNewOMSensAnalysis(runType);
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:
@@ -425,9 +426,13 @@ void OMSensDialog::loadExperimentFileDialog()
             QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
             // Find the corresponding analysis type
             BaseRunSpecsDialog *runSpecsDialog;
-            if (analysis_type == IndivSpecs::analysis_id_str) runSpecsDialog = new IndivParamSensAnalysisDialog(json_specs_doc,this);
-            // Launch analysis dialog
-            int dialogCode  = runSpecsDialog->exec();
+            RunType             runType;
+            if (analysis_type == IndivSpecs::analysis_id_str)
+            {
+                runSpecsDialog = new IndivParamSensAnalysisDialog(json_specs_doc,this);
+                runType = Individual;
+            }
+            runAnalysisAndShowResult(runSpecsDialog,runType);
         }
     }
 }
