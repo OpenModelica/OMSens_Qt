@@ -2,6 +2,9 @@
 #include <QList>
 #include <QString>
 #include <QFile>
+#include <QJsonDocument>
+#include <QJsonObject>
+#include <QJsonArray>
 
 // Parametrized constructor
 Model::Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters, QString filePath, QString modelName):
@@ -44,4 +47,22 @@ QString Model::getFilePath() const
 QString Model::getModelName() const
 {
     return mModelName;
+}
+
+// To JSON
+
+QJsonDocument Model::toJson()
+{
+    // Initialize JSON root object
+    QJsonObject json_specs;
+    json_specs["input_variables"]  = QJsonArray::fromStringList(mInputVariables);
+    json_specs["output_variables"] = QJsonArray::fromStringList(mOutputVariables);
+    json_specs["aux_variables"]    = QJsonArray::fromStringList(mAuxVariables);
+    json_specs["parameters"]       = QJsonArray::fromStringList(mParameters);
+    json_specs["model_mo_path"]    = mFilePath;
+    json_specs["model_name"]       = mModelName;
+    // Initialize JSON doc from JSON object
+    QJsonDocument json_specs_doc(json_specs);
+
+    return json_specs_doc;
 }

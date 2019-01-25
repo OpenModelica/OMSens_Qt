@@ -21,7 +21,7 @@
 #include "specs/IndivSpecs.h"
 
 
-OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
+OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
 {
     // Dialog settings
     setMinimumWidth(400);
@@ -207,19 +207,17 @@ QString OMSensDialog::createTimestampDir(QString destFolderPath)
     return timeStampFolderPath;
 }
 
-QString OMSensDialog::writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecificationsDoc)
+QString OMSensDialog::writeJsonToDisk(QString file_path, QJsonDocument runSpecificationsDoc)
 {
-    QString jsonSpecsName = "experiment_specs.json";
-    QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
     // Save analysis specifications to disk
-    QFile runSpecificationsFile(jsonSpecsPath);
+    QFile runSpecificationsFile(file_path);
     if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
     {
         runSpecificationsFile.write(runSpecificationsDoc.toJson());
         runSpecificationsFile.close();
     }
 
-    return jsonSpecsPath;
+    return file_path;
 }
 
 QString OMSensDialog::createResultsFolder(QString timeStampFolderPath)
@@ -259,7 +257,27 @@ bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsP
     return processEndedCorrectly;
 }
 
-void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType)
+void OMSensDialog::showResultsDialog(RunType runType, QString resultsFolderPath)
+{
+    QJsonDocument jsonPathsDocument = readJsonFile(resultsFolderPath);
+    // Initialize results instance with JSON document
+    BaseResultsDialog *resultsDialog;
+    switch (runType)
+    {
+        case Vectorial:
+           resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+           break;
+        case Sweep:
+           resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+           break;
+        case Individual:
+           resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+           break;
+    }
+    resultsDialog->show();
+}
+
+void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model)
 {
     // Hide this dialog before opening the new one
     hide();
@@ -273,37 +291,27 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
         // python executable path from class member
         QString pythonBinPath = mPythonBinPath;
 
-        QJsonDocument runSpecs = runSpecsDialog->getRunSpecifications();
+        QJsonDocument exp_specs = runSpecsDialog->getRunSpecifications();
         QString destFolderPath = runSpecsDialog->getDestFolderPath();
         // Make timestamp subfolder in dest folder path
         QString timeStampFolderPath = createTimestampDir(destFolderPath);
         // Make sub-folder where the results will be written
         QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
-        // Write JSON to disk
-        QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecs);
+        // Write Exp specs to disk
+        QString exp_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + exp_specs_file_name);
+        writeJsonToDisk(exp_specs_path, exp_specs);
+        // Write model specs to disk
+        QString model_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + model_specs_file_name);
+        QJsonDocument model_specs = model.toJson();
+        writeJsonToDisk(model_specs_path, model_specs);
         // Run command
         QString scriptDirPath = dirPathForFilePath(scriptPath);
-        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, jsonSpecsPath, resultsFolderPath, scriptPath, pythonBinPath);
+        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, resultsFolderPath, scriptPath, pythonBinPath);
         // If the process ended correctly, show the results dialog
         if (processEndedCorrectly)
         {
             // Read JSON in results folder with the paths to the results of the script
-            QJsonDocument jsonPathsDocument = readJsonFile(resultsFolderPath);
-            // Initialize results instance with JSON document
-            BaseResultsDialog *resultsDialog;
-            switch (runType)
-            {
-                case Vectorial:
-                   resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
-                   break;
-                case Sweep:
-                   resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
-                   break;
-                case Individual:
-                   resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
-                   break;
-            }
-            resultsDialog->show();
+            showResultsDialog(runType, resultsFolderPath);
         }
     }
     // If the user pressed the "Cancel" button, do nothing for now
@@ -319,16 +327,16 @@ void OMSensDialog::runNewOMSensAnalysis(RunType runType)
     switch (runType)
     {
         case Vectorial:
-           runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
+           runSpecsDialog = new VectorialSensAnalysisDialog(mActiveModel,this);
            break;
         case Sweep:
-           runSpecsDialog = new MultiParamSweepDialog(mModel,this);
+           runSpecsDialog = new MultiParamSweepDialog(mActiveModel,this);
            break;
         case Individual:
-           runSpecsDialog = new IndivParamSensAnalysisDialog(mModel,this);
+           runSpecsDialog = new IndivParamSensAnalysisDialog(mActiveModel,this);
            break;
     }
-    runAnalysisAndShowResult(runSpecsDialog, runType);
+    runAnalysisAndShowResult(runSpecsDialog, runType, mActiveModel);
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:
@@ -427,11 +435,14 @@ void OMSensDialog::loadExperimentFileDialog()
             // Find the corresponding analysis type
             BaseRunSpecsDialog *runSpecsDialog;
             RunType             runType;
+            // TODO: READ MODEL FROM FILE:
+            Model               model = Model(QStringList(),QStringList(),QStringList(),QStringList(),QString(),QString());
             if (analysis_type == IndivSpecs::analysis_id_str)
             {
                 IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
                 runSpecsDialog = new IndivParamSensAnalysisDialog(runSpecs,this);
                 runType = Individual;
+
             }
             else if (analysis_type == SweepSpecs::analysis_id_str)
             {
@@ -440,7 +451,7 @@ void OMSensDialog::loadExperimentFileDialog()
                 runType = Sweep;
             }
 
-            runAnalysisAndShowResult(runSpecsDialog,runType);
+            runAnalysisAndShowResult(runSpecsDialog,runType,model);
         }
     }
 }

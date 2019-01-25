@@ -17,11 +17,15 @@ public:
     // Constructors
     OMSensDialog(Model model, QWidget *parent = nullptr);
     // Conventions
-    QString helpTextPath = "qrc:/OMSens/help/help.html";
+    QString helpTextPath          = "qrc:/OMSens/help/help.html";
+    QString exp_specs_file_name   = "experiment_specs.json";
+    QString model_specs_file_name = "model_specs.json";
+
+    void showResultsDialog(RunType runType, QString resultsFolderPath);
 
 private:
     // Data
-    Model mModel;
+    Model mActiveModel;
     QString mOMSensPath;
     QString mPythonBinPath;
     // GUI
@@ -42,14 +46,14 @@ private:
     QJsonDocument readJsonFile(QString resultsFolderPath);
     bool runProcessAndShowProgress(QString scriptDirPath, QString command);
     QString createTimestampDir(QString destFolderPath);
-    QString writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecifications);
+    QString writeJsonToDisk(QString file_path, QJsonDocument runSpecifications);
     QString createResultsFolder(QString timeStampFolderPath);
     QString dirPathForFilePath(QString scriptPath);
     QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
     bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
     void runNewOMSensAnalysis(RunType runType);
     QString progressDialogTextForCurrentTime();
-    void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType);
+    void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model);
 
 signals:
 
