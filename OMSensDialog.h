@@ -5,35 +5,19 @@
 #include <QDialog>
 #include <QLabel>
 #include "model.h"
+#include "dialogs/BaseRunSpecsDialog.h"
 
-// Enum so we can refactor the run and results dialog common behaviour between the types of runs
+// Enum so we can pseudo-reference classes
 enum RunType {Individual, Sweep, Vectorial};
 
 class OMSensDialog : public QDialog
 {
     Q_OBJECT
 public:
+    // Constructors
     OMSensDialog(Model model, QWidget *parent = nullptr);
-
-    QJsonDocument readJsonFile(QString resultsFolderPath);
-    
-    bool runProcessAndShowProgress(QString scriptDirPath, QString command);
-    
-    QString createTimestampDir(QString destFolderPath);
-    
-    QString writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecifications);
-    
-    QString createResultsFolder(QString timeStampFolderPath);
-    
-    QString dirPathForFilePath(QString scriptPath);
-    
-    QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
-    
-    bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
-    
-    void runOMSensFeature(RunType runType, QString scriptFileName);
-    
-    QString progressDialogTextForCurrentTime();
+    // Conventions
+    QString helpTextPath = "qrc:/OMSens/help/help.html";
 
 private:
     // Data
@@ -54,9 +38,18 @@ private:
     QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton; // Not shown for now
     QPushButton *mpLoadExperimentButton;
-    // Conventions
-    QString helpTextPath = "qrc:/OMSens/help/help.html";
     // Auxs
+    QJsonDocument readJsonFile(QString resultsFolderPath);
+    bool runProcessAndShowProgress(QString scriptDirPath, QString command);
+    QString createTimestampDir(QString destFolderPath);
+    QString writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecifications);
+    QString createResultsFolder(QString timeStampFolderPath);
+    QString dirPathForFilePath(QString scriptPath);
+    QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
+    bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
+    void runNewOMSensAnalysis(RunType runType);
+    QString progressDialogTextForCurrentTime();
+    void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType);
 
 signals:
 

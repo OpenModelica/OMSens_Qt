@@ -8,6 +8,13 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
+// Conventions
+QString VectorialSensAnalysisDialog::pythonScriptName()
+{
+    return "vectorial_analysis.py" ;
+}
+
+// Constructors
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   BaseRunSpecsDialog(pParent)
 {

@@ -120,36 +120,13 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
 
 void OMSensDialog::runIndivSensAnalysis()
 {
-  QString scriptFileName = "individual_sens_calculator.py" ;
   RunType runType = Individual;
-  // Hide this dialog before opening the new one
-  runOMSensFeature(runType, scriptFileName);
-
- // RUN PREDEFINED EXP. NEEDS TO BE ADAPTED
-//          // Initialize the Dialog with a predefined analysis
-//          // Read JSON with W3 specs
-//          QString jsonSpecsName = "exp_01_paper_fig_2_heatmap.json";
-//          QString experimentsFolderPath = "/home/omsens/Documents/OMSens/resource/experiments/individual/";
-//          QString jsonSpecsPath = QDir::cleanPath(experimentsFolderPath + QDir::separator() + jsonSpecsName);
-//          // Reed analysis specifications from disk
-//          QString fileContents;
-//          QFile file(jsonSpecsPath);
-//          file.open(QIODevice::ReadOnly | QIODevice::Text);
-//          fileContents = file.readAll();
-//          file.close();
-//          // Initialize Qt JSON document with file contents
-//          QJsonDocument jsonSpecsDocument = QJsonDocument::fromJson(fileContents.toUtf8());
-//          // Initialize dialog with JSON specs
-//          indivDialog = new IndivParamSensAnalysisDialog(jsonSpecsDocument,this);
-//          dialogCodeSecondDialog = indivDialog->exec();;
-
+  runNewOMSensAnalysis(runType);
 }
 void OMSensDialog::runMultiParameterSweep()
 {
-  QString scriptFileName = "multiparam_sweep.py" ;
   RunType runType = Sweep;
-  // Hide this dialog before opening the new one
-  runOMSensFeature(runType, scriptFileName);
+  runNewOMSensAnalysis(runType);
 }
 QJsonDocument OMSensDialog::readJsonFile(QString resultsFolderPath)
 {
@@ -275,33 +252,18 @@ bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsP
     return processEndedCorrectly;
 }
 
-void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
+void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType)
 {
-    // Get script path from OMSens dir and script file name
-    QString scriptPath = QDir::cleanPath(mOMSensPath + QDir::separator() + scriptFileName);
-
-    // python executable path from class member
-    QString pythonBinPath = mPythonBinPath;
-
-    hide();
-    // Initialize and execute dialog
-    BaseRunSpecsDialog *runSpecsDialog;
-    switch (runType)
-    {
-        case Vectorial:
-           runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
-           break;
-        case Sweep:
-           runSpecsDialog = new MultiParamSweepDialog(mModel,this);
-           break;
-        case Individual:
-           runSpecsDialog = new IndivParamSensAnalysisDialog(mModel,this);
-           break;
-    }
     int dialogCode  = runSpecsDialog->exec();
     // If the dialog was accepted by the user, run the analysis
     if(dialogCode == QDialog::Accepted)
-    {   // Get user inputs from dialog
+    {
+        // Get script path from OMSens dir and script file name
+        QString scriptFileName = runSpecsDialog->pythonScriptName();
+        QString scriptPath = QDir::cleanPath(mOMSensPath + QDir::separator() + scriptFileName);
+        // python executable path from class member
+        QString pythonBinPath = mPythonBinPath;
+
         QJsonDocument runSpecs = runSpecsDialog->getRunSpecifications();
         QString destFolderPath = runSpecsDialog->getDestFolderPath();
         // Make timestamp subfolder in dest folder path
@@ -341,11 +303,31 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
     }
 }
 
+void OMSensDialog::runNewOMSensAnalysis(RunType runType)
+{
+    // Hide this dialog before opening the new one
+    hide();
+    // Initialize and execute dialog
+    BaseRunSpecsDialog *runSpecsDialog;
+    switch (runType)
+    {
+        case Vectorial:
+           runSpecsDialog = new VectorialSensAnalysisDialog(mModel,this);
+           break;
+        case Sweep:
+           runSpecsDialog = new MultiParamSweepDialog(mModel,this);
+           break;
+        case Individual:
+           runSpecsDialog = new IndivParamSensAnalysisDialog(mModel,this);
+           break;
+    }
+    runAnalysisAndShowResult(runSpecsDialog, runType);
+}
+
 void OMSensDialog::runVectorialSensAnalysis()
 {
-  QString scriptFileName = "vectorial_analysis.py" ;
   RunType runType = Vectorial;
-  runOMSensFeature(runType, scriptFileName);
+  runNewOMSensAnalysis(runType);
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:

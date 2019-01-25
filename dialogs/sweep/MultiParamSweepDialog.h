@@ -22,11 +22,15 @@ class MultiParamSweepDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:
+    // Constructors
     MultiParamSweepDialog(Model model, QWidget *pParent = 0);
 
     // Getters
     QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
+
+    // Conventions
+    QString pythonScriptName();
 
 private:
     void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime);

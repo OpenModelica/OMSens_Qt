@@ -13,6 +13,14 @@
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
 
+// Conventions
+QString MultiParamSweepDialog::pythonScriptName()
+{
+    // Conventions
+    return "multiparam_sweep.py";
+}
+
+// Constructors
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     BaseRunSpecsDialog(pParent)
 {

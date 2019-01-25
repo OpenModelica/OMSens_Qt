@@ -14,6 +14,13 @@
 #include "../../tabs/SimulationTab.h"
 #include "../../tabs/HelpTab.h"
 
+// Conventions
+QString IndivParamSensAnalysisDialog::pythonScriptName()
+{
+    return "individual_sens_calculator.py";
+}
+
+// Constructor
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(QJsonDocument jsonSpecsDocument, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {

@@ -22,11 +22,14 @@ class VectorialSensAnalysisDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:
+    // Constructors
     VectorialSensAnalysisDialog(Model model, QWidget *pParent = 0);
-
     // Getters
     QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
+    // Conventions
+    QString pythonScriptName();
+
 private:
     void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
     // GUI members
