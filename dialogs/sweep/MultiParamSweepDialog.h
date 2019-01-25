@@ -17,12 +17,14 @@
 #include "../../DualLists.h"
 #include "../../model.h"
 #include "../BaseRunSpecsDialog.h"
+#include "../../specs/SweepSpecs.h"
 
 class MultiParamSweepDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:
     // Constructors
+    MultiParamSweepDialog(SweepSpecs runSpecs, QWidget *pParent = 0);
     MultiParamSweepDialog(Model model, QWidget *pParent = 0);
 
     // Getters
@@ -31,6 +33,10 @@ public:
 
     // Conventions
     QString pythonScriptName();
+
+    QStringList getVarsToAnalyze() const;
+
+    void groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const;
 
 private:
     void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime);
@@ -41,9 +47,6 @@ private:
     ParametersExtendedTab *mpParametersTab;
     HelpTab               *mpHelpTab;
     QDialogButtonBox    *mpButtonBox;
-    // Dialog "return" members
-    QJsonObject mRunSpecifications;
-    QString     mpDestFolderPath;
 
     // Conventions
     QString helpTextPath = ":/OMSens/sweep/help.html";

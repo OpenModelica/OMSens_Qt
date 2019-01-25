@@ -25,7 +25,7 @@ class IndivParamSensAnalysisDialog : public BaseRunSpecsDialog
     Q_OBJECT
 public:
     // Constructors
-    IndivParamSensAnalysisDialog(QJsonDocument jsonSpecsDocument, QWidget *pParent = 0);
+    IndivParamSensAnalysisDialog(IndivSpecs runSpecs, QWidget *pParent = 0);
     IndivParamSensAnalysisDialog(Model model, QWidget *pParent = 0);
     // Getters
     QJsonDocument getRunSpecifications() const;

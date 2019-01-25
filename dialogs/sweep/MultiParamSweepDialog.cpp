@@ -21,6 +21,11 @@ QString MultiParamSweepDialog::pythonScriptName()
 }
 
 // Constructors
+MultiParamSweepDialog::MultiParamSweepDialog(SweepSpecs runSpecs, QWidget *pParent)
+  : BaseRunSpecsDialog(pParent)
+{
+
+}
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     BaseRunSpecsDialog(pParent)
 {
@@ -69,35 +74,9 @@ void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, Q
     setLayout(mainLayout);
 }
 
-QJsonDocument MultiParamSweepDialog::getRunSpecifications() const
+QStringList MultiParamSweepDialog::getVarsToAnalyze() const
 {
-
-    return QJsonDocument(mRunSpecifications);
-}
-
-QString MultiParamSweepDialog::getDestFolderPath() const
-{
-    return mpDestFolderPath;
-}
-
-void MultiParamSweepDialog::initializeWindowSettings()
-{
-    setWindowTitle("Multiparameter Sweep");
-    setMinimumWidth(550);
-}
-
-
-void MultiParamSweepDialog::runMultiParamSweep()
-{
-    // Get folder where to write results
-    mpDestFolderPath = mpSimulationSettingsTab->getDestFolderPath();
-    // Instantiate a JSON Qt object with analysis specs
-    mRunSpecifications["model_name"]    = mpSimulationSettingsTab->getModelName();
-    mRunSpecifications["model_mo_path"] = mpSimulationSettingsTab->getModelPath();
-    mRunSpecifications["start_time"]    = mpSimulationSettingsTab->getStartTimeValue();
-    mRunSpecifications["stop_time"]     = mpSimulationSettingsTab->getStopTimeValue();
-    // Variables to analyze
-    QJsonArray varsToAnalize;
+    QStringList varsToAnalize;
     QTableWidget *pVarsTable = mpVariablesTab->getVariablesTable();
     for(int i_row = 0; i_row < pVarsTable->rowCount(); i_row++)
     {
@@ -117,10 +96,12 @@ void MultiParamSweepDialog::runMultiParamSweep()
             varsToAnalize.append(varNameStr);
         }
     }
-    mRunSpecifications["vars_to_analyze"] = varsToAnalize;
-    // Parameters to perturb
-    QJsonArray parametersToSweep;
-    QJsonArray parametersToSetFixedValue;
+
+    return varsToAnalize;
+}
+
+void MultiParamSweepDialog::groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const
+{
     QTableWidget *pParamsTable = mpParametersTab->getParametersTable();
     for(int i_row = 0; i_row < pParamsTable->rowCount(); i_row++)
     {
@@ -145,13 +126,10 @@ void MultiParamSweepDialog::runMultiParamSweep()
             const int paramPerturbationPercColPos = mpParametersTab->pertRangeColPos;
             QDoubleSpinBox *paramPertPercSpinBox= qobject_cast<QDoubleSpinBox *>(pParamsTable->cellWidget(i_row,paramPerturbationPercColPos));
             double paramPertPerc = paramPertPercSpinBox->value();
-            // Create JSON object from info
-            QJsonObject sweep_info;
-            sweep_info["name"]              = paramNameStr;
-            sweep_info["iterations"]        = paramNIters;
-            sweep_info["delta_percentage"]  = paramPertPerc;
+            // Create object from info
+            SweepingParameterPerturbation sweep_pert = SweepingParameterPerturbation(paramNameStr, paramPertPerc, paramNIters);
             // Add it to the list
-            parametersToSweep.append(sweep_info);
+            parametersToSweep.append(sweep_pert);
         }
         else if (perturbationTypeInt == mpParametersTab->FixedPerturbationId)
         {
@@ -164,15 +142,52 @@ void MultiParamSweepDialog::runMultiParamSweep()
             QDoubleSpinBox *pFixedValueSpinbox = qobject_cast<QDoubleSpinBox *>(pParamsTable->cellWidget(i_row,fixedValueColPos));
             double paramValue = pFixedValueSpinbox->value();
             // Create JSON object from info
-            QJsonObject fixed_val_info;
-            fixed_val_info["name"]  = paramNameStr;
-            fixed_val_info["value"] = paramValue;
+            FixedParameterPerturbation fixed_pert = FixedParameterPerturbation(paramNameStr, paramValue);
             // Add it to the list
-            parametersToSetFixedValue.append(fixed_val_info);
+            parametersToSetFixedValue.append(fixed_pert);
         }
     }
-    mRunSpecifications["parameters_to_sweep"] = parametersToSweep;
-    mRunSpecifications["fixed_params"]    = parametersToSetFixedValue;
+}
+
+QJsonDocument MultiParamSweepDialog::getRunSpecifications() const
+{
+    // Group parameters from dialog
+    QList<SweepingParameterPerturbation> parametersToSweep;
+    QList<FixedParameterPerturbation> parametersToSetFixedValue;
+    this->groupParametersPerturbationsToLists(parametersToSweep, parametersToSetFixedValue);
+    // Initialize specs from dialog info
+    SweepSpecs runSpecs = SweepSpecs(
+        mpSimulationSettingsTab->getModelPath(),
+        mpSimulationSettingsTab->getModelName(),
+        mpSimulationSettingsTab->getStartTimeValue(),
+        mpSimulationSettingsTab->getStopTimeValue(),
+        this->getVarsToAnalyze(),
+        parametersToSweep,
+        parametersToSetFixedValue
+    );
+    // It's easier to just return the json doc (concrete class) instead of returning a RunSpecifications (abstract class)
+    //   and having to deal with pointers
+    QJsonDocument runSpecsDoc = runSpecs.toJson();
+
+    return runSpecsDoc;
+}
+
+QString MultiParamSweepDialog::getDestFolderPath() const
+{
+    // Get folder where to write results
+    QString destFolderPath = mpSimulationSettingsTab->getDestFolderPath();
+    return destFolderPath;
+}
+
+void MultiParamSweepDialog::initializeWindowSettings()
+{
+    setWindowTitle("Multiparameter Sweep");
+    setMinimumWidth(550);
+}
+
+
+void MultiParamSweepDialog::runMultiParamSweep()
+{
     // "Return" the run specifications (it has to be read by the caller of the dialog)
     accept();
 }

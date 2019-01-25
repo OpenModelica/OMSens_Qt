@@ -21,25 +21,18 @@ QString IndivParamSensAnalysisDialog::pythonScriptName()
 }
 
 // Constructor
-IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(QJsonDocument jsonSpecsDocument, QWidget *pParent)
+IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(IndivSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {
-    // Get main object from document
-    QJsonObject jsonSpecs = jsonSpecsDocument.object();
     // Get straightforward specs
-    QString modelName     = jsonSpecs.value(QString("model_name")).toString();
-    QString modelFilePath = jsonSpecs.value(QString("model_mo_path")).toString();
-    double percentage     = jsonSpecs.value(QString("percentage")).toDouble();
-    double startTime      = jsonSpecs.value(QString("start_time")).toDouble();
-    double stopTime       = jsonSpecs.value(QString("stop_time")).toDouble();
-    // Get variables QVariant list
-    QList<QVariant> variablesQVariant = jsonSpecs.value(QString("vars_to_analyze")).toArray().toVariantList();
-    // Transform from list of QVariant to list of QString
-    QList<QString> variables = fromListOfVariantToListOfStr(variablesQVariant);
-    // Get parameters QVariant list
-    QList<QVariant> parametersQVariant = jsonSpecs.value(QString("parameters_to_perturb")).toArray().toVariantList();
-    // Transform from list of QVariant to list of QString
-    QList<QString> parameters = fromListOfVariantToListOfStr(parametersQVariant);
+    QString modelName      = runSpecs.model_name;
+    QString modelFilePath  = runSpecs.model_file_path;
+    double percentage      = runSpecs.percentage;
+    double startTime       = runSpecs.start_time;
+    double stopTime        = runSpecs.stop_time;
+    QStringList variables  = runSpecs.vars_to_analyze;
+    QStringList parameters = runSpecs.parameters_to_perturb;
+
     // Call the initializer with the parsed data from the JSON specs
     initializeDialogWithData(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
 }

@@ -17,7 +17,7 @@ public:
     QJsonDocument toJson();
     // Conventions
     static const QString analysis_id_str; // Defined in .cpp
-private:
+
     // Specification info
     QString model_file_path;
     QString model_name;
@@ -26,6 +26,7 @@ private:
     double start_time;
     double stop_time;
     QStringList vars_to_analyze;
+private:
     // Auxs
     QList<QString> fromListOfVariantToListOfStr(QList<QVariant> listOfQVariant);
 };

@@ -429,9 +429,17 @@ void OMSensDialog::loadExperimentFileDialog()
             RunType             runType;
             if (analysis_type == IndivSpecs::analysis_id_str)
             {
-                runSpecsDialog = new IndivParamSensAnalysisDialog(json_specs_doc,this);
+                IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
+                runSpecsDialog = new IndivParamSensAnalysisDialog(runSpecs,this);
                 runType = Individual;
             }
+            else if (analysis_type == SweepSpecs::analysis_id_str)
+            {
+                SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
+                runSpecsDialog = new MultiParamSweepDialog(runSpecs,this);
+                runType = Sweep;
+            }
+
             runAnalysisAndShowResult(runSpecsDialog,runType);
         }
     }
