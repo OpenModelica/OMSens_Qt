@@ -10,7 +10,7 @@ public:
     BaseRunSpecsDialog(QWidget *parent = nullptr) : QDialog(parent) {}
 
     // Getters
-    virtual QJsonObject getRunSpecifications() const = 0;
+    virtual QJsonDocument getRunSpecifications() const = 0;
     virtual QString getDestFolderPath() const = 0;
 
 signals:

@@ -25,7 +25,7 @@ public:
     MultiParamSweepDialog(Model model, QWidget *pParent = 0);
 
     // Getters
-    QJsonObject getRunSpecifications() const;
+    QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
 
 private:

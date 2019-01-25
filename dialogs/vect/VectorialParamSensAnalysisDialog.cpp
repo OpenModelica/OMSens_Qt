@@ -5,6 +5,7 @@
 #include <QFrame>
 #include <QGridLayout>
 #include <QJsonArray>
+#include <QJsonDocument>
 #include <QTextStream>
 
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
@@ -64,9 +65,9 @@ void VectorialSensAnalysisDialog::initializeDialogWithData(QList<QString> variab
     setLayout(mainLayout);
 }
 
-QJsonObject VectorialSensAnalysisDialog::getRunSpecifications() const
+QJsonDocument VectorialSensAnalysisDialog::getRunSpecifications() const
 {
-    return mRunSpecifications;
+    return QJsonDocument(mRunSpecifications);
 }
 
 QString VectorialSensAnalysisDialog::getDestFolderPath() const

@@ -7,6 +7,7 @@
 #include "../../tabs/HelpTab.h"
 #include "../../tabs/PerturbationTab.h"
 #include "../BaseRunSpecsDialog.h"
+#include "../../specs/IndivSpecs.h"
 
 #include <QDialog>
 #include <QFrame>
@@ -27,10 +28,14 @@ public:
     IndivParamSensAnalysisDialog(Model model, QWidget *pParent = 0);
 
     // Getters
-    QJsonObject getRunSpecifications() const;
+    QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
 
 
+
+    QStringList getVarsToAnalize() const;
+
+    QStringList getParametersToPerturb() const;
 
 private:
     // GUI members
@@ -41,9 +46,6 @@ private:
     HelpTab             *mpHelpTab;
     PerturbationTab     *mpPerturbationTab;
     QDialogButtonBox    *mpButtonBox;
-    // Dialog "return" members
-    QJsonObject mRunSpecifications;
-    QString     destFolderPath;
 
     // Conventions
     QString helpTextPath = ":/OMSens/indiv/help.html";

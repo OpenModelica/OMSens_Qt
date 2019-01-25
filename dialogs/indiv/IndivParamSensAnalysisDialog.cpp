@@ -92,13 +92,27 @@ void IndivParamSensAnalysisDialog::initializeDialogWithData(QList<QString> varia
     setLayout(mainLayout);
 }
 
-QJsonObject IndivParamSensAnalysisDialog::getRunSpecifications() const
+QJsonDocument IndivParamSensAnalysisDialog::getRunSpecifications() const
 {
-    return mRunSpecifications;
+    // Initialize specs from dialog info
+    IndivSpecs runSpecs = IndivSpecs(
+        mpSimulationSettingsTab->getModelPath(),
+        mpSimulationSettingsTab->getModelName(),
+        this->getParametersToPerturb(),
+        mpPerturbationTab->getPerturbationValue(),
+        mpSimulationSettingsTab->getStartTimeValue(),
+        mpSimulationSettingsTab->getStopTimeValue(),
+        this->getVarsToAnalize()
+    );
+    // It's easier to just return the json doc (concrete class) instead of returning a RunSpecifications (abstract class)
+    //   and having to deal with pointers
+    QJsonDocument runSpecsDoc = runSpecs.toJson();
+    return runSpecsDoc;
 }
 
 QString IndivParamSensAnalysisDialog::getDestFolderPath() const
 {
+    QString destFolderPath = mpSimulationSettingsTab->getDestFolderPath();
     return destFolderPath;
 }
 
@@ -114,18 +128,9 @@ QList<QString> IndivParamSensAnalysisDialog::fromListOfVariantToListOfStr(QList<
 }
 
 
-void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
+QStringList IndivParamSensAnalysisDialog::getVarsToAnalize() const
 {
-    // Instantiate members that will be read by the caller of this dialog
-    // Instantiate dest folder path from user input
-    destFolderPath = mpSimulationSettingsTab->getDestFolderPath();
-    // Modify json with the data entered in this dialog
-    // Model info
-    mRunSpecifications["model_name"]      = mpSimulationSettingsTab->getModelName();
-    mRunSpecifications["model_mo_path"]   = mpSimulationSettingsTab->getModelPath();
-    // User inputs info
-    // Variables to analyze
-    QJsonArray varsToAnalize;
+    QStringList varsToAnalize;
     QTableWidget *pVarsTable = mpVariablesTab->getVariablesTable();
     for(int i_row = 0; i_row < pVarsTable->rowCount(); i_row++)
     {
@@ -145,13 +150,13 @@ void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
             varsToAnalize.append(varNameStr);
         }
     }
-    mRunSpecifications["vars_to_analyze"] = varsToAnalize;
 
-    mRunSpecifications["start_time"] = mpSimulationSettingsTab->getStartTimeValue();
-    mRunSpecifications["stop_time"]  = mpSimulationSettingsTab->getStopTimeValue();
-    mRunSpecifications["percentage"] = mpPerturbationTab->getPerturbationValue();
-    // Parameters to perturb
-    QJsonArray parametersToPerturb;
+    return varsToAnalize;
+}
+
+QStringList IndivParamSensAnalysisDialog::getParametersToPerturb() const
+{
+    QStringList parametersToPerturb;
     QTableWidget *pParamsTable = mpParametersTab->getParametersTable();
     for(int i_row = 0; i_row < pParamsTable->rowCount(); i_row++)
     {
@@ -171,7 +176,13 @@ void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
             parametersToPerturb.append(paramNameStr);
         }
     }
-    mRunSpecifications["parameters_to_perturb"] = parametersToPerturb;
+
+    return parametersToPerturb;
+}
+
+void IndivParamSensAnalysisDialog::runIndivParamSensAnalysis()
+{
+    // Just accept for now
     accept();
 }
 

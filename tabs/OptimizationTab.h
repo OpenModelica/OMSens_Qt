@@ -7,6 +7,8 @@
 #include <QButtonGroup>
 #include <QRadioButton>
 #include <QDoubleSpinBox>
+#include <QSpinBox>
+#include "../SciNotationDoubleSpinbox.h"
 
 class OptimizationTab : public QWidget
 {
@@ -32,8 +34,9 @@ private:
     QRadioButton *mpMinRadio;
     QRadioButton *mpMaxRadio;
     // Epsilon
-    QLabel         *mpEpsilonLabel;
-    QDoubleSpinBox *mpEpsilonBox;
+    QLabel   *mpEpsilonLabel;
+    SciNotationDoubleSpinbox *mpEpsilonBox;
+    QLabel   *mpEpsilonHintLabel;
     // Boundaries
     QLabel *mpBoundariesLabel;
     QDoubleSpinBox *mpBoundariesBox;

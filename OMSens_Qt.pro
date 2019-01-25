@@ -48,7 +48,8 @@ SOURCES += \
     tabs/optim_result/OptimizationResultOtherTab.cpp \
     tabs/sweep_result/SweepResultVariableTab.cpp \
     dialogs/help/HelpBrowser.cpp \
-    tabs/PerturbationTab.cpp
+    tabs/PerturbationTab.cpp \
+    specs/IndivSpecs.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -78,7 +79,10 @@ HEADERS += \
     tabs/sweep_result/SweepResultVariableTab.h \
     dialogs/help/HelpBrowser.h \
     tabs/PerturbationTab.h \
-    DoubleSpinboxAdapted.h
+    ForceSignDoubleSpinbox.h \
+    SciNotationDoubleSpinbox.h \
+    specs/IndivSpecs.h \
+    specs/RunSpecifications.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

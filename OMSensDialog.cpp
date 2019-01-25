@@ -18,6 +18,7 @@
 #include "dialogs/BaseRunSpecsDialog.h"
 #include "dialogs/BaseResultsDialog.h"
 #include "dialogs/help/HelpBrowser.h"
+#include "specs/IndivSpecs.h"
 
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mModel(model)
@@ -75,11 +76,17 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mpHorizontalLineTwo->setFrameShape(QFrame::HLine);
     mpHorizontalLineTwo->setFrameShadow(QFrame::Sunken);
 
-    // Help
+    // Help (not shown for now)
     mpHelpButton = new QPushButton(tr("Help"));
     mpHelpButton->setAutoDefault(true);
     mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
+
+    // Load experiment
+    mpLoadExperimentButton = new QPushButton(tr("Load"));
+    mpLoadExperimentButton->setAutoDefault(true);
+    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
@@ -101,9 +108,10 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mMod
     mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
     mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
+    mainLayout->addWidget(mpHorizontalLineTwo);
 // Don't show the help for now
-//    mainLayout->addWidget(mpHorizontalLineTwo);
 //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+    mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignRight);
 
     // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);
@@ -215,12 +223,11 @@ QString OMSensDialog::createTimestampDir(QString destFolderPath)
     return timeStampFolderPath;
 }
 
-QString OMSensDialog::writeJsonToDisk(QString timeStampFolderPath, QJsonObject runSpecifications)
+QString OMSensDialog::writeJsonToDisk(QString timeStampFolderPath, QJsonDocument runSpecificationsDoc)
 {
     QString jsonSpecsName = "experiment_specs.json";
     QString jsonSpecsPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + jsonSpecsName);
     // Save analysis specifications to disk
-    QJsonDocument runSpecificationsDoc(runSpecifications);
     QFile runSpecificationsFile(jsonSpecsPath);
     if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
     {
@@ -295,14 +302,14 @@ void OMSensDialog::runOMSensFeature(RunType runType, QString scriptFileName)
     // If the dialog was accepted by the user, run the analysis
     if(dialogCode == QDialog::Accepted)
     {   // Get user inputs from dialog
-        QJsonObject runSpecifications = runSpecsDialog->getRunSpecifications();
+        QJsonDocument runSpecs = runSpecsDialog->getRunSpecifications();
         QString destFolderPath = runSpecsDialog->getDestFolderPath();
         // Make timestamp subfolder in dest folder path
         QString timeStampFolderPath = createTimestampDir(destFolderPath);
         // Make sub-folder where the results will be written
         QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
         // Write JSON to disk
-        QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecifications);
+        QString jsonSpecsPath = writeJsonToDisk(timeStampFolderPath, runSpecs);
         // Run command
         QString scriptDirPath = dirPathForFilePath(scriptPath);
         bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, jsonSpecsPath, resultsFolderPath, scriptPath, pythonBinPath);
@@ -410,4 +417,35 @@ void OMSensDialog::helpDialog()
 {
     HelpBrowser *helpBrowser = new HelpBrowser(helpTextPath);
     helpBrowser->show();
+}
+
+
+void OMSensDialog::loadExperimentFileDialog()
+{
+    // Launch
+    QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                            "/home",
+                                                            tr("Experiments (*.json)"));
+    if(!filePath.isEmpty() && !filePath.isNull())
+    {
+        // Load file
+        QFile jsonFile(filePath);
+        jsonFile.open(QFile::ReadOnly);
+        // Parse file into Json Document
+        QJsonDocument json_specs_doc = QJsonDocument().fromJson(jsonFile.readAll());
+        // Get object from top
+        QJsonObject json_specs = json_specs_doc.object();
+        // Check if contains key specifying analysis type
+        QString analysis_type_key = "analysis_type";
+        if(json_specs.contains(analysis_type_key))
+        {
+            // Get analysis type
+            QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
+            // Find the corresponding analysis type
+            BaseRunSpecsDialog *runSpecsDialog;
+            if (analysis_type == IndivSpecs::analysis_id_str) runSpecsDialog = new IndivParamSensAnalysisDialog(json_specs_doc,this);
+            // Launch analysis dialog
+            int dialogCode  = runSpecsDialog->exec();
+        }
+    }
 }
