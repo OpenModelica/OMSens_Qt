@@ -25,7 +25,7 @@ class IndivParamSensAnalysisDialog : public BaseRunSpecsDialog
     Q_OBJECT
 public:
     // Constructors
-    IndivParamSensAnalysisDialog(IndivSpecs runSpecs, QWidget *pParent = 0);
+    IndivParamSensAnalysisDialog(Model model, IndivSpecs runSpecs, QWidget *pParent = 0);
     IndivParamSensAnalysisDialog(Model model, QWidget *pParent = 0);
     // Getters
     QJsonDocument getRunSpecifications() const;
@@ -50,7 +50,7 @@ private:
     QString helpTextPath = ":/OMSens/indiv/help.html";
 
     // Auxs
-    void initialize(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<VariableInclusion> vars_to_include, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
     void initializeWindowSettings();
     void setHeading();
     void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time, const QVector<QString> methods);
@@ -60,7 +60,7 @@ private:
     QList<QString> fromListOfVariantToListOfStr(QList<QVariant> listOfQVariant);
     QString readHelpText();
 
-    QList<VariableToInclude> defaultVariablesToInclude(QList<QString> variables);
+    QList<VariableInclusion> defaultVariablesToInclude(QList<QString> variables);
 
 private slots:
   void runIndivParamSensAnalysis();

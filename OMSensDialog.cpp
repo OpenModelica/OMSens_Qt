@@ -442,7 +442,7 @@ void OMSensDialog::loadExperimentFileDialog()
             if (analysis_type == IndivSpecs::analysis_id_str)
             {
                 IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
-                runSpecsDialog = new IndivParamSensAnalysisDialog(runSpecs,this);
+                runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs,this);
                 runType = Individual;
 
             }

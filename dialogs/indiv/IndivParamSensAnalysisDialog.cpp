@@ -21,20 +21,33 @@ QString IndivParamSensAnalysisDialog::pythonScriptName()
 }
 
 // Constructors
-IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(IndivSpecs runSpecs, QWidget *pParent)
+IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, IndivSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {
-    // Get straightforward specs
-    QString modelName      = runSpecs.model_name;
-    QString modelFilePath  = runSpecs.model_file_path;
-    double percentage      = runSpecs.percentage;
-    double startTime       = runSpecs.start_time;
-    double stopTime        = runSpecs.stop_time;
-    QStringList variables  = runSpecs.vars_to_analyze;
-    QStringList parameters = runSpecs.parameters_to_perturb;
+    // Get specs info
+    double percentage                 = runSpecs.percentage;
+    double startTime                  = runSpecs.start_time;
+    double stopTime                   = runSpecs.stop_time;
+    QStringList exp_vars              = runSpecs.vars_to_analyze;
+    QStringList parameters_to_perturb = runSpecs.parameters_to_perturb;
+
+    // Get model info
+    QList<QString> model_variables  = model.getAuxVariables()+model.getOutputVariables();
+    QList<QString> model_parameters = model.getParameters();
+    QString model_name              = model.getModelName();
+    QString model_file_path         = model.getFilePath();
+
+    // Define dialog data from both info
+    QList<VariableInclusion> vars_inclusion;
+    foreach (QString variable, model_variables)
+    {
+        bool check = exp_vars.contains(variable);
+        VariableInclusion var_include = VariableInclusion(variable,check);
+        vars_inclusion.append(var_include);
+    }
 
     // Call the initializer with the parsed data from the specs
-    initialize(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(vars_inclusion, model_parameters, model_name, model_file_path, percentage, startTime, stopTime);
 }
 
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget *pParent)
@@ -47,25 +60,25 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget 
     QString modelFilePath     = model.getFilePath();
 
     // Default settings
+    QList<VariableInclusion> vars_inclusion = defaultVariablesToInclude(variables);
     double percentage = 5;
     double startTime  = 0;
     double stopTime   = 1;
 
     // Initialize the dialog with this info
-    initialize(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(vars_inclusion, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 
 // Initialize
-void IndivParamSensAnalysisDialog::initialize(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
 {
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/indiv_sens_results";
     QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
-    QList<VariableToInclude> vars_to_include = defaultVariablesToInclude(variables);
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
-    mpVariablesTab          = new VariablesTab(vars_to_include);
+    mpVariablesTab          = new VariablesTab(vars_inclusion);
     mpParametersTab         = new ParametersSimpleTab(parameters, parametersQuickExplanation);
     mpHelpTab               = new HelpTab(helpText);
     mpPerturbationTab       = new PerturbationTab(percentage);
@@ -205,13 +218,13 @@ QString IndivParamSensAnalysisDialog::readHelpText()
     return helpText;
 }
 
-QList<VariableToInclude> IndivParamSensAnalysisDialog::defaultVariablesToInclude(QList<QString> variables)
+QList<VariableInclusion> IndivParamSensAnalysisDialog::defaultVariablesToInclude(QList<QString> variables)
 {
-    QList<VariableToInclude> default_vars_to_include;
+    QList<VariableInclusion> default_vars_to_include;
     foreach (QString variable, variables)
     {
         bool default_check = true;
-        VariableToInclude var_include = VariableToInclude(variable,default_check);
+        VariableInclusion var_include = VariableInclusion(variable,default_check);
         default_vars_to_include.append(var_include);
     }
     return default_vars_to_include;
