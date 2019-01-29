@@ -111,7 +111,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mainLayout->addWidget(mpHorizontalLineTwo);
 // Don't show the help for now
 //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
-    mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignRight);
+    mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignLeft);
 
     // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);
