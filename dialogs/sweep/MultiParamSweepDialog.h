@@ -55,6 +55,8 @@ private:
     void initializeWindowSettings();
     QString readHelpText();
 
+    QList<VariableToInclude> defaultVariablesToInclude(QList<QString> variables);
+    
 private slots:
     void runMultiParamSweep();
 };

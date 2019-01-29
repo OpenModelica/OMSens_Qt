@@ -49,8 +49,9 @@ void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, Q
     QString helpText = readHelpText();
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
+    QList<VariableToInclude> vars_to_include =  defaultVariablesToInclude(variables);
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
-    mpVariablesTab          = new VariablesTab(variables);
+    mpVariablesTab          = new VariablesTab(vars_to_include);
     mpParametersTab         = new ParametersExtendedTab(parameters);
     mpHelpTab               = new HelpTab(helpText);
 
@@ -206,4 +207,16 @@ QString MultiParamSweepDialog::readHelpText()
     }
 
     return helpText;
+}
+
+QList<VariableToInclude> MultiParamSweepDialog::defaultVariablesToInclude(QList<QString> variables)
+{
+    QList<VariableToInclude> vars_to_include;
+    foreach (QString variable, variables)
+    {
+        bool default_check = true;
+        VariableToInclude var_include = VariableToInclude(variable,default_check);
+        vars_to_include.append(var_include);
+    }
+    return vars_to_include;
 }
