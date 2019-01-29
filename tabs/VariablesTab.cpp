@@ -6,29 +6,7 @@
 #include <QLabel>
 
 // Constructors
-// Default constructor
-VariablesTab::VariablesTab(QList<QString> variables, QWidget *parent) : QWidget(parent)
-{
-    // Define default checks for variables
-    QList<VariableToInclude> vars_to_include;
-    foreach (QString variable, variables)
-    {
-        bool default_check = true;
-        VariableToInclude var_include = VariableToInclude(variable,default_check);
-        vars_to_include.append(var_include);
-    }
-    // Initialize
-    initialize(vars_to_include);
-}
-
-// Custom constructor
 VariablesTab::VariablesTab(QList<VariableToInclude> vars_to_include, QWidget *parent) : QWidget(parent)
-{
-    initialize(vars_to_include);
-}
-
-// Initialize
-void VariablesTab::initialize(QList<VariableToInclude> vars_to_include)
 {
     mpVariablesTable = new QTableWidget(0, 2);
     const QList<QString> tableHeaders( QList<QString>()
@@ -58,8 +36,6 @@ void VariablesTab::initialize(QList<VariableToInclude> vars_to_include)
     mainLayout->addWidget(mpVariablesTable);
     setLayout(mainLayout);
 }
-
-
 
 // Methods
 QTableWidget *VariablesTab::getVariablesTable() const

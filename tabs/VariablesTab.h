@@ -17,7 +17,7 @@ class VariablesTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit VariablesTab(QList<QString> variables, QWidget *parent = 0);
+    // Constructors
     explicit VariablesTab(QList<VariableToInclude> vars_to_include, QWidget *parent = 0);
     // Getters
     QTableWidget *getVariablesTable() const;
@@ -28,7 +28,6 @@ public:
 
 private:
     QTableWidget *mpVariablesTable;
-    void initialize(QList<VariableToInclude> vars_to_include);
 
 signals:
 
