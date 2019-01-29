@@ -210,7 +210,7 @@ QList<VariableToInclude> IndivParamSensAnalysisDialog::defaultVariablesToInclude
     QList<VariableToInclude> default_vars_to_include;
     foreach (QString variable, variables)
     {
-        bool default_check = false;
+        bool default_check = true;
         VariableToInclude var_include = VariableToInclude(variable,default_check);
         default_vars_to_include.append(var_include);
     }
