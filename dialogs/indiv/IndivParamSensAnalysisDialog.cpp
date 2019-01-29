@@ -63,8 +63,9 @@ void IndivParamSensAnalysisDialog::initialize(QList<QString> variables, QList<QS
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/indiv_sens_results";
     QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
+    QList<VariableToInclude> vars_to_include = defaultVariablesToInclude(variables);
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
-    mpVariablesTab          = new VariablesTab(variables);
+    mpVariablesTab          = new VariablesTab(vars_to_include);
     mpParametersTab         = new ParametersSimpleTab(parameters, parametersQuickExplanation);
     mpHelpTab               = new HelpTab(helpText);
     mpPerturbationTab       = new PerturbationTab(percentage);
@@ -202,4 +203,16 @@ QString IndivParamSensAnalysisDialog::readHelpText()
     }
 
     return helpText;
+}
+
+QList<VariableToInclude> IndivParamSensAnalysisDialog::defaultVariablesToInclude(QList<QString> variables)
+{
+    QList<VariableToInclude> default_vars_to_include;
+    foreach (QString variable, variables)
+    {
+        bool default_check = false;
+        VariableToInclude var_include = VariableToInclude(variable,default_check);
+        default_vars_to_include.append(var_include);
+    }
+    return default_vars_to_include;
 }

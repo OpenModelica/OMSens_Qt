@@ -60,6 +60,8 @@ private:
     QList<QString> fromListOfVariantToListOfStr(QList<QVariant> listOfQVariant);
     QString readHelpText();
 
+    QList<VariableToInclude> defaultVariablesToInclude(QList<QString> variables);
+
 private slots:
   void runIndivParamSensAnalysis();
 };
