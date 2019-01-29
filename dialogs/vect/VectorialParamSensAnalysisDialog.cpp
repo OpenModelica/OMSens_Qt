@@ -28,8 +28,9 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *p
     double percentage = 5;
     double startTime  = 0;
     double stopTime   = 1;
+    QList<ParameterInclusion> params_inclusion = defaultParametersToInclude(parameters);
 
-    initializeDialogWithData(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 
 void VectorialSensAnalysisDialog::initializeWindowSettings()
@@ -38,7 +39,7 @@ void VectorialSensAnalysisDialog::initializeWindowSettings()
     setMinimumWidth(550);
 }
 
-void VectorialSensAnalysisDialog::initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
     {
     initializeWindowSettings();
 
@@ -48,7 +49,7 @@ void VectorialSensAnalysisDialog::initializeDialogWithData(QList<QString> variab
     QString defaultResultsFolderPath = "/home/omsens/Documents/vectorial_analysis";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
-    mpParametersTab         = new ParametersSimpleTab(parameters, parametersQuickExplanation);
+    mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);
     mpOptimizationTab       = new OptimizationTab(variables, percentage);
     mpHelpTab               = new HelpTab(helpText);
 
@@ -143,4 +144,16 @@ QString VectorialSensAnalysisDialog::readHelpText()
     }
 
     return helpText;
+}
+
+QList<ParameterInclusion> VectorialSensAnalysisDialog::defaultParametersToInclude(QList<QString> parameters)
+{
+    QList<ParameterInclusion> params_inclusion;
+    foreach (QString param, parameters)
+    {
+        bool default_check = true;
+        ParameterInclusion param_include = ParameterInclusion(param,default_check);
+        params_inclusion.append(param_include);
+    }
+    return params_inclusion;
 }

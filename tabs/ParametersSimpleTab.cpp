@@ -7,7 +7,7 @@
 #include <QCheckBox>
 #include <QVBoxLayout>
 
-ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, QString quickExplanation, QWidget *parent) : QWidget(parent)
+ParametersSimpleTab::ParametersSimpleTab(QList<ParameterInclusion> params_inclusion, QString quickExplanation, QWidget *parent) : QWidget(parent)
 {
     // Initialize label with brief description of the analysis
     mpBriefDescriptionLabel = new QLabel(quickExplanation,this);
@@ -21,7 +21,7 @@ ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, QString quic
                                      );
     mpParametersTable->setHorizontalHeaderLabels(tableHeaders);
     // Declare the QPair outside the foreach because the commas are ambigous for Qt's macro
-    foreach (QString param_name, parameters)
+    foreach (ParameterInclusion param_include, params_inclusion)
     {
         // Add a row
         // Row index to add row to
@@ -30,11 +30,11 @@ ParametersSimpleTab::ParametersSimpleTab(QList<QString> parameters, QString quic
         mpParametersTable->insertRow(rowNum);
         // Fill blank row with values corresponding to this variable
         // Set parameter name
-        QLabel *paramNameWidget = new QLabel(param_name);
+        QLabel *paramNameWidget = new QLabel(param_include.name);
         mpParametersTable->setCellWidget(rowNum,paramColPos, paramNameWidget);
         // Set checkbox
         QCheckBox *includeCheckBox = new QCheckBox;
-        includeCheckBox->setChecked(true);
+        includeCheckBox->setChecked(param_include.include);
         mpParametersTable->setCellWidget(rowNum,cboxColPos,includeCheckBox);
     }
     // Set table settings

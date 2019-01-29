@@ -31,7 +31,7 @@ public:
     QString pythonScriptName();
 
 private:
-    void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<QString> variables, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;
@@ -51,6 +51,8 @@ private:
     void initializeWindowSettings();
     QString readHelpText();
 
+    QList<ParameterInclusion> defaultParametersToInclude(QList<QString> parameters);
+    
 private slots:
     void runVectorialParamSensAnalysis();
 };

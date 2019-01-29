@@ -7,11 +7,20 @@
 #include <QDoubleSpinBox>
 
 
+// Aux Structs
+struct ParameterInclusion{
+  QString name;
+  bool include;
+
+  ParameterInclusion(QString name, bool include): name(name), include(include){}
+};
+
+// Class
 class ParametersSimpleTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ParametersSimpleTab(QList<QString> parameters, QString quickExplanation, QWidget *parent = 0);
+    explicit ParametersSimpleTab(QList<ParameterInclusion> params_inclusion, QString quickExplanation, QWidget *parent = 0);
     // Getters
     QTableWidget *getParametersTable() const;
     // Conventions:

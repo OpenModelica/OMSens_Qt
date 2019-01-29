@@ -50,7 +50,7 @@ private:
     QString helpTextPath = ":/OMSens/indiv/help.html";
 
     // Auxs
-    void initialize(QList<VariableInclusion> vars_to_include, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<VariableInclusion> vars_to_include, QList<ParameterInclusion> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
     void initializeWindowSettings();
     void setHeading();
     void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time, const QVector<QString> methods);
@@ -59,8 +59,11 @@ private:
     QGridLayout * initializeLayout();
     QList<QString> fromListOfVariantToListOfStr(QList<QVariant> listOfQVariant);
     QString readHelpText();
-
     QList<VariableInclusion> defaultVariablesToInclude(QList<QString> variables);
+    QList<ParameterInclusion> defaultParametersToInclude(QList<QString> parameters);
+    QList<VariableInclusion> varsInclusionFromSuperAndSubList(QStringList exp_vars, QList<QString> model_variables);
+    QList<ParameterInclusion> paramsInclusionFromSuperAndSubList(QStringList exp_params, QList<QString> model_parameters);
+
 
 private slots:
   void runIndivParamSensAnalysis();
