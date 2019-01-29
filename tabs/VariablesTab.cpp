@@ -6,7 +6,7 @@
 #include <QLabel>
 
 // Constructors
-VariablesTab::VariablesTab(QList<VariableToInclude> vars_to_include, QWidget *parent) : QWidget(parent)
+VariablesTab::VariablesTab(QList<VariableInclusion> vars_inclusion, QWidget *parent) : QWidget(parent)
 {
     mpVariablesTable = new QTableWidget(0, 2);
     const QList<QString> tableHeaders( QList<QString>()
@@ -15,7 +15,7 @@ VariablesTab::VariablesTab(QList<VariableToInclude> vars_to_include, QWidget *pa
                                      );
     mpVariablesTable->setHorizontalHeaderLabels(tableHeaders);
 
-    foreach (VariableToInclude var_include, vars_to_include)
+    foreach (VariableInclusion var_include, vars_inclusion)
     {
         // Add a row
         // Row index to add row to

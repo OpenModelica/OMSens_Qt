@@ -5,11 +5,11 @@
 #include <QTableWidget>
 
 // Aux Structs
-struct VariableToInclude{
+struct VariableInclusion{
   QString name;
   bool include;
 
-  VariableToInclude(QString name, bool include): name(name), include(include){}
+  VariableInclusion(QString name, bool include): name(name), include(include){}
 };
 
 // Class
@@ -18,7 +18,7 @@ class VariablesTab : public QWidget
     Q_OBJECT
 public:
     // Constructors
-    explicit VariablesTab(QList<VariableToInclude> vars_to_include, QWidget *parent = 0);
+    explicit VariablesTab(QList<VariableInclusion> vars_inclusion, QWidget *parent = 0);
     // Getters
     QTableWidget *getVariablesTable() const;
     // Conventions:
