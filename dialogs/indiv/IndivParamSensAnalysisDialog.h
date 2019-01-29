@@ -50,7 +50,7 @@ private:
     QString helpTextPath = ":/OMSens/indiv/help.html";
 
     // Auxs
-    void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
     void initializeWindowSettings();
     void setHeading();
     void initializeFormInputsAndLabels(const double min_perturbation_perc, const double max_perturbation_perc, const double max_target_time, const QVector<QString> methods);

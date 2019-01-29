@@ -20,7 +20,7 @@ QString IndivParamSensAnalysisDialog::pythonScriptName()
     return "individual_sens_calculator.py";
 }
 
-// Constructor
+// Constructors
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(IndivSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {
@@ -34,7 +34,7 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(IndivSpecs runSpecs, 
     QStringList parameters = runSpecs.parameters_to_perturb;
 
     // Call the initializer with the parsed data from the specs
-    initializeDialogWithData(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget *pParent)
@@ -52,10 +52,11 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget 
     double stopTime   = 1;
 
     // Initialize the dialog with this info
-    initializeDialogWithData(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 
-void IndivParamSensAnalysisDialog::initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+// Initialize
+void IndivParamSensAnalysisDialog::initialize(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
 {
     // Help text description
     QString helpText = readHelpText();
