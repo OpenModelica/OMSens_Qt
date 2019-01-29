@@ -135,10 +135,8 @@ void OMSensDialog::runVectorialSensAnalysis()
   runNewOMSensAnalysis(runType);
 }
 
-QJsonDocument OMSensDialog::readJsonFile(QString resultsFolderPath)
+QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
 {
-    QString resultsFileName = "result.json";
-    QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + resultsFileName);
     // Read JSON file into string
     QString val;
     QFile jsonPathsQFile;
@@ -259,7 +257,8 @@ bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsP
 
 void OMSensDialog::showResultsDialog(RunType runType, QString resultsFolderPath)
 {
-    QJsonDocument jsonPathsDocument = readJsonFile(resultsFolderPath);
+    QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
+    QJsonDocument jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
     // Initialize results instance with JSON document
     BaseResultsDialog *resultsDialog;
     switch (runType)
@@ -414,16 +413,13 @@ void OMSensDialog::helpDialog()
 void OMSensDialog::loadExperimentFileDialog()
 {
     // Launch
-    QString filePath = QFileDialog::getOpenFileName(this, tr("Open File"),
+    QString exp_specs_path = QFileDialog::getOpenFileName(this, tr("Open File"),
                                                             "/home",
                                                             tr("Experiments (*.json)"));
-    if(!filePath.isEmpty() && !filePath.isNull())
+    if(!exp_specs_path.isEmpty() && !exp_specs_path.isNull())
     {
         // Load file
-        QFile jsonFile(filePath);
-        jsonFile.open(QFile::ReadOnly);
-        // Parse file into Json Document
-        QJsonDocument json_specs_doc = QJsonDocument().fromJson(jsonFile.readAll());
+        QJsonDocument json_specs_doc = readJsonFile(exp_specs_path);
         // Get object from top
         QJsonObject json_specs = json_specs_doc.object();
         // Check if contains key specifying analysis type
@@ -435,8 +431,14 @@ void OMSensDialog::loadExperimentFileDialog()
             // Find the corresponding analysis type
             BaseRunSpecsDialog *runSpecsDialog;
             RunType             runType;
-            // TODO: READ MODEL FROM FILE:
-            Model               model = Model(QStringList(),QStringList(),QStringList(),QStringList(),QString(),QString());
+            // Get specs file folder path
+            QFileInfo exp_specs_file_info = QFileInfo(exp_specs_path);
+            QDir exp_specs_dir = exp_specs_file_info.absoluteDir();
+            // We assume that the model information is available in the same folder as the experiment specifications
+            QString model_specs_path = QDir::cleanPath(exp_specs_dir.absolutePath() + QDir::separator() + model_specs_file_name);
+            // Read model info from file
+            QJsonDocument model_info_json = readJsonFile(model_specs_path);
+            Model               model = Model(model_info_json);
             if (analysis_type == IndivSpecs::analysis_id_str)
             {
                 IndivSpecs runSpecs = IndivSpecs(json_specs_doc);

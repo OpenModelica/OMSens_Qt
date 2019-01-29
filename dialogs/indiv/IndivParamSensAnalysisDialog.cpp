@@ -33,7 +33,7 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(IndivSpecs runSpecs, 
     QStringList variables  = runSpecs.vars_to_analyze;
     QStringList parameters = runSpecs.parameters_to_perturb;
 
-    // Call the initializer with the parsed data from the JSON specs
+    // Call the initializer with the parsed data from the specs
     initializeDialogWithData(variables, parameters, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 

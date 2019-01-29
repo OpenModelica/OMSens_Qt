@@ -10,6 +10,7 @@ class Model
 {
 public:
   // Constructor
+  Model(QJsonDocument model_info_json);
   Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters, QString filePath, QString modelName);
   // Getters
   QList<QString> getInputVariables() const;

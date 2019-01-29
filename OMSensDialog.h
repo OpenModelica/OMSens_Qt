@@ -17,9 +17,10 @@ public:
     // Constructors
     OMSensDialog(Model model, QWidget *parent = nullptr);
     // Conventions
-    QString helpTextPath          = "qrc:/OMSens/help/help.html";
-    QString exp_specs_file_name   = "experiment_specs.json";
-    QString model_specs_file_name = "model_specs.json";
+    QString helpTextPath                    = "qrc:/OMSens/help/help.html";
+    QString exp_specs_file_name             = "experiment_specs.json";
+    QString model_specs_file_name           = "model_info.json";
+    QString analysis_results_info_file_name = "result.json";
 
     void showResultsDialog(RunType runType, QString resultsFolderPath);
 
@@ -43,7 +44,7 @@ private:
     QPushButton *mpHelpButton; // Not shown for now
     QPushButton *mpLoadExperimentButton;
     // Auxs
-    QJsonDocument readJsonFile(QString resultsFolderPath);
+    QJsonDocument readJsonFile(QString analysisResultsJSONPath);
     bool runProcessAndShowProgress(QString scriptDirPath, QString command);
     QString createTimestampDir(QString destFolderPath);
     QString writeJsonToDisk(QString file_path, QJsonDocument runSpecifications);

@@ -6,7 +6,21 @@
 #include <QJsonObject>
 #include <QJsonArray>
 
-// Parametrized constructor
+// Constructors
+Model::Model(QJsonDocument model_info_json)
+{
+    // Get main object from document
+    QJsonObject json_info = model_info_json.object();
+    // Initialize model from information found in json
+    mInputVariables  = json_info.value(QString("input_variables")).toVariant().toStringList();
+    mOutputVariables = json_info.value(QString("output_variables")).toVariant().toStringList();
+    mAuxVariables    = json_info.value(QString("aux_variables")).toVariant().toStringList();
+    mParameters      = json_info.value(QString("parameters")).toVariant().toStringList();
+    mFilePath        = json_info.value(QString("model_mo_path")).toString();
+    mModelName       = json_info.value(QString("model_name")).toString();
+
+}
+
 Model::Model(QList<QString> inputVariables, QList<QString> outputVariables, QList<QString> auxVariables, QList<QString> parameters, QString filePath, QString modelName):
   mInputVariables(inputVariables),
   mOutputVariables(outputVariables),
@@ -50,7 +64,6 @@ QString Model::getModelName() const
 }
 
 // To JSON
-
 QJsonDocument Model::toJson()
 {
     // Initialize JSON root object
