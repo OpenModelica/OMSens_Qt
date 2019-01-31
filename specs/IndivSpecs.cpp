@@ -25,7 +25,6 @@ IndivSpecs::IndivSpecs(QJsonDocument json_specs_doc)
     QList<QVariant> parametersQVariant = json_specs.value(QString("parameters_to_perturb")).toArray().toVariantList();
     // Transform from list of QVariant to list of QString
     this->parameters_to_perturb = fromListOfVariantToListOfStr(parametersQVariant);
-    // Call the initializer with the parsed data from the JSON specs
 }
 
 IndivSpecs::IndivSpecs(QString model_file_path, QString model_name, QStringList parameters_to_perturb,

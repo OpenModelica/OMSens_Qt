@@ -13,8 +13,10 @@ public:
     IndivSpecs(QString model_file_path, QString model_name, QStringList parameters_to_perturb,
                double percentage, double start_time, double stop_time,
                QStringList vars_to_analyze);
+
     // Methods
     QJsonDocument toJson();
+
     // Conventions
     static const QString analysis_id_str; // Defined in .cpp
 
