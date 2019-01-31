@@ -136,9 +136,9 @@ void MultiParamSweepDialog::groupParametersPerturbationsToLists(QList<SweepingPa
         {
             // If the user wants to sweep this param, add it to the sweep list
             // Get param name
-            const int paramColPos = mpParametersTab->paramColPos;
-            QLabel *paramNameLabel= qobject_cast<QLabel *>(pParamsTable->cellWidget(i_row,paramColPos));
-            QString paramNameStr = paramNameLabel->text();
+            const int paramColPos = mpParametersTab->nameColPos;
+            QTableWidgetItem *nameWidgetItem= pParamsTable->item(i_row,paramColPos);
+            QString paramNameStr = nameWidgetItem->text();
             // Param #iters
             const int paramNItersColPos = mpParametersTab->nItersColPos;
             QSpinBox *paramNItersSpinBox= qobject_cast<QSpinBox *>(pParamsTable->cellWidget(i_row,paramNItersColPos));
@@ -155,9 +155,9 @@ void MultiParamSweepDialog::groupParametersPerturbationsToLists(QList<SweepingPa
         else if (perturbationTypeInt == mpParametersTab->FixedPerturbationId)
         {
             // Get param name
-            const int paramColPos = mpParametersTab->paramColPos;
-            QLabel *paramNameLabel= qobject_cast<QLabel *>(pParamsTable->cellWidget(i_row,paramColPos));
-            QString paramNameStr = paramNameLabel->text();
+            const int paramColPos = mpParametersTab->nameColPos;
+            QTableWidgetItem *nameWidgetItem= pParamsTable->item(i_row,paramColPos);
+            QString paramNameStr = nameWidgetItem->text();
             // Get value to set to param
             const int fixedValueColPos = mpParametersTab->fixedValueColPos;
             QDoubleSpinBox *pFixedValueSpinbox = qobject_cast<QDoubleSpinBox *>(pParamsTable->cellWidget(i_row,fixedValueColPos));

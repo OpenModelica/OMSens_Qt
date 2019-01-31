@@ -28,9 +28,9 @@ ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, Q
         // Add "blank" row
         mpParametersTable->insertRow(rowNum);
         // Fill blank row with values corresponding to this parameter
-        // Set parameter name
-        QLabel *paramNameWidget = new QLabel(row.name);
-        mpParametersTable->setCellWidget(rowNum,paramColPos, paramNameWidget);
+        // Set parameter name (needs to be widget item or it isn't sorted correctly)
+        QTableWidgetItem *nameWidgetItem = new QTableWidgetItem(row.name);
+        mpParametersTable->setItem(rowNum, nameColPos, nameWidgetItem);
         // Set perturbation type
         QComboBox *pTypeComboBox = new QComboBox;
         pTypeComboBox->setProperty("row", (int) rowNum);
@@ -68,6 +68,8 @@ ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, Q
     // Set table settings
     // Resize columns to contents
     mpParametersTable->resizeColumnsToContents();
+    // Sort by name
+    mpParametersTable->sortByColumn(nameColPos, Qt::AscendingOrder);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     // Parameters table/list

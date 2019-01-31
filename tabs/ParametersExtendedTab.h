@@ -24,7 +24,7 @@ public:
     QTableWidget *getParametersTable() const;
     // Conventions:
     //   Columns ordering
-    int paramColPos      = 0;
+    int nameColPos       = 0;
     int pertTypeColPos   = 1;
     int nItersColPos     = 2;
     int pertRangeColPos  = 3;
