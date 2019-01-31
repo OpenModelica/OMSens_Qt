@@ -6,9 +6,22 @@
 #include <QStringList>
 #include <QJsonDocument>
 #include <QJsonArray>
-#include "FixedParameterPerturbation.h"
-#include "SweepingParameterPerturbation.h"
 
+// Aux structs
+struct FixedParameterPerturbation {
+    FixedParameterPerturbation(QString name, double value): name(name), value(value) {}
+    QString name;
+    double value;
+};
+
+struct SweepingParameterPerturbation {
+    QString name;
+    double delta_percentage;
+    int iterations;
+    SweepingParameterPerturbation(QString name, double delta_percentage, int iterations):
+        name(name), delta_percentage(delta_percentage), iterations(iterations) {}
+};
+// Class
 class SweepSpecs : public RunSpecifications
 {
 public:

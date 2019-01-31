@@ -50,9 +50,7 @@ SOURCES += \
     dialogs/help/HelpBrowser.cpp \
     tabs/PerturbationTab.cpp \
     specs/IndivSpecs.cpp \
-    specs/SweepSpecs.cpp \
-    specs/FixedParameterPerturbation.cpp \
-    specs/SweepingParameterPerturbation.cpp
+    specs/SweepSpecs.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -85,10 +83,7 @@ HEADERS += \
     ForceSignDoubleSpinbox.h \
     SciNotationDoubleSpinbox.h \
     specs/IndivSpecs.h \
-    specs/RunSpecifications.h \
-    specs/SweepSpecs.h \
-    specs/FixedParameterPerturbation.h \
-    specs/SweepingParameterPerturbation.h
+    specs/RunSpecifications.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

@@ -7,7 +7,6 @@
 const QString SweepSpecs::analysis_id_str = "sweep";
 
 // Constructors
-
 SweepSpecs::SweepSpecs(QJsonDocument json_specs_doc)
 {
     // Get main object from document
