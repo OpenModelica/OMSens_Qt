@@ -37,7 +37,7 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, IndivSpe
     QString model_name              = model.getModelName();
     QString model_file_path         = model.getFilePath();
 
-    // Define dialog data from both info
+    // Define dialog data
     QList<VariableInclusion>  vars_inclusion   = varsInclusionFromSuperAndSubList(exp_vars, model_variables);
     QList<ParameterInclusion> params_inclusion =  paramsInclusionFromSuperAndSubList(exp_params, model_parameters);
 
