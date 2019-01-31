@@ -54,7 +54,7 @@ QJsonDocument VectSpecs::toJson()
     json_specs["start_time"]            = this->start_time;
     json_specs["stop_time"]             = this->stop_time;
     json_specs["percentage"]            = this->percentage;
-    json_specs["percentage"]            = this->epsilon;
+    json_specs["epsilon"]               = this->epsilon;
     json_specs["target_var_name"]       = this->target_var;
     json_specs["parameters_to_perturb"] = QJsonArray::fromStringList(this->parameters_to_perturb);
     //json_specs["max_or_min"]            = optimTypeString(this->optim_type);

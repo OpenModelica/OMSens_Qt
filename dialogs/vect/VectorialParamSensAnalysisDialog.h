@@ -33,7 +33,7 @@ public:
     QString pythonScriptName();
 
 private:
-    void initialize(QList<QString> variables, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<QString> variables, QString target_var, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;
@@ -42,20 +42,16 @@ private:
     HelpTab               *mpHelpTab;
     QDialogButtonBox      *mpButtonBox;
 
-    // Dialog "return" members
-    QJsonObject mRunSpecifications;
-    QString     mpDestFolderPath;
-
     // Conventions
     QString helpTextPath = ":/OMSens/vect/help.html";
 
     // Aux functions
     void initializeWindowSettings();
     QString readHelpText();
-
     QList<ParameterInclusion> defaultParametersToInclude(QList<QString> parameters);
-    
     QList<ParameterInclusion> paramsInclusionFromSuperAndSubList(QStringList exp_params, QList<QString> model_parameters);
+    QStringList getParametersToPerturb() const;
+    OptimType getOptimizationType() const;
 
 private slots:
     void runVectorialParamSensAnalysis();

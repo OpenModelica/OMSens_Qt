@@ -37,7 +37,7 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs 
     QList<ParameterInclusion> params_inclusion = paramsInclusionFromSuperAndSubList(exp_params, model_parameters);
 
     // Call the initializer with the parsed data from the specs
-    initialize(model_variables, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
+    initialize(model_variables,exp_target_var, epsilon, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
 }
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   BaseRunSpecsDialog(pParent)
@@ -52,9 +52,11 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *p
     double percentage = 5;
     double startTime  = 0;
     double stopTime   = 1;
+    double epsilon    = 0.1;
     QList<ParameterInclusion> params_inclusion = defaultParametersToInclude(parameters);
+    QString target_var = variables.first();
 
-    initialize(variables, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, target_var, epsilon, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 
 void VectorialSensAnalysisDialog::initializeWindowSettings()
@@ -63,7 +65,7 @@ void VectorialSensAnalysisDialog::initializeWindowSettings()
     setMinimumWidth(550);
 }
 
-void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
     {
     initializeWindowSettings();
 
@@ -74,7 +76,7 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QList<Par
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
     mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);
-    mpOptimizationTab       = new OptimizationTab(variables, percentage);
+    mpOptimizationTab       = new OptimizationTab(variables, target_var, epsilon, percentage);
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
@@ -97,39 +99,9 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QList<Par
     setLayout(mainLayout);
 }
 
-QJsonDocument VectorialSensAnalysisDialog::getRunSpecifications() const
+QStringList VectorialSensAnalysisDialog::getParametersToPerturb() const
 {
-    return QJsonDocument(mRunSpecifications);
-}
-
-QString VectorialSensAnalysisDialog::getDestFolderPath() const
-{
-    return mpDestFolderPath;
-}
-
-void VectorialSensAnalysisDialog::runVectorialParamSensAnalysis()
-{
-    // Get folder where to write results
-    //mpDestFolderPath = new QString(mpSimulationSettingsTab->getDestFolderPath());
-    mpDestFolderPath = mpSimulationSettingsTab->getDestFolderPath();
-    // Instantiate a JSON Qt object with analysis specs
-    mRunSpecifications["model_name"]      = mpSimulationSettingsTab->getModelName();
-    mRunSpecifications["model_mo_path"]   = mpSimulationSettingsTab->getModelPath();
-    mRunSpecifications["start_time"]      = mpSimulationSettingsTab->getStartTimeValue();
-    mRunSpecifications["stop_time"]       = mpSimulationSettingsTab->getStopTimeValue();
-    mRunSpecifications["percentage"]      = mpOptimizationTab->getBoundariesValue();
-    mRunSpecifications["epsilon"]         = mpOptimizationTab->getEpsilon();
-    mRunSpecifications["target_var_name"] = mpOptimizationTab->getTargetVariable();
-    // Goal
-    int goalButtonId = mpOptimizationTab->getGoalId();
-    QString goalString;
-    if(goalButtonId == mpOptimizationTab->mMinimizeButtonId)
-        goalString = "min";
-    else
-        goalString = "max";
-    mRunSpecifications["max_or_min"]      = goalString;
-    // Parameters to perturb
-    QJsonArray parametersToPerturb;
+    QStringList parametersToPerturb;
     QTableWidget *pParamsTable = mpParametersTab->getParametersTable();
     for(int i_row = 0; i_row < pParamsTable->rowCount(); i_row++)
     {
@@ -149,8 +121,51 @@ void VectorialSensAnalysisDialog::runVectorialParamSensAnalysis()
             parametersToPerturb.append(paramNameStr);
         }
     }
-    mRunSpecifications["parameters_to_perturb"] = parametersToPerturb;
-    // "Return" the run specifications (it has to be read by the caller of the dialog)
+
+    return parametersToPerturb;
+}
+
+OptimType VectorialSensAnalysisDialog::getOptimizationType() const
+{
+    int goalButtonId = mpOptimizationTab->getGoalId();
+    OptimType optim_type;
+    if(goalButtonId == mpOptimizationTab->mMinimizeButtonId)
+        optim_type = MinOptim;
+    else
+        optim_type = MaxOptim;
+
+    return optim_type;
+}
+
+QJsonDocument VectorialSensAnalysisDialog::getRunSpecifications() const
+{
+    // Initialize specs from dialog info
+    VectSpecs runSpecs = VectSpecs(
+        mpSimulationSettingsTab->getModelPath(),
+        mpSimulationSettingsTab->getModelName(),
+        getOptimizationType(),
+        getParametersToPerturb(),
+        mpOptimizationTab->getEpsilon(),
+        mpOptimizationTab->getBoundariesValue(),
+        mpSimulationSettingsTab->getStartTimeValue(),
+        mpSimulationSettingsTab->getStopTimeValue(),
+        mpOptimizationTab->getTargetVariable()
+    );
+    // It's easier to just return the json doc (concrete class) instead of returning a RunSpecifications (abstract class)
+    //   and having to deal with pointers
+    QJsonDocument runSpecsDoc = runSpecs.toJson();
+    return runSpecsDoc;
+}
+
+QString VectorialSensAnalysisDialog::getDestFolderPath() const
+{
+    QString destFolderPath = mpSimulationSettingsTab->getDestFolderPath();
+    return destFolderPath;
+}
+
+void VectorialSensAnalysisDialog::runVectorialParamSensAnalysis()
+{
+    // Just accept for now
     accept();
 }
 

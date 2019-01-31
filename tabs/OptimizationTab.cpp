@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QtMath>
 
-OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QWidget *parent) : QWidget(parent)
+OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, QWidget *parent) : QWidget(parent)
 {
     // Variables
     mpVariablesLabel = new QLabel(tr("Variable:"), this);
@@ -12,6 +12,8 @@ OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QW
     foreach(QString var_name, variables) {
         mpVariablesComboBox->addItem(var_name);
     }
+    int target_var_index = mpVariablesComboBox->findData(target_var);
+    mpVariablesComboBox->setCurrentIndex(target_var_index);
     // Goal
     mpGoalButtonGroup = new QButtonGroup(this); // Has to have "this" as parent because it's never assigned to anything
     mpMinRadio = new QRadioButton(tr("Minimize"));
@@ -23,7 +25,7 @@ OptimizationTab::OptimizationTab(QList<QString> variables, double percentage, QW
     mpEpsilonLabel = new QLabel(tr("Epsilon"));
     mpEpsilonBox = new SciNotationDoubleSpinbox;
     mpEpsilonBox->setRange(std::numeric_limits<double>::min(), 1-std::numeric_limits<double>::min());
-    mpEpsilonBox->setValue(0.1);
+    mpEpsilonBox->setValue(epsilon);
     mpEpsilonBox->setSingleStep(0.01);
     mpEpsilonHintLabel = new QLabel(tr("(0 < ε < 1)"));
     // Boundaries
