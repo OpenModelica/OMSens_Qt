@@ -90,7 +90,7 @@ QJsonArray SweepSpecs::fromFixedPertsToQJsonArray(QList<FixedParameterPerturbati
         // Initialize object
         QJsonObject fixed_pert_info;
         fixed_pert_info["name"]              = name;
-        fixed_pert_info["delta_percentage"]  = value;
+        fixed_pert_info["value"]  = value;
         fixed_params_jsonarray.append(fixed_pert_info);
     }
     return fixed_params_jsonarray;
