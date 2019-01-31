@@ -17,12 +17,14 @@
 #include "../../tabs/OptimizationTab.h"
 #include "../../tabs/HelpTab.h"
 #include "../BaseRunSpecsDialog.h"
+#include "specs/VectSpecs.h"
 
 class VectorialSensAnalysisDialog : public BaseRunSpecsDialog
 {
     Q_OBJECT
 public:
     // Constructors
+    VectorialSensAnalysisDialog(Model model, VectSpecs runSpecs, QWidget *pParent = 0);
     VectorialSensAnalysisDialog(Model model, QWidget *pParent = 0);
     // Getters
     QJsonDocument getRunSpecifications() const;
@@ -53,6 +55,8 @@ private:
 
     QList<ParameterInclusion> defaultParametersToInclude(QList<QString> parameters);
     
+    QList<ParameterInclusion> paramsInclusionFromSuperAndSubList(QStringList exp_params, QList<QString> model_parameters);
+
 private slots:
     void runVectorialParamSensAnalysis();
 };

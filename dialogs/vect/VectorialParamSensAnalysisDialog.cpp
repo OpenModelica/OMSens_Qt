@@ -15,6 +15,30 @@ QString VectorialSensAnalysisDialog::pythonScriptName()
 }
 
 // Constructors
+VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs runSpecs, QWidget *pParent)
+  : BaseRunSpecsDialog(pParent)
+{
+    // Get specs info
+    double percentage        = runSpecs.percentage;
+    double startTime         = runSpecs.start_time;
+    double stopTime          = runSpecs.stop_time;
+    double epsilon           = runSpecs.epsilon;
+    QString exp_target_var   = runSpecs.target_var;
+    QStringList exp_params   = runSpecs.parameters_to_perturb;
+    OptimType exp_optim_type = runSpecs.optim_type;
+
+    // Get model info
+    QList<QString> model_variables  = model.getAuxVariables() + model.getOutputVariables();
+    QList<QString> model_parameters = model.getParameters();
+    QString model_name              = model.getModelName();
+    QString model_file_path         = model.getFilePath();
+
+    // Define complex dialog data
+    QList<ParameterInclusion> params_inclusion = paramsInclusionFromSuperAndSubList(exp_params, model_parameters);
+
+    // Call the initializer with the parsed data from the specs
+    initialize(model_variables, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
+}
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   BaseRunSpecsDialog(pParent)
 {
@@ -155,5 +179,18 @@ QList<ParameterInclusion> VectorialSensAnalysisDialog::defaultParametersToInclud
         ParameterInclusion param_include = ParameterInclusion(param,default_check);
         params_inclusion.append(param_include);
     }
+    return params_inclusion;
+}
+
+QList<ParameterInclusion> VectorialSensAnalysisDialog::paramsInclusionFromSuperAndSubList(QStringList exp_params, QList<QString> model_parameters)
+{
+    QList<ParameterInclusion> params_inclusion;
+    foreach (QString param, model_parameters)
+    {
+        bool check = exp_params.contains(param);
+        ParameterInclusion param_include = ParameterInclusion(param,check);
+        params_inclusion.append(param_include);
+    }
+
     return params_inclusion;
 }

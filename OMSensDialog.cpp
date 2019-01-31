@@ -19,6 +19,8 @@
 #include "dialogs/BaseResultsDialog.h"
 #include "dialogs/help/HelpBrowser.h"
 #include "specs/IndivSpecs.h"
+#include "specs/SweepSpecs.h"
+#include "specs/VectSpecs.h"
 
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
@@ -442,15 +444,21 @@ void OMSensDialog::loadExperimentFileDialog()
             if (analysis_type == IndivSpecs::analysis_id_str)
             {
                 IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
-                runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs,this);
+                runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs, this);
                 runType = Individual;
 
             }
             else if (analysis_type == SweepSpecs::analysis_id_str)
             {
                 SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
-                runSpecsDialog = new MultiParamSweepDialog(model, runSpecs,this);
+                runSpecsDialog = new MultiParamSweepDialog(model, runSpecs, this);
                 runType = Sweep;
+            }
+            else if (analysis_type == VectSpecs::analysis_id_str)
+            {
+                VectSpecs runSpecs = VectSpecs(json_specs_doc);
+                runSpecsDialog = new VectorialSensAnalysisDialog(model, runSpecs, this);
+                runType = Vectorial;
             }
 
             runAnalysisAndShowResult(runSpecsDialog,runType,model);
