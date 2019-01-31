@@ -5,16 +5,13 @@
 #include <QJsonDocument>
 #include <QStringList>
 
-// Enum
-enum OptimType {MaxOptim, MinOptim};
-
 // Class
 class VectSpecs
 {
 public:
     // Constructors
     VectSpecs(QJsonDocument json_specs_doc);
-    VectSpecs( QString model_file_path, QString model_name, OptimType optim_type,
+    VectSpecs( QString model_file_path, QString model_name, bool maximize,
                QStringList parameters_to_perturb, double epsilon, double percentage, double start_time,
                double stop_time, QString target_var);
 
@@ -27,19 +24,19 @@ public:
     // Specification info
     QString model_file_path;
     QString model_name;
-    OptimType optim_type;
+    bool maximize;
     QStringList parameters_to_perturb;
     double epsilon;
     double percentage;
     double start_time;
     double stop_time;
     QString target_var;
-    QString optimTypeString(OptimType optim_type);
+    QString optimTypeString(bool maximize);
 
 private:
     // Auxs
     QList<QString> fromListOfVariantToListOfStr(QList<QVariant> listOfQVariant);
-    void optimTypeString(QJsonObject json_specs);
+    bool ifMaximizationFromMaxOrMinStr(QString max_or_min);
 };
 
 #endif // VECTSPECS_H

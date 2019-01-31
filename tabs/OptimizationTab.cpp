@@ -4,7 +4,7 @@
 #include <QHBoxLayout>
 #include <QtMath>
 
-OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, QWidget *parent) : QWidget(parent)
+OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize, QWidget *parent) : QWidget(parent)
 {
     // Variables
     mpVariablesLabel = new QLabel(tr("Variable:"), this);
@@ -12,13 +12,13 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     foreach(QString var_name, variables) {
         mpVariablesComboBox->addItem(var_name);
     }
-    int target_var_index = mpVariablesComboBox->findData(target_var);
+    int target_var_index = mpVariablesComboBox->findText(target_var);
     mpVariablesComboBox->setCurrentIndex(target_var_index);
     // Goal
     mpGoalButtonGroup = new QButtonGroup(this); // Has to have "this" as parent because it's never assigned to anything
     mpMinRadio = new QRadioButton(tr("Minimize"));
-    mpMinRadio->toggle(); //This index start selected by default
     mpMaxRadio = new QRadioButton(tr("Maximize"));
+    toggleOptimType(maximize);
     mpGoalButtonGroup->addButton(mpMinRadio, mMinimizeButtonId);
     mpGoalButtonGroup->addButton(mpMaxRadio, mMaximizeButtonId);
     // Epsilon
@@ -78,4 +78,16 @@ int OptimizationTab::getGoalId() const
 double OptimizationTab::getBoundariesValue() const
 {
     return mpBoundariesBox->value();
+}
+
+void OptimizationTab::toggleOptimType(bool maximize)
+{
+    if(maximize)
+    {
+        mpMaxRadio->toggle();
+    }
+    else
+    {
+        mpMinRadio->toggle();
+    }
 }

@@ -25,7 +25,7 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs 
     double epsilon           = runSpecs.epsilon;
     QString exp_target_var   = runSpecs.target_var;
     QStringList exp_params   = runSpecs.parameters_to_perturb;
-    OptimType exp_optim_type = runSpecs.optim_type;
+    bool exp_maximize        = runSpecs.maximize;
 
     // Get model info
     QList<QString> model_variables  = model.getAuxVariables() + model.getOutputVariables();
@@ -37,7 +37,7 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs 
     QList<ParameterInclusion> params_inclusion = paramsInclusionFromSuperAndSubList(exp_params, model_parameters);
 
     // Call the initializer with the parsed data from the specs
-    initialize(model_variables,exp_target_var, epsilon, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
+    initialize(model_variables, exp_target_var, exp_maximize, epsilon, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
 }
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   BaseRunSpecsDialog(pParent)
@@ -55,8 +55,9 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *p
     double epsilon    = 0.1;
     QList<ParameterInclusion> params_inclusion = defaultParametersToInclude(parameters);
     QString target_var = variables.first();
+    bool   maximize = true;
 
-    initialize(variables, target_var, epsilon, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, target_var, maximize, epsilon, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
 }
 
 void VectorialSensAnalysisDialog::initializeWindowSettings()
@@ -65,7 +66,7 @@ void VectorialSensAnalysisDialog::initializeWindowSettings()
     setMinimumWidth(550);
 }
 
-void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var, bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
     {
     initializeWindowSettings();
 
@@ -76,7 +77,7 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString t
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
     mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);
-    mpOptimizationTab       = new OptimizationTab(variables, target_var, epsilon, percentage);
+    mpOptimizationTab       = new OptimizationTab(variables, target_var, epsilon, percentage, maximize);
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
@@ -125,16 +126,15 @@ QStringList VectorialSensAnalysisDialog::getParametersToPerturb() const
     return parametersToPerturb;
 }
 
-OptimType VectorialSensAnalysisDialog::getOptimizationType() const
+bool VectorialSensAnalysisDialog::getIfMaximization() const
 {
     int goalButtonId = mpOptimizationTab->getGoalId();
-    OptimType optim_type;
+    bool maximize;
     if(goalButtonId == mpOptimizationTab->mMinimizeButtonId)
-        optim_type = MinOptim;
-    else
-        optim_type = MaxOptim;
-
-    return optim_type;
+        maximize = false;
+    else if(goalButtonId == mpOptimizationTab->mMaximizeButtonId)
+        maximize = true;
+    return maximize;
 }
 
 QJsonDocument VectorialSensAnalysisDialog::getRunSpecifications() const
@@ -143,7 +143,7 @@ QJsonDocument VectorialSensAnalysisDialog::getRunSpecifications() const
     VectSpecs runSpecs = VectSpecs(
         mpSimulationSettingsTab->getModelPath(),
         mpSimulationSettingsTab->getModelName(),
-        getOptimizationType(),
+        getIfMaximization(),
         getParametersToPerturb(),
         mpOptimizationTab->getEpsilon(),
         mpOptimizationTab->getBoundariesValue(),

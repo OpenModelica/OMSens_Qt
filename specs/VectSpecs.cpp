@@ -24,13 +24,15 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     QList<QVariant> parametersQVariant = json_specs.value(QString("parameters_to_perturb")).toArray().toVariantList();
     // Transform from list of QVariant to list of QString
     this->parameters_to_perturb = fromListOfVariantToListOfStr(parametersQVariant);
-}
-VectSpecs::VectSpecs( QString model_file_path, QString model_name, OptimType optim_type,
+    // Get optimization type
+    QString max_or_min  = json_specs.value(QString("max_or_min")).toString();
+    this->maximize = ifMaximizationFromMaxOrMinStr(max_or_min);}
+VectSpecs::VectSpecs( QString model_file_path, QString model_name, bool maximize,
                QStringList parameters_to_perturb, double epsilon, double percentage, double start_time,
                double stop_time, QString target_var):
     model_file_path(model_file_path),
     model_name(model_name),
-    optim_type(optim_type),
+    maximize(maximize),
     parameters_to_perturb(parameters_to_perturb),
     epsilon(epsilon),
     percentage(percentage),
@@ -57,8 +59,7 @@ QJsonDocument VectSpecs::toJson()
     json_specs["epsilon"]               = this->epsilon;
     json_specs["target_var_name"]       = this->target_var;
     json_specs["parameters_to_perturb"] = QJsonArray::fromStringList(this->parameters_to_perturb);
-    //json_specs["max_or_min"]            = optimTypeString(this->optim_type);
-    QString optim_type_string = optimTypeString(this->optim_type);
+    QString optim_type_string           = optimTypeString(this->maximize);
     json_specs["max_or_min"]            = optim_type_string;
     // Initialize JSON doc from JSON object
     QJsonDocument json_specs_doc(json_specs);
@@ -78,17 +79,23 @@ QList<QString> VectSpecs::fromListOfVariantToListOfStr(QList<QVariant> listOfQVa
     return listOfStr;
 }
 
-QString VectSpecs::optimTypeString(OptimType optim_type)
+QString VectSpecs::optimTypeString(bool maximize)
 {
     QString optim_type_string;
-    switch(optim_type)
-    {
-        case MaxOptim:
-            optim_type_string = "max";
-            break;
-        case MinOptim:
-            optim_type_string = "min";
-            break;
-    }
+    if(maximize) optim_type_string = "max";
+    else         optim_type_string = "min";
     return optim_type_string;
+}
+
+bool VectSpecs::ifMaximizationFromMaxOrMinStr(QString max_or_min)
+{
+    bool maximize;
+    if(max_or_min == "max") maximize = true;
+    else if(max_or_min == "min") maximize = false;
+    else
+    {
+        // TODO: tirar error
+    }
+
+    return maximize;
 }
