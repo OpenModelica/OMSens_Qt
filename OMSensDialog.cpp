@@ -449,7 +449,7 @@ void OMSensDialog::loadExperimentFileDialog()
             else if (analysis_type == SweepSpecs::analysis_id_str)
             {
                 SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
-                runSpecsDialog = new MultiParamSweepDialog(runSpecs,this);
+                runSpecsDialog = new MultiParamSweepDialog(model, runSpecs,this);
                 runType = Sweep;
             }
 

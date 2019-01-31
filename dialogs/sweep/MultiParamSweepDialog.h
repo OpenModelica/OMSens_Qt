@@ -24,7 +24,7 @@ class MultiParamSweepDialog : public BaseRunSpecsDialog
     Q_OBJECT
 public:
     // Constructors
-    MultiParamSweepDialog(SweepSpecs runSpecs, QWidget *pParent = 0);
+    MultiParamSweepDialog(Model model, SweepSpecs runSpecs, QWidget *pParent = 0);
     MultiParamSweepDialog(Model model, QWidget *pParent = 0);
 
     // Getters
@@ -39,7 +39,7 @@ public:
     void groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const;
 
 private:
-    void initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime);
+    void initialize(QList<VariableInclusion> vars_inclusion, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime);
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;

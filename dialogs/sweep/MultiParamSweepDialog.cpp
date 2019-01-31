@@ -21,7 +21,7 @@ QString MultiParamSweepDialog::pythonScriptName()
 }
 
 // Constructors
-MultiParamSweepDialog::MultiParamSweepDialog(SweepSpecs runSpecs, QWidget *pParent)
+MultiParamSweepDialog::MultiParamSweepDialog(Model model, SweepSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {
 
@@ -38,10 +38,11 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     // Default settings
     double startTime  = 0;
     double stopTime   = 1;
+    QList<VariableInclusion> vars_inclusion =  defaultVariablesToInclude(variables);
     // Initialize the dialog with this info
-    initializeDialogWithData(variables, parameters, modelName, modelFilePath, startTime, stopTime);
+    initialize(vars_inclusion, parameters, modelName, modelFilePath, startTime, stopTime);
 }
-void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime)
+void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime)
     {
     initializeWindowSettings();
 
@@ -49,7 +50,6 @@ void MultiParamSweepDialog::initializeDialogWithData(QList<QString> variables, Q
     QString helpText = readHelpText();
     // Initialize tabs
     QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
-    QList<VariableInclusion> vars_inclusion =  defaultVariablesToInclude(variables);
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
     mpParametersTab         = new ParametersExtendedTab(parameters);
