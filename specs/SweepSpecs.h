@@ -52,32 +52,6 @@ private:
     double stop_time;
     QStringList vars_to_analyze;
     // Auxs
-
-// {
-//     "fixed_params": [
-//         {
-//             "name": "realParam2",
-//             "value": 0
-//         }
-//     ],
-//     "model_mo_path": "/tmp/OMSens_Qt-06pS2j/ModelWithVariousParams.mo",
-//     "model_name": "ModelWithVariousParams",
-//     "parameters_to_sweep": [
-//         {
-//             "delta_percentage": 5,
-//             "iterations": 3,
-//             "name": "realParam1"
-//         }
-//     ],
-//     "start_time": 0,
-//     "stop_time": 1,
-//     "vars_to_analyze": [
-//         "outvar1",
-//         "outvar2",
-//         "outvar3"
-//     ]
-// }
-
 };
 
 #endif // SWEEPSPECS_H
