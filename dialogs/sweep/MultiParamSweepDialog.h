@@ -58,6 +58,8 @@ private:
     QList<VariableInclusion> defaultVariablesToInclude(QList<QString> variables);
     QList<PerturbationRow> defaultParametersPerturbations(QList<QString> parameters);
 
+    QList<VariableInclusion> varsInclusionFromSuperAndSubList(QStringList exp_vars, QList<QString> model_variables);
+
 private slots:
     void runMultiParamSweep();
 };

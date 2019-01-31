@@ -25,24 +25,18 @@ struct SweepingParameterPerturbation {
 class SweepSpecs : public RunSpecifications
 {
 public:
+    // Constructors
     SweepSpecs(QJsonDocument json_specs_doc);
     SweepSpecs(QString model_file_path, QString model_name, double start_time, double stop_time,
-               QStringList vars_to_analyze, QList<SweepingParameterPerturbation> parameters_to_sweep, QList<FixedParameterPerturbation> fixed_params);
-    // Methods
-    QJsonDocument toJson();
+               QStringList vars_to_analyze, QList<SweepingParameterPerturbation> parameters_to_sweep,
+               QList<FixedParameterPerturbation> fixed_params);
+
     // Conventions
     static const QString analysis_id_str; // Defined in .cpp
-    void fromJsonArrayToListOfSweepingPerts(QJsonArray params_to_sweep_jsonarray);
 
-    QList<SweepingParameterPerturbation> fromQJsonArrayToSweepingPerts(QJsonArray sweep_params_jsonarray);
+    // Methods
+    QJsonDocument toJson();
 
-    QList<FixedParameterPerturbation> fromQJsonArrayToFixedPerts(QJsonArray fixed_params_jsonarray);
-
-    QJsonArray fromSweepingPertsToQJsonArray(QList<SweepingParameterPerturbation> parameters_to_sweep);
-
-    QJsonArray fromFixedPertsToQJsonArray(QList<FixedParameterPerturbation> fixed_params);
-
-private:
     // Specification info
     QList<FixedParameterPerturbation>    fixed_params;
     QList<SweepingParameterPerturbation> parameters_to_sweep;
@@ -51,7 +45,14 @@ private:
     double start_time;
     double stop_time;
     QStringList vars_to_analyze;
-    // Auxs
+
+private:
+    // Methods
+    void fromJsonArrayToListOfSweepingPerts(QJsonArray params_to_sweep_jsonarray);
+    QList<SweepingParameterPerturbation> fromQJsonArrayToSweepingPerts(QJsonArray sweep_params_jsonarray);
+    QList<FixedParameterPerturbation> fromQJsonArrayToFixedPerts(QJsonArray fixed_params_jsonarray);
+    QJsonArray fromSweepingPertsToQJsonArray(QList<SweepingParameterPerturbation> parameters_to_sweep);
+    QJsonArray fromFixedPertsToQJsonArray(QList<FixedParameterPerturbation> fixed_params);
 };
 
 #endif // SWEEPSPECS_H

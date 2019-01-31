@@ -24,13 +24,29 @@ QString MultiParamSweepDialog::pythonScriptName()
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, SweepSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {
+    // Get specs info
+    QList<FixedParameterPerturbation>    fixed_params        = runSpecs.fixed_params;
+    QList<SweepingParameterPerturbation> parameters_to_sweep = runSpecs.parameters_to_sweep;
+    double                               start_time          = runSpecs.start_time;
+    double                               stop_time           = runSpecs.stop_time;
+    QStringList                          exp_vars            = runSpecs.vars_to_analyze;
 
+    // Get model info
+    QList<QString> model_variables  = model.getAuxVariables()+model.getOutputVariables();
+    QList<QString> model_parameters = model.getParameters();
+    QString        model_name       = model.getModelName();
+    QString        model_file_path  = model.getFilePath();
+
+    // Define complex dialog data
+    QList<VariableInclusion> vars_inclusion = varsInclusionFromSuperAndSubList(exp_vars, model_variables);
+    QList<PerturbationRow> pert_rows        = defaultParametersPerturbations(model_parameters);
+    initialize(vars_inclusion, pert_rows, model_name, model_file_path, start_time, stop_time);
 }
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     BaseRunSpecsDialog(pParent)
 {
     // Get Model information necessary for the dialog
-    QList<QString> variables  = model.getAuxVariables()+model.getOutputVariables();
+    QList<QString> variables  = model.getAuxVariables() + model.getOutputVariables();
     QList<QString> parameters = model.getParameters();
     QString modelName         = model.getModelName();
     QString modelFilePath     = model.getFilePath();
@@ -238,4 +254,17 @@ QList<PerturbationRow> MultiParamSweepDialog::defaultParametersPerturbations(QLi
     }
 
     return pert_rows;
+}
+
+QList<VariableInclusion> MultiParamSweepDialog::varsInclusionFromSuperAndSubList(QStringList exp_vars, QList<QString> model_variables)
+{
+    QList<VariableInclusion> vars_inclusion;
+    foreach (QString variable, model_variables)
+    {
+        bool check = exp_vars.contains(variable);
+        VariableInclusion var_include = VariableInclusion(variable,check);
+        vars_inclusion.append(var_include);
+    }
+
+    return vars_inclusion;
 }
