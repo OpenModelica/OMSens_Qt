@@ -38,18 +38,8 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     // Default settings
     double startTime  = 0;
     double stopTime   = 1;
-    QList<VariableInclusion> vars_inclusion =  defaultVariablesToInclude(variables);
-    QList<PerturbationRow> pert_rows;
-    foreach (QString param_name, parameters)
-    {
-        PerturbationRow row;
-        row.name                 = param_name;
-        row.perturbation_type_id = default_perturbation_type_id;
-        row.iterations           = default_iterations;
-        row.percentage           = default_percentage;
-        row.fixed_value          = default_fixed_value;
-        pert_rows.append(row);
-    }
+    QList<VariableInclusion> vars_inclusion = defaultVariablesToInclude(variables);
+    QList<PerturbationRow> pert_rows        = defaultParametersPerturbations(parameters);
 
     // Initialize the dialog with this info
     initialize(vars_inclusion, pert_rows, modelName, modelFilePath, startTime, stopTime);
@@ -231,4 +221,21 @@ QList<VariableInclusion> MultiParamSweepDialog::defaultVariablesToInclude(QList<
         vars_inclusion.append(var_include);
     }
     return vars_inclusion;
+}
+
+QList<PerturbationRow> MultiParamSweepDialog::defaultParametersPerturbations(QList<QString> parameters)
+{
+    QList<PerturbationRow> pert_rows;
+    foreach (QString param_name, parameters)
+    {
+        PerturbationRow row;
+        row.name                 = param_name;
+        row.perturbation_type_id = default_perturbation_type_id;
+        row.iterations           = default_iterations;
+        row.percentage           = default_percentage;
+        row.fixed_value          = default_fixed_value;
+        pert_rows.append(row);
+    }
+
+    return pert_rows;
 }

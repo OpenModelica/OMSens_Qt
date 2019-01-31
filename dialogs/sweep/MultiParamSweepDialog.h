@@ -48,7 +48,7 @@ private:
     VariablesTab          *mpVariablesTab;
     ParametersExtendedTab *mpParametersTab;
     HelpTab               *mpHelpTab;
-    QDialogButtonBox    *mpButtonBox;
+    QDialogButtonBox      *mpButtonBox;
 
     // Auxs:
     void initializeWindowSettings();
@@ -56,7 +56,8 @@ private:
     QStringList getVarsToAnalyze() const;
     void groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const;
     QList<VariableInclusion> defaultVariablesToInclude(QList<QString> variables);
-    
+    QList<PerturbationRow> defaultParametersPerturbations(QList<QString> parameters);
+
 private slots:
     void runMultiParamSweep();
 };
