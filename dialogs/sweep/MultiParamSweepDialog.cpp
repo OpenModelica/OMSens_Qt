@@ -39,7 +39,9 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, SweepSpecs runSpecs, Q
 
     // Define complex dialog data
     QList<VariableInclusion> vars_inclusion = varsInclusionFromSuperAndSubList(exp_vars, model_variables);
-    QList<PerturbationRow> pert_rows        = defaultParametersPerturbations(model_parameters);
+    QList<QString> no_pert_params = model_parameters;
+    QList<PerturbationRow> pert_rows = pertRowsFromFIxedAndSweepParamsInfo(fixed_params, parameters_to_sweep, no_pert_params);
+
     initialize(vars_inclusion, pert_rows, model_name, model_file_path, start_time, stop_time);
 }
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
@@ -267,4 +269,51 @@ QList<VariableInclusion> MultiParamSweepDialog::varsInclusionFromSuperAndSubList
     }
 
     return vars_inclusion;
+}
+
+QList<PerturbationRow> MultiParamSweepDialog::pertRowsFromFIxedAndSweepParamsInfo(QList<FixedParameterPerturbation> fixed_params, QList<SweepingParameterPerturbation> parameters_to_sweep, QList<QString> no_pert_params)
+{
+    QList<PerturbationRow> pert_rows;
+    // Iterate fixed params
+    foreach (FixedParameterPerturbation param_pert, fixed_params)
+    {
+        // Set the values for this type of perturbation and the rest to default
+        PerturbationRow row;
+        row.name                 = param_pert.name;
+        row.perturbation_type_id = ParametersExtendedTab::FixedPerturbationId;
+        row.iterations           = default_iterations;
+        row.percentage           = default_percentage;
+        row.fixed_value          = param_pert.value;
+        pert_rows.append(row);
+        // Pop this param from the no pert params list
+        no_pert_params.removeOne(param_pert.name);
+    }
+    // Iterate sweep params
+    foreach (SweepingParameterPerturbation param_pert, parameters_to_sweep)
+    {
+        // Set the values for this type of perturbation and the rest to default
+        PerturbationRow row;
+        row.name                 = param_pert.name;
+        row.perturbation_type_id = ParametersExtendedTab::SweepPerturbationId;
+        row.iterations           = param_pert.iterations;
+        row.percentage           = param_pert.delta_percentage;
+        row.fixed_value          = default_fixed_value;
+        pert_rows.append(row);
+        // Pop this param from the no pert params list
+        no_pert_params.removeOne(param_pert.name);
+    }
+    // Iterate no pert params
+    foreach (QString param_name, no_pert_params)
+    {
+        // Set the values for this type of perturbation and the rest to default
+        PerturbationRow row;
+        row.name                 = param_name;
+        row.perturbation_type_id = ParametersExtendedTab::NoPerturbationId;
+        row.iterations           = default_iterations;
+        row.percentage           = default_percentage;
+        row.fixed_value          = default_fixed_value;
+        pert_rows.append(row);
+    }
+
+    return pert_rows;
 }

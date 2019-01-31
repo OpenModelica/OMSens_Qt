@@ -57,8 +57,8 @@ private:
     void groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const;
     QList<VariableInclusion> defaultVariablesToInclude(QList<QString> variables);
     QList<PerturbationRow> defaultParametersPerturbations(QList<QString> parameters);
-
     QList<VariableInclusion> varsInclusionFromSuperAndSubList(QStringList exp_vars, QList<QString> model_variables);
+    QList<PerturbationRow> pertRowsFromFIxedAndSweepParamsInfo(QList<FixedParameterPerturbation> fixed_params, QList<SweepingParameterPerturbation> parameters_to_sweep, QList<QString> no_pert_params);
 
 private slots:
     void runMultiParamSweep();
