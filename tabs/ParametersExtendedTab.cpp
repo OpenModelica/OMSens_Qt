@@ -6,7 +6,7 @@
 #include <QComboBox>
 
 
-ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget *parent) : QWidget(parent)
+ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, QWidget *parent) : QWidget(parent)
 {
     // Initialize label with brief description of the sweep
     mpBriefDescriptionLabel = new QLabel("The total #iterations will be the product of the #iterations of all the parameters.");
@@ -20,7 +20,7 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
                                      << "Fixed value"
                                      );
     mpParametersTable->setHorizontalHeaderLabels(tableHeaders);
-    foreach (QString param_name, parameters)
+    foreach (PerturbationRow row, pert_rows)
     {
         // Add a row
         // Row index to add row to
@@ -29,7 +29,7 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
         mpParametersTable->insertRow(rowNum);
         // Fill blank row with values corresponding to this parameter
         // Set parameter name
-        QLabel *paramNameWidget = new QLabel(param_name);
+        QLabel *paramNameWidget = new QLabel(row.name);
         mpParametersTable->setCellWidget(rowNum,paramColPos, paramNameWidget);
         // Set perturbation type
         QComboBox *pTypeComboBox = new QComboBox;
@@ -37,25 +37,28 @@ ParametersExtendedTab::ParametersExtendedTab(QList<QString> parameters, QWidget 
         pTypeComboBox->addItem("None",  QVariant(NoPerturbationId));
         pTypeComboBox->addItem("Sweep", QVariant(SweepPerturbationId));
         pTypeComboBox->addItem("Fixed", QVariant(FixedPerturbationId));
+        QVariant pert_type_qvariant = QVariant(row.perturbation_type_id);
+        int pert_type_index = pTypeComboBox->findData(pert_type_qvariant);
+        pTypeComboBox->setCurrentIndex(pert_type_index);
         connect(pTypeComboBox, SIGNAL(currentIndexChanged(int)),this, SLOT(pertTypeChanged(int)));
         mpParametersTable->setCellWidget(rowNum,pertTypeColPos, pTypeComboBox);
         // #iters spinbox
         QSpinBox *pIterationsSpinBox = new QSpinBox;
         pIterationsSpinBox->setRange(2,99);
-        pIterationsSpinBox->setValue(3);
+        pIterationsSpinBox->setValue(row.iterations);
         pIterationsSpinBox->setAlignment(Qt::AlignRight);
         mpParametersTable->setCellWidget(rowNum,nItersColPos,pIterationsSpinBox);
         // Percentage spinbox
         QDoubleSpinBox *pPercentageBox = new QDoubleSpinBox;
         pPercentageBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-        pPercentageBox->setValue(5);
+        pPercentageBox->setValue(row.percentage);
         pPercentageBox->setSuffix("%");
         pPercentageBox->setPrefix("±");
         mpParametersTable->setCellWidget(rowNum,pertRangeColPos,pPercentageBox);
         // Set fixed value
         QDoubleSpinBox *fixedValueSpinBox = new QDoubleSpinBox;
         fixedValueSpinBox->setRange(-std::numeric_limits<double>::max(), std::numeric_limits<double>::max());
-        fixedValueSpinBox->setValue(0);
+        fixedValueSpinBox->setValue(row.fixed_value);
         fixedValueSpinBox->setDecimals(4);
         mpParametersTable->setCellWidget(rowNum,fixedValueColPos,fixedValueSpinBox);
 
@@ -138,7 +141,7 @@ void ParametersExtendedTab::enableOrDisableCellsOnRow(int rowNum)
     }
 }
 
-void ParametersExtendedTab::pertTypeChanged(int ignoreMe)
+void ParametersExtendedTab::pertTypeChanged(int)
 {
     // Get row number of triggered combobox
     int rowNum = sender()->property("row").toInt();

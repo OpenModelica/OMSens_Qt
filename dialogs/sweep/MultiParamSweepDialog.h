@@ -33,13 +33,15 @@ public:
 
     // Conventions
     QString pythonScriptName();
-
-    QStringList getVarsToAnalyze() const;
-
-    void groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const;
+    QString helpTextPath = ":/OMSens/sweep/help.html";
+    // Conventions for parameters perturbation rows
+    int    default_perturbation_type_id = ParametersExtendedTab::NoPerturbationId;
+    int    default_iterations           = 3;
+    double default_percentage           = 5;
+    double default_fixed_value          = 0;
 
 private:
-    void initialize(QList<VariableInclusion> vars_inclusion, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime);
+    void initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime);
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;
@@ -48,13 +50,11 @@ private:
     HelpTab               *mpHelpTab;
     QDialogButtonBox    *mpButtonBox;
 
-    // Conventions
-    QString helpTextPath = ":/OMSens/sweep/help.html";
-
     // Auxs:
     void initializeWindowSettings();
     QString readHelpText();
-
+    QStringList getVarsToAnalyze() const;
+    void groupParametersPerturbationsToLists(QList<SweepingParameterPerturbation> &parametersToSweep, QList<FixedParameterPerturbation> &parametersToSetFixedValue) const;
     QList<VariableInclusion> defaultVariablesToInclude(QList<QString> variables);
     
 private slots:

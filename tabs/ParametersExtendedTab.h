@@ -5,12 +5,21 @@
 #include <QTableWidget>
 #include <QLabel>
 
+// Aux structs
+struct PerturbationRow{
+   QString name;
+   int perturbation_type_id;
+   int iterations;
+   double percentage;
+   double fixed_value;
+};
 
+// Class
 class ParametersExtendedTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit ParametersExtendedTab(QList<QString> parameters, QWidget *parent = 0);
+    explicit ParametersExtendedTab(QList<PerturbationRow> pert_rows, QWidget *parent = 0);
     // Getters
     QTableWidget *getParametersTable() const;
     // Conventions:
@@ -20,10 +29,10 @@ public:
     int nItersColPos     = 2;
     int pertRangeColPos  = 3;
     int fixedValueColPos = 4;
-    // Perturbation types
-    int NoPerturbationId    = 0;
-    int SweepPerturbationId = 1;
-    int FixedPerturbationId = 2;
+    // Perturbation types (we use these instead of enums because QVariants don't like enums)
+    static const int NoPerturbationId    = 0;
+    static const int SweepPerturbationId = 1;
+    static const int FixedPerturbationId = 2;
 
 
 private:
@@ -39,7 +48,7 @@ private:
     void enableAllCells(int rowNum);
 
 private slots:
-    void pertTypeChanged(int ignoreMe);
+    void pertTypeChanged(int);
 
 signals:
 

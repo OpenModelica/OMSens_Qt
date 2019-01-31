@@ -39,10 +39,22 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     double startTime  = 0;
     double stopTime   = 1;
     QList<VariableInclusion> vars_inclusion =  defaultVariablesToInclude(variables);
+    QList<PerturbationRow> pert_rows;
+    foreach (QString param_name, parameters)
+    {
+        PerturbationRow row;
+        row.name                 = param_name;
+        row.perturbation_type_id = default_perturbation_type_id;
+        row.iterations           = default_iterations;
+        row.percentage           = default_percentage;
+        row.fixed_value          = default_fixed_value;
+        pert_rows.append(row);
+    }
+
     // Initialize the dialog with this info
-    initialize(vars_inclusion, parameters, modelName, modelFilePath, startTime, stopTime);
+    initialize(vars_inclusion, pert_rows, modelName, modelFilePath, startTime, stopTime);
 }
-void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<QString> parameters, QString modelName, QString modelFilePath, double startTime, double stopTime)
+void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime)
     {
     initializeWindowSettings();
 
@@ -52,7 +64,7 @@ void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, 
     QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
-    mpParametersTab         = new ParametersExtendedTab(parameters);
+    mpParametersTab         = new ParametersExtendedTab(pert_rows);
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
