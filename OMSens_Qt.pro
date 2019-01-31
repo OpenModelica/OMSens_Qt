@@ -50,7 +50,8 @@ SOURCES += \
     dialogs/help/HelpBrowser.cpp \
     tabs/PerturbationTab.cpp \
     specs/IndivSpecs.cpp \
-    specs/SweepSpecs.cpp
+    specs/SweepSpecs.cpp \
+    specs/VectSpecs.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -83,7 +84,8 @@ HEADERS += \
     ForceSignDoubleSpinbox.h \
     SciNotationDoubleSpinbox.h \
     specs/IndivSpecs.h \
-    specs/RunSpecifications.h
+    specs/RunSpecifications.h \
+    specs/VectSpecs.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
