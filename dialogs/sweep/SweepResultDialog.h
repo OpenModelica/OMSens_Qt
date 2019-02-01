@@ -19,11 +19,9 @@ class SweepResultsDialog: public BaseResultsDialog
 public:
     SweepResultsDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
-    // GUI
+    // GUI (there are some components defined in the superclass)
     QTabWidget *mpTabWidget;
     SweepResultVariableTab *mpVariablesResultTab;
-    QLabel      *mpResultsFolderPathLabel;
-    QLabel      *mpResultsFolderPathValue;
     QDialogButtonBox   *mpButtonBox;
     // Data members
     QJsonObject mVarNameToPlotMap;

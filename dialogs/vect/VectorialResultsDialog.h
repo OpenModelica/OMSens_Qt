@@ -19,12 +19,10 @@ class VectorialResultsDialog : public BaseResultsDialog
 public:
     VectorialResultsDialog(QJsonDocument vectorialResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
-    // GUI
+    // GUI (there are some components defined in the superclass)
     QTabWidget            *mpTabWidget;
     OptimizationResultParametersTab* mpOptimParamsTab;
     OptimizationResultOtherTab*      mpOptimOtherTab;
-    QLabel      *mpResultsFolderPathLabel;
-    QLabel      *mpResultsFolderPathValue;
     QDialogButtonBox   *mpButtonBox;
     // Plot
     QLabel      *mpFxPlotLabel;

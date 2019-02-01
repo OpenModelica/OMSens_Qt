@@ -15,13 +15,11 @@ class IndivSensResultsDialog : public BaseResultsDialog
 public:
     explicit IndivSensResultsDialog(QJsonDocument analysisResults, QString resultsFolderPath, QWidget *pParent = 0);
 private:
-    // GUI
+    // GUI (there are some components defined in the superclass)
     SensitivityMethodResultsTab *mpRelativeMethodTab;
     SensitivityMethodResultsTab *mpRMSMethodTab;
     QTabWidget                  *mpTabWidget;
     QDialogButtonBox   *mpButtonBox;
-    QLabel      *mpResultsFolderPathLabel;
-    QLabel      *mpResultsFolderPathValue;
     // Aux
     SensitivityMethodResultsTab* resultsTabForRelativeFromJSONObject(QJsonObject heatmapsJSONObject);
     SensitivityMethodResultsTab* resultsTabForRMSFromJSONObject(QJsonObject heatmapsJSONObject);

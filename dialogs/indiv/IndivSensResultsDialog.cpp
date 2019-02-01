@@ -28,8 +28,9 @@ IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QS
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &IndivSensResultsDialog::accept);
 
     // Results folder (defined in superclass)
-    mpResultsFolderPathLabel = folderPathLabel();
-    mpResultsFolderPathValue = folderPathValue(resultsFolderPath);
+    mpResultsFolderPathLabel  = resultsFolderLabel();
+    mpResultsFolderPathValue  = resultsFolderPathLabel(resultsFolderPath);
+    mpOpenResultsFolderButton = buttonToOpenResultsFolder();
 
     // Dialog settings
     setWindowTitle("Individual Sensitivity Analysis Results");
@@ -38,12 +39,13 @@ IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QS
     // Tabs widget
     mainLayout->addWidget(mpTabWidget);
     // Add results folder
-    QFormLayout *resultsFolderLayout = new QFormLayout;
-    resultsFolderLayout->addRow(mpResultsFolderPathLabel);
-    resultsFolderLayout->addRow(mpResultsFolderPathValue);
+    QGridLayout *resultsFolderLayout = new QGridLayout;
+    resultsFolderLayout->addWidget(mpResultsFolderPathLabel, 0, 0);
+    resultsFolderLayout->addWidget(mpResultsFolderPathValue, 1, 0);
+    resultsFolderLayout->addWidget(mpOpenResultsFolderButton, 1, 1);
     mainLayout->addLayout(resultsFolderLayout);
     // Accept button
-    mainLayout->addWidget(mpButtonBox);
+    mainLayout->addWidget(mpButtonBox, 0, Qt::AlignCenter);
 
     // Layout settings
     setLayout(mainLayout);

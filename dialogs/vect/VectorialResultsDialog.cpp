@@ -38,8 +38,9 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     //mpStopTimeValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
     // Results folder (defined in superclass)
-    mpResultsFolderPathLabel = folderPathLabel();
-    mpResultsFolderPathValue = folderPathValue(resultsFolderPath);
+    mpResultsFolderPathLabel  = resultsFolderLabel();
+    mpResultsFolderPathValue  = resultsFolderPathLabel(resultsFolderPath);
+    mpOpenResultsFolderButton = buttonToOpenResultsFolder();
 
     // Buttons
     mpButtonBox = new QDialogButtonBox;
@@ -66,11 +67,14 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     pStopTimeLayout->addStretch();
     pMainLayout->addLayout(pStopTimeLayout);
     // Results folder path
-    pMainLayout->addWidget(mpResultsFolderPathLabel);
-    pMainLayout->addWidget(mpResultsFolderPathValue);
+    QGridLayout *resultsFolderLayout = new QGridLayout;
+    resultsFolderLayout->addWidget(mpResultsFolderPathLabel, 0, 0);
+    resultsFolderLayout->addWidget(mpResultsFolderPathValue, 1, 0);
+    resultsFolderLayout->addWidget(mpOpenResultsFolderButton, 1, 1);
+    pMainLayout->addLayout(resultsFolderLayout);
 
     // Accept button
-    pMainLayout->addWidget(mpButtonBox);
+    pMainLayout->addWidget(mpButtonBox, 0, Qt::AlignCenter);
 
     // Layout settings
     setLayout(pMainLayout);
