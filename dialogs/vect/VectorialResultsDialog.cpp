@@ -37,11 +37,9 @@ VectorialResultsDialog::VectorialResultsDialog(QJsonDocument vectorialResults, Q
     mpStopTimeValue = new QLabel(QString::number(mStopTime));
     //mpStopTimeValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
 
-    // Results folder
-    mpResultsFolderPathLabel = new QLabel("Results can be found in:");
-    mpResultsFolderPathValue = new QLabel(resultsFolderPath);
-    mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    // Results folder (defined in superclass)
+    mpResultsFolderPathLabel = folderPathLabel();
+    mpResultsFolderPathValue = folderPathValue(resultsFolderPath);
 
     // Buttons
     mpButtonBox = new QDialogButtonBox;

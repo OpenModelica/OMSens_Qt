@@ -27,11 +27,9 @@ IndivSensResultsDialog::IndivSensResultsDialog(QJsonDocument analysisResults, QS
     mpButtonBox->addButton("Ok", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &IndivSensResultsDialog::accept);
 
-    // GUI: Results folder
-    mpResultsFolderPathLabel = new QLabel("Results can be found in:");
-    mpResultsFolderPathValue = new QLabel(resultsFolderPath);
-    mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
+    // Results folder (defined in superclass)
+    mpResultsFolderPathLabel = folderPathLabel();
+    mpResultsFolderPathValue = folderPathValue(resultsFolderPath);
 
     // Dialog settings
     setWindowTitle("Individual Sensitivity Analysis Results");

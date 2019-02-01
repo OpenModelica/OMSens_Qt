@@ -20,12 +20,9 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     mpTabWidget = new QTabWidget;
     mpTabWidget->addTab(mpVariablesResultTab, tr("Variables"));
 
-    // Results folder
-    mpResultsFolderPathLabel = new QLabel("Results can be found in:");
-    mpResultsFolderPathValue = new QLabel(resultsFolderPath);
-    mpResultsFolderPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-    mpResultsFolderPathValue->setTextInteractionFlags(Qt::TextSelectableByMouse);
-
+    // Results folder (defined in superclass)
+    mpResultsFolderPathLabel = folderPathLabel();
+    mpResultsFolderPathValue = folderPathValue(resultsFolderPath);
     // Buttons
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Ok", QDialogButtonBox::AcceptRole);
