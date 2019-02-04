@@ -33,7 +33,10 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mOMSensPath = "/home/omsens/Documents/OMSens/" ;
     // Python executable path
     mPythonBinPath = "/home/omsens/anaconda3/bin/python";
-
+    // Initialize dialogs
+    mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
+    mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);
+    mpIndivSensDialog    = new IndivParamSensAnalysisDialog(mActiveModel,this);
     // Initialize paths
     mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
     mpOMSensPathValue = new QLabel(mOMSensPath);
@@ -124,17 +127,17 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
 void OMSensDialog::runIndivSensAnalysis()
 {
   RunType runType = Individual;
-  runNewOMSensAnalysis(runType);
+  runAnalysisAndShowResult(mpIndivSensDialog, runType, mActiveModel);
 }
 void OMSensDialog::runMultiParameterSweep()
 {
   RunType runType = Sweep;
-  runNewOMSensAnalysis(runType);
+  runAnalysisAndShowResult(mpSweepDialog, runType, mActiveModel);
 }
 void OMSensDialog::runVectorialSensAnalysis()
 {
   RunType runType = Vectorial;
-  runNewOMSensAnalysis(runType);
+  runAnalysisAndShowResult(mpVectSensDialog, runType, mActiveModel);
 }
 
 QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
@@ -319,25 +322,6 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
     if(dialogCode == QDialog::Rejected) {
         // Cancel button clicked
     }
-}
-
-void OMSensDialog::runNewOMSensAnalysis(RunType runType)
-{
-    // Initialize dialog
-    BaseRunSpecsDialog *runSpecsDialog;
-    switch (runType)
-    {
-        case Vectorial:
-           runSpecsDialog = new VectorialSensAnalysisDialog(mActiveModel,this);
-           break;
-        case Sweep:
-           runSpecsDialog = new MultiParamSweepDialog(mActiveModel,this);
-           break;
-        case Individual:
-           runSpecsDialog = new IndivParamSensAnalysisDialog(mActiveModel,this);
-           break;
-    }
-    runAnalysisAndShowResult(runSpecsDialog, runType, mActiveModel);
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:

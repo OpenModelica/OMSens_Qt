@@ -6,6 +6,9 @@
 #include <QLabel>
 #include "model.h"
 #include "dialogs/BaseRunSpecsDialog.h"
+#include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
+#include "dialogs/sweep/MultiParamSweepDialog.h"
+#include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
 
 // Enum so we can pseudo-reference classes
 enum RunType {Individual, Sweep, Vectorial};
@@ -29,6 +32,10 @@ private:
     Model mActiveModel;
     QString mOMSensPath;
     QString mPythonBinPath;
+    // Dialogs
+    VectorialSensAnalysisDialog  *mpVectSensDialog;
+    MultiParamSweepDialog        *mpSweepDialog;
+    IndivParamSensAnalysisDialog *mpIndivSensDialog;
     // GUI
     QLabel      *mpOMSensPathLabel;
     QLabel      *mpOMSensPathValue;
@@ -52,7 +59,6 @@ private:
     QString dirPathForFilePath(QString scriptPath);
     QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
     bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
-    void runNewOMSensAnalysis(RunType runType);
     QString progressDialogTextForCurrentTime();
     void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model);
 
