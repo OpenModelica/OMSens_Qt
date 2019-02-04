@@ -30,6 +30,10 @@ HEADERS += \
     $$PWD/DualLists.h \
     $$PWD/model.h \
     $$PWD/OMSensDialog.h \
+    $$PWD/specs/VectSpecs.h \
+    $$PWD/specs/IndivSpecs.h \
+    $$PWD/specs/SweepSpecs.h \
+    $$PWD/SciNotationDoubleSpinbox.h \
     $$PWD/TableItemDelegate.h
 
 SOURCES += \
@@ -54,6 +58,9 @@ SOURCES += \
     $$PWD/tabs/SensitivityMethodResultsTab.cpp \
     $$PWD/tabs/SimulationTab.cpp \
     $$PWD/tabs/VariablesTab.cpp \
+    $$PWD/specs/VectSpecs.cpp \
+    $$PWD/specs/IndivSpecs.cpp \
+    $$PWD/specs/SweepSpecs.cpp \
     $$PWD/DualLists.cpp \
     $$PWD/model.cpp \
     $$PWD/OMSensDialog.cpp

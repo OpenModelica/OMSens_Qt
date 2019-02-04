@@ -17,7 +17,7 @@
 #include "../../tabs/OptimizationTab.h"
 #include "../../tabs/HelpTab.h"
 #include "../BaseRunSpecsDialog.h"
-#include "specs/VectSpecs.h"
+#include "../../specs/VectSpecs.h"
 
 class VectorialSensAnalysisDialog : public BaseRunSpecsDialog
 {
