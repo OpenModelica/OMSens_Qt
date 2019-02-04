@@ -51,7 +51,8 @@ SOURCES += \
     tabs/PerturbationTab.cpp \
     specs/IndivSpecs.cpp \
     specs/SweepSpecs.cpp \
-    specs/VectSpecs.cpp
+    specs/VectSpecs.cpp \
+    OMSensPlugin.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -85,7 +86,8 @@ HEADERS += \
     SciNotationDoubleSpinbox.h \
     specs/IndivSpecs.h \
     specs/RunSpecifications.h \
-    specs/VectSpecs.h
+    specs/VectSpecs.h \
+    OMSensPlugin.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
@@ -97,3 +99,6 @@ DISTFILES += \
 
 RESOURCES += \
     resources.qrc
+
+# Include OMEdit headers (these headers should be moved to an independent repo in the future)
+INCLUDEPATH  += ../../plugins
