@@ -260,12 +260,12 @@ bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsP
     return processEndedCorrectly;
 }
 
-void OMSensDialog::showResultsDialog(RunType runType, QString resultsFolderPath)
+BaseResultsDialog* OMSensDialog::showResultsDialog(RunType runType, QString resultsFolderPath)
 {
     QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
     QJsonDocument jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
     // Initialize results instance with JSON document
-    BaseResultsDialog *resultsDialog;
+    BaseResultsDialog *resultsDialog = 0;
     switch (runType)
     {
         case Vectorial:
@@ -278,15 +278,16 @@ void OMSensDialog::showResultsDialog(RunType runType, QString resultsFolderPath)
            resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
            break;
     }
-    resultsDialog->show();
+    return resultsDialog;
 }
 
 void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model)
 {
     // Hide this dialog before opening the new one
-    hide();
+    this->hide();
     int dialogCode  = runSpecsDialog->exec();
     // If the dialog was accepted by the user, run the analysis
+    BaseResultsDialog* resultDialog = 0;
     if(dialogCode == QDialog::Accepted)
     {
         // Get script path from OMSens dir and script file name
@@ -315,13 +316,23 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
         if (processEndedCorrectly)
         {
             // Read JSON in results folder with the paths to the results of the script
-            showResultsDialog(runType, resultsFolderPath);
+            resultDialog = showResultsDialog(runType, resultsFolderPath);
         }
     }
     // If the user pressed the "Cancel" button, do nothing for now
     if(dialogCode == QDialog::Rejected) {
         // Cancel button clicked
     }
+
+    // First show OMSens main dialog
+    this->show();
+
+    if(resultDialog)
+    {
+        // If a result dialog was initialized, show it
+        resultDialog->show();
+    }
+
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:

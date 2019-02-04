@@ -9,6 +9,7 @@
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
 #include "dialogs/sweep/MultiParamSweepDialog.h"
 #include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
+#include "dialogs/BaseResultsDialog.h"
 
 // Enum so we can pseudo-reference classes
 enum RunType {Individual, Sweep, Vectorial};
@@ -25,7 +26,6 @@ public:
     QString model_specs_file_name           = "model_info.json";
     QString analysis_results_info_file_name = "result.json";
 
-    void showResultsDialog(RunType runType, QString resultsFolderPath);
 
 private:
     // Data
@@ -61,6 +61,7 @@ private:
     bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
     QString progressDialogTextForCurrentTime();
     void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model);
+    BaseResultsDialog* showResultsDialog(RunType runType, QString resultsFolderPath);
 
 signals:
 
