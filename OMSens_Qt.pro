@@ -8,8 +8,12 @@ QT       += core gui
 
 greaterThan(QT_MAJOR_VERSION, 4): QT += widgets
 
-TARGET = OMSens_Qt
-TEMPLATE = app
+# Vars if standalone app
+# TARGET = OMSens_Qt
+# TEMPLATE = app
+# Vars if plugin
+TEMPLATE        = lib
+TARGET          = $$qtLibraryTarget(omsensplugin)
 
 # The following define makes your compiler emit warnings if you use
 # any feature of Qt which has been marked as deprecated (the exact warnings
@@ -102,3 +106,5 @@ RESOURCES += \
 
 # Include OMEdit headers (these headers should be moved to an independent repo in the future)
 INCLUDEPATH  += ../../plugins
+# Configuration to make it work as plugin
+DESTDIR         = ../../plugins

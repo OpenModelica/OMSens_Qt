@@ -9,7 +9,7 @@ QString OMSensPlugin::pluginName()
 void OMSensPlugin::analyzeModel(Model model)
 {
     // Initialize main dialog with model
-    OMSensDialog* pOmsensDialog =  new OMSensDialog(model,this);
+    OMSensDialog* pOmsensDialog =  new OMSensDialog(model);
     // Show dialog
     pOmsensDialog->show();
 }

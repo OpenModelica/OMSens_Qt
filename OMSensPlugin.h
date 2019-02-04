@@ -5,12 +5,11 @@
 #include "model.h"
 
 #include <QObject>
-#include <QWidget>
 #include <QtPlugin>
 #include <QString>
 
 
-class OMSensPlugin: public QWidget, public PluginInformationInterface, public ModelAnalysisInterface
+class OMSensPlugin: public QObject, public PluginInformationInterface, public ModelAnalysisInterface
 {
     Q_OBJECT
     Q_PLUGIN_METADATA(IID "org.omedit.plugins.OMSens")
