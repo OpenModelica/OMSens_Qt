@@ -34,13 +34,13 @@ SweepSpecs::SweepSpecs(QString model_file_path,
     QList<SweepingParameterPerturbation> parameters_to_sweep,
     QList<FixedParameterPerturbation> fixed_params
     ):
+        fixed_params(fixed_params),
+        parameters_to_sweep(parameters_to_sweep),
         model_file_path(model_file_path),
         model_name(model_name),
         start_time(start_time),
         stop_time(stop_time),
-        vars_to_analyze(vars_to_analyze),
-        parameters_to_sweep(parameters_to_sweep),
-        fixed_params(fixed_params)
+        vars_to_analyze(vars_to_analyze)
 {
     // Do nothing else for now
 }
