@@ -46,7 +46,6 @@ SOURCES += \
     tabs/VariablesTab.cpp \
     DualLists.cpp \
     main.cpp \
-    model.cpp \
     OMSensDialog.cpp \
     tabs/optim_result/OptimizationResultParametersTab.cpp \
     tabs/optim_result/OptimizationResultOtherTab.cpp \
@@ -56,7 +55,8 @@ SOURCES += \
     specs/IndivSpecs.cpp \
     specs/SweepSpecs.cpp \
     specs/VectSpecs.cpp \
-    OMSensPlugin.cpp
+    OMSensPlugin.cpp \
+    omedit_plugin/model.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -76,7 +76,6 @@ HEADERS += \
     tabs/SimulationTab.h \
     tabs/VariablesTab.h \
     DualLists.h \
-    model.h \
     OMSensDialog.h \
     TableItemDelegate.h \
     tabs/optim_result/OptimizationResultParametersTab.h \
@@ -91,11 +90,12 @@ HEADERS += \
     specs/IndivSpecs.h \
     specs/RunSpecifications.h \
     specs/VectSpecs.h \
-    OMSensPlugin.h
+    OMSensPlugin.h \
+    omedit_plugin/interfaces.h \
+    omedit_plugin/model.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
-    OMSens_Qt_plugin.pri \
     dialogs/indiv/help.html \
     dialogs/sweep/help.html \
     dialogs/vect/help.html \
@@ -104,7 +104,5 @@ DISTFILES += \
 RESOURCES += \
     resources.qrc
 
-# Include OMEdit headers (these headers should be moved to an independent repo in the future)
-INCLUDEPATH  += ../../plugins
 # Configuration to make it work as plugin
-DESTDIR         = ../../plugins
+DESTDIR = ./build

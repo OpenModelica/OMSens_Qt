@@ -15,7 +15,7 @@
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
 #include "../../DualLists.h"
-#include "../../model.h"
+#include "omedit_plugin/model.h"
 #include "../BaseRunSpecsDialog.h"
 #include "../../specs/SweepSpecs.h"
 

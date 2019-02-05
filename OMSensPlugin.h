@@ -1,8 +1,8 @@
 #ifndef OMSENSPLUGIN_H
 #define OMSENSPLUGIN_H
 
-#include "interfaces.h"
-#include "model.h"
+#include "omedit_plugin/interfaces.h"
+#include "omedit_plugin/model.h"
 
 #include <QObject>
 #include <QtPlugin>

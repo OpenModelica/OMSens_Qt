@@ -4,7 +4,7 @@
 #include <QWidget>
 #include <QDialog>
 #include <QLabel>
-#include "model.h"
+#include "omedit_plugin/model.h"
 #include "dialogs/BaseRunSpecsDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
 #include "dialogs/sweep/MultiParamSweepDialog.h"

@@ -9,7 +9,7 @@
 #include <QTextStream>
 #include <QComboBox>
 
-#include "../../model.h"
+#include "omedit_plugin/model.h"
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
 

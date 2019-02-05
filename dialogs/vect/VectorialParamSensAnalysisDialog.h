@@ -11,7 +11,7 @@
 #include <QVBoxLayout>
 #include <QDialogButtonBox>
 #include <QJsonObject>
-#include "../../model.h"
+#include "omedit_plugin/model.h"
 #include "../../tabs/SimulationTab.h"
 #include "../../tabs/ParametersSimpleTab.h"
 #include "../../tabs/OptimizationTab.h"

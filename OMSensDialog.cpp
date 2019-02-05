@@ -5,7 +5,7 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QDateTime>
-#include "model.h"
+#include "omedit_plugin/model.h"
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
 #include "dialogs/indiv/IndivSensResultsDialog.h"

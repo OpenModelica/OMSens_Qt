@@ -1,5 +1,5 @@
 #include "OMSensDialog.h"
-#include "model.h"
+#include "omedit_plugin/model.h"
 
 #include <QApplication>
 #include <QTemporaryDir>
