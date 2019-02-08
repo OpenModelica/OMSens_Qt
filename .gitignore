@@ -31,3 +31,4 @@
 *.out
 *.app
 /OMSens_Qt.pro.user
+/build*
