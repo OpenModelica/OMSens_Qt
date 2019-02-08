@@ -5,7 +5,6 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 
-
 ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, QWidget *parent) : QWidget(parent)
 {
     // Initialize label with brief description of the sweep
@@ -20,6 +19,8 @@ ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, Q
                                      << "Fixed value"
                                      );
     mpParametersTable->setHorizontalHeaderLabels(tableHeaders);
+    // Sort rows before adding them so the "row" property is consistent
+    std::sort(pert_rows.begin(), pert_rows.end());
     foreach (PerturbationRow row, pert_rows)
     {
         // Add a row
@@ -68,8 +69,6 @@ ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, Q
     // Set table settings
     // Resize columns to contents
     mpParametersTable->resizeColumnsToContents();
-    // Sort by name
-    mpParametersTable->sortByColumn(nameColPos, Qt::AscendingOrder);
 
     QVBoxLayout *mainLayout = new QVBoxLayout;
     // Parameters table/list
@@ -151,3 +150,4 @@ void ParametersExtendedTab::pertTypeChanged(int)
     enableOrDisableCellsOnRow(rowNum);
 
 }
+
