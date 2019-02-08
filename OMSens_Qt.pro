@@ -103,6 +103,3 @@ DISTFILES += \
 
 RESOURCES += \
     resources.qrc
-
-# Configuration to make it work as plugin
-DESTDIR = ./build
