@@ -2,6 +2,7 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QList>
+#include <QVariant>
 
 // Conventions
 const QString IndivSpecs::analysis_id_str = "indiv";
