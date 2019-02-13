@@ -5,6 +5,7 @@
 #include <QJsonDocument>
 #include <QJsonObject>
 #include <QJsonArray>
+#include <QVariant>
 
 // Constructors
 Model::Model(QJsonDocument model_info_json)
