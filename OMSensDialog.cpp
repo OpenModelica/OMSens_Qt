@@ -88,9 +88,10 @@ QString OMSensDialog::pythonExecPath()
     {
         // Get STDOUT
         QString sysCallSTDOUT(sysProcc.readAllStandardOutput());
-        // Remove /n from ending
-        int lastPos = sysCallSTDOUT.size() -1;
-        pythonPath = sysCallSTDOUT.remove(lastPos, 1);
+        // Sanitize output
+        QStringList paths = sysCallSTDOUT.split("\n");
+        QString firstPath = paths.at(0);	
+        pythonPath = firstPath;
     }
     else
     {
