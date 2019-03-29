@@ -22,6 +22,82 @@
 #include "specs/SweepSpecs.h"
 #include "specs/VectSpecs.h"
 
+QString osName()
+ {
+ #if defined(Q_OS_ANDROID)
+ return QLatin1String("android");
+ #elif defined(Q_OS_BLACKBERRY)
+ return QLatin1String("blackberry");
+ #elif defined(Q_OS_IOS)
+ return QLatin1String("ios");
+ #elif defined(Q_OS_MACOS)
+ return QLatin1String("macos");
+ #elif defined(Q_OS_TVOS)
+ return QLatin1String("tvos");
+ #elif defined(Q_OS_WATCHOS)
+ return QLatin1String("watchos");
+ #elif defined(Q_OS_WINCE)
+ return QLatin1String("wince");
+ #elif defined(Q_OS_WIN)
+ return QLatin1String("windows");
+ #elif defined(Q_OS_LINUX)
+ return QLatin1String("linux");
+ #elif defined(Q_OS_UNIX)
+ return QLatin1String("unix");
+ #else
+ return QLatin1String("unknown");
+ #endif
+}
+
+
+
+QString OMSensDialog::omsensBackendPath()
+{
+    // Get environment var value
+    QString envVarVal = qgetenv("OMSENSBACKEND");
+    // Check if it's empty
+    QString backendPath;
+    if(envVarVal.size() == 0)
+    {
+        backendPath = "?";
+    }
+    else
+    {
+        backendPath=envVarVal;
+    }
+    return backendPath;
+}
+
+QString OMSensDialog::pythonExecPath()
+{
+    // Define command to call depending on platform
+    QString system = osName();
+    QString command;
+    if(system == "linux") command = "which python";
+    else if(system == "windows") command = "where python";
+    else command = "invalid command to call";
+    // Call command
+    QProcess sysProcc;
+    sysProcc.start(command);
+    sysProcc.waitForFinished(); // sets current thread to sleep and waits for pingProcess end
+    // Check that it's was a sucessful call
+    int retCode = sysProcc.exitCode();
+    // Define python path
+    QString pythonPath;
+    if (retCode == 0)
+    {
+        // Get STDOUT
+        QString sysCallSTDOUT(sysProcc.readAllStandardOutput());
+        // Remove /n from ending
+        int lastPos = sysCallSTDOUT.size() -1;
+        pythonPath = sysCallSTDOUT.remove(lastPos, 1);
+    }
+    else
+    {
+        pythonPath = "?";
+    }
+    return pythonPath;
+}
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
 {
@@ -30,9 +106,9 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     setWindowTitle("OMSens");
 
     // OMSens python backend path
-    mOMSensPath = "/home/omsens/Documents/OMSens/" ;
+    mOMSensPath    = omsensBackendPath();
     // Python executable path
-    mPythonBinPath = "/home/omsens/anaconda3/bin/python";
+    mPythonBinPath = pythonExecPath();
     // Initialize dialogs
     mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
     mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);

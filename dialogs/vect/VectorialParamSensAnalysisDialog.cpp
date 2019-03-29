@@ -7,6 +7,8 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QTextStream>
+#include <QStandardPaths>
+#include <QDir>
 
 // Conventions
 QString VectorialSensAnalysisDialog::pythonScriptName()
@@ -73,7 +75,8 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString t
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/vectorial_analysis";
+    QString homePath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QString defaultResultsFolderPath = QDir::cleanPath(homePath + QDir::separator() + "omsens_results" + QDir::separator() + "vect_results");
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
     mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);

@@ -8,6 +8,8 @@
 #include <QCheckBox>
 #include <QTextStream>
 #include <QComboBox>
+#include <QStandardPaths>
+#include <QDir>
 
 #include "omedit_plugin/model.h"
 #include "../../tabs/ParametersExtendedTab.h"
@@ -69,7 +71,8 @@ void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, 
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
+    QString homePath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+    QString defaultResultsFolderPath = QDir::cleanPath(homePath + QDir::separator() + "omsens_results" + QDir::separator() + "sweep_results");
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
     mpParametersTab         = new ParametersExtendedTab(pert_rows);

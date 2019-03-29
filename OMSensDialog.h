@@ -27,6 +27,10 @@ public:
     QString analysis_results_info_file_name = "result.json";
 
 
+    QString omsensBackendPath();
+    
+    QString pythonExecPath();
+
 private:
     // Data
     Model mActiveModel;
