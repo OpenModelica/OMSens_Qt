@@ -56,7 +56,7 @@ private:
     QPushButton *mpLoadExperimentButton;
     // Auxs
     QJsonDocument readJsonFile(QString analysisResultsJSONPath);
-    bool runProcessAndShowProgress(QString scriptDirPath, QString command);
+    bool runProcessAndShowProgress(QString scriptDirPath, QString command, QString resultsFolderPath);
     QString createTimestampDir(QString destFolderPath);
     QString writeJsonToDisk(QString file_path, QJsonDocument runSpecifications);
     QString createResultsFolder(QString timeStampFolderPath);

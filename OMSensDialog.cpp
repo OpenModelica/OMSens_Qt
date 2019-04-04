@@ -5,6 +5,8 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QDateTime>
+#include <QTextStream>
+
 #include "omedit_plugin/model.h"
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
@@ -243,7 +245,7 @@ QString OMSensDialog::progressDialogTextForCurrentTime()
     return progressDialogText;
 }
 
-bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
+bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command, QString resultsFolderPath)
 {
     QProcess pythonScriptProcess;
     // Set working dir path
@@ -263,10 +265,24 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
     dialog->exec();
     // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
     pythonScriptProcess.waitForFinished(3000);
-
+    //
     // See if the process ended correctly
     QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
     int exitCode = pythonScriptProcess.exitCode();
+    // Prepare python call log
+    QString python_log_header    = QString("full command:%1\n-------\n").arg(command);
+    QString python_call_stdout(pythonScriptProcess.readAllStandardOutput());
+    QString python_log_full_str  = python_log_header + python_call_stdout;
+    // Write log to file
+    QString python_log_file_name = "python_log.txt";
+    QString python_log_file_path = QDir::cleanPath(resultsFolderPath + QDir::separator() + python_log_file_name);;
+    QFile logFile(python_log_file_path);
+    if ( logFile.open(QIODevice::ReadWrite) )
+    {
+        QTextStream out(&logFile);
+        out << python_log_full_str;
+        logFile.close();
+    }
 
     bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
 
@@ -331,8 +347,10 @@ QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBin
 
 bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
 {
+    // Define command
     QString command = commandCallFromPaths(scriptPath, pythonBinPath, jsonSpecsPath, resultsFolderPath);
-    bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command);
+    // Call process
+    bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command, resultsFolderPath);
 
     return processEndedCorrectly;
 }
