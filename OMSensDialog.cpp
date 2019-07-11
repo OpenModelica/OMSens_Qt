@@ -27,7 +27,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
 {
     // Dialog settings
     setMinimumWidth(400);
-    setWindowTitle("OMSens");
+    setWindowTitle("OMSens WINDOW PANE 2");
 
     // OMSens python backend path
     mOMSensPath = "/home/omsens/Documents/OMSens/" ;
