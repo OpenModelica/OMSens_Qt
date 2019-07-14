@@ -71,7 +71,7 @@ void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_incl
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/indiv_sens_results";
+    QString defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/indiv_sens_results";
     QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
@@ -96,6 +96,7 @@ void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_incl
 
     // Dialog settings
     setWindowTitle("Run Individual Sensitivity Analysis");
+
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpTabWidget);

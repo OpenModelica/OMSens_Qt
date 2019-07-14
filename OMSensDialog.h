@@ -32,10 +32,12 @@ private:
     Model mActiveModel;
     QString mOMSensPath;
     QString mPythonBinPath;
+
     // Dialogs
     VectorialSensAnalysisDialog  *mpVectSensDialog;
     MultiParamSweepDialog        *mpSweepDialog;
     IndivParamSensAnalysisDialog *mpIndivSensDialog;
+
     // GUI
     QLabel      *mpOMSensPathLabel;
     QLabel      *mpOMSensPathValue;
@@ -44,9 +46,11 @@ private:
     QLabel      *mpPythonBinValue;
     QPushButton *mpPythonBinBrowseButton;
     QFrame      *mpHorizontalLineOne;
-    QPushButton *mpIndivButton;
-    QPushButton *mpSweepButton;
-    QPushButton *mpVectButton;
+
+    QPushButton *mpIndivButton; QPushButton *mpIndivButtonAnalysis;
+    QPushButton *mpSweepButton; QPushButton *mpSweepButtonAnalysis;
+    QPushButton *mpVectButton; QPushButton *mpVectButtonAnalysis;
+
     QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton; // Not shown for now
     QPushButton *mpLoadExperimentButton;
@@ -60,15 +64,27 @@ private:
     QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
     bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
     QString progressDialogTextForCurrentTime();
+
     void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model);
     BaseResultsDialog* showResultsDialog(RunType runType, QString resultsFolderPath);
+
+    void showResult(RunType runType);
+    BaseResultsDialog* showResultsDialogAndGetFolderPath(RunType runType);
+
 
 signals:
 
 public slots:
+  // RUN AND SHOW ANALYSIS
   void runIndivSensAnalysis();
   void runMultiParameterSweep();
   void runVectorialSensAnalysis();
+
+  // SHOW ANALYSIS
+  void showMultiParameterSweepAnalysis();
+  void showVectorialSensAnalysis();
+  void showIndivSensAnalysis();
+
   void openSensAnalysisResult();
   void openSensAnalysisImage();
   void launchOMSensBackendChooseFolderDialog();

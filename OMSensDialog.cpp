@@ -27,16 +27,19 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
 {
     // Dialog settings
     setMinimumWidth(400);
-    setWindowTitle("OMSens WINDOW PANE 2");
+    setWindowTitle("OMSens");
 
     // OMSens python backend path
     mOMSensPath = "/home/omsens/Documents/OMSens/" ;
+
     // Python executable path
     mPythonBinPath = "/home/omsens/anaconda3/bin/python";
+
     // Initialize dialogs
     mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
     mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);
     mpIndivSensDialog    = new IndivParamSensAnalysisDialog(mActiveModel,this);
+
     // Initialize paths
     mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
     mpOMSensPathValue = new QLabel(mOMSensPath);
@@ -59,22 +62,32 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpHorizontalLineOne->setFrameShape(QFrame::HLine);
     mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
 
-
-    // Initialize features
-    mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"));
+    // Individual parameters
+    mpIndivButton = new QPushButton(tr("Run"));
     mpIndivButton->setAutoDefault(true);
     mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
 
-    mpSweepButton = new QPushButton(tr("Multi-parameter Sweep"));
+    mpIndivButtonAnalysis = new QPushButton(tr("Analisis"));
+    connect(mpIndivButtonAnalysis, SIGNAL(clicked()), SLOT(showIndivSensAnalysis()));
+
+    // Parameter Sweep
+    mpSweepButton = new QPushButton(tr("Run"));
     mpSweepButton->setAutoDefault(true);
     mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
 
-    mpVectButton = new QPushButton(tr("Vectorial Parameter Based Sensitivity Analysis"));
+    mpSweepButtonAnalysis = new QPushButton(tr("Analisis"));
+    connect(mpSweepButtonAnalysis, SIGNAL(clicked()), SLOT(showMultiParameterSweepAnalysis()));
+
+    // Vectorial
+    mpVectButton = new QPushButton(tr("Run"));
     mpVectButton->setAutoDefault(true);
     mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
+
+    mpVectButtonAnalysis = new QPushButton(tr("Analisis"));
+    connect(mpVectButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
 
     // Division between features and help
     mpHorizontalLineTwo= new QFrame;
@@ -109,13 +122,38 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mainLayout->addLayout(pPythonBinValueLayout);
     // Division
     mainLayout->addWidget(mpHorizontalLineOne);
+
     // Buttons
-    mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
-    mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
-    mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
+    // LABEL 1
+    QLabel *label1 = new QLabel("Individual Parameter Based Sensitivity ");
+    mainLayout->addWidget(label1, 0, Qt::AlignLeft);
+    QHBoxLayout *row1 = new QHBoxLayout;
+    row1->addWidget(mpIndivButton);
+    row1->addWidget(mpIndivButtonAnalysis);
+    mainLayout->addItem(row1);
+
+    // LABEL 2
+    QLabel *label2 = new QLabel("Multi-parameter Sweep");
+    mainLayout->addWidget(label2, 0, Qt::AlignLeft);
+    QHBoxLayout *row2 = new QHBoxLayout;
+    row2->addWidget(mpSweepButton);
+    row2->addWidget(mpSweepButtonAnalysis);
+    mainLayout->addItem(row2);
+
+    // LABEL 3
+    QLabel *label3 = new QLabel("Vectorial Parameter Based Sensitivity Analysis");
+    mainLayout->addWidget(label3, 0, Qt::AlignLeft);
+    QHBoxLayout *row3 = new QHBoxLayout;
+    row3->addWidget(mpVectButton);
+    row3->addWidget(mpVectButtonAnalysis);
+    mainLayout->addItem(row3);
+
+    // Separator
     mainLayout->addWidget(mpHorizontalLineTwo);
-// Don't show the help for now
-//    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+
+    // Don't show the help for now
+    //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+
     mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignLeft);
 
     // Layout settings
@@ -123,7 +161,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     setLayout(mainLayout);
 }
 
-
+// RUN ANALYSIS AND SHOW RESULTS
 void OMSensDialog::runIndivSensAnalysis()
 {
   RunType runType = Individual;
@@ -138,6 +176,23 @@ void OMSensDialog::runVectorialSensAnalysis()
 {
   RunType runType = Vectorial;
   runAnalysisAndShowResult(mpVectSensDialog, runType, mActiveModel);
+}
+
+// SHOW RESULTS OF (PREVIOUS) ANALYSIS
+void OMSensDialog::showIndivSensAnalysis()
+{
+    RunType runType = Individual;
+    showResult(runType);
+}
+void OMSensDialog::showMultiParameterSweepAnalysis()
+{
+    RunType runType = Sweep;
+    showResult(runType);
+}
+void OMSensDialog::showVectorialSensAnalysis()
+{
+    RunType runType = Vectorial;
+    showResult(runType);
 }
 
 QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
@@ -279,6 +334,53 @@ BaseResultsDialog* OMSensDialog::showResultsDialog(RunType runType, QString resu
            break;
     }
     return resultsDialog;
+}
+
+BaseResultsDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runType)
+{
+    BaseResultsDialog *resultsDialog = 0;
+    QString resultsFolderPath;
+    QString analysisResultsJSONPath;
+    QJsonDocument jsonPathsDocument;
+
+    switch (runType)
+    {
+        case Vectorial:
+            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
+                                                         "/home/omsens/Documents/resultados_corridas/vectorial_analysis/",
+                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+            analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
+            jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
+            resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+            break;
+        case Sweep:
+            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
+                                                         "/home/omsens/Documents/resultados_corridas/sweep_results/",
+                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+            analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
+            jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
+            resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+            break;
+        case Individual:
+            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
+                                                         "/home/omsens/Documents/resultados_corridas/indiv_sens_results/",
+                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+
+            analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
+            jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
+            resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+            break;
+    }
+    return resultsDialog;
+
+}
+
+void OMSensDialog::showResult(RunType runType)
+{
+    BaseResultsDialog* resultDialog = showResultsDialogAndGetFolderPath(runType);
+    resultDialog->show();
 }
 
 void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model)

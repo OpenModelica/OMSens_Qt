@@ -69,7 +69,7 @@ void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, 
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/sweep_results";
+    QString defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
     mpParametersTab         = new ParametersExtendedTab(pert_rows);
