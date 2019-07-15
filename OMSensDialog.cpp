@@ -187,12 +187,12 @@ void OMSensDialog::showIndivSensAnalysis()
 void OMSensDialog::showMultiParameterSweepAnalysis()
 {
     RunType runType = Sweep;
-    showResult(runType);
+    showResult( runType);
 }
 void OMSensDialog::showVectorialSensAnalysis()
 {
     RunType runType = Vectorial;
-    showResult(runType);
+    showResult( runType);
 }
 
 QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
@@ -319,7 +319,6 @@ BaseResultsDialog* OMSensDialog::showResultsDialog(RunType runType, QString resu
 {
     QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
     QJsonDocument jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-    // Initialize results instance with JSON document
     BaseResultsDialog *resultsDialog = 0;
     switch (runType)
     {
@@ -346,41 +345,42 @@ BaseResultsDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runTy
     switch (runType)
     {
         case Vectorial:
-            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
-                                                         "/home/omsens/Documents/resultados_corridas/vectorial_analysis/",
-                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
+            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Vectorial analysis: Choose results folder"),
+                                                                  "/home/omsens/Documents/results_experiments/vectorial_analysis",
+                                                                  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+            if(resultsFolderPath == "") break;
             analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
             jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
             resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
             break;
         case Sweep:
-            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
-                                                         "/home/omsens/Documents/resultados_corridas/sweep_results/",
-                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
+            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Multiparameter Sweep: Choose results folder"),
+                                                              "/home/omsens/Documents/results_experiments/sweep_results",
+                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+            if(resultsFolderPath == "") break;
             analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
             jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
             resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
             break;
         case Individual:
-            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
-                                                         "/home/omsens/Documents/resultados_corridas/indiv_sens_results/",
-                                                         QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-
+            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Individual Sensitivity analysis: Choose results folder"),
+                                                              "/home/omsens/Documents/results_experiments/indiv_sens_results",
+                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+            if(resultsFolderPath == "") break;
             analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
             jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
             resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
             break;
     }
     return resultsDialog;
-
 }
 
 void OMSensDialog::showResult(RunType runType)
 {
     BaseResultsDialog* resultDialog = showResultsDialogAndGetFolderPath(runType);
-    resultDialog->show();
+    if(resultDialog) {
+        resultDialog->show();
+    }
 }
 
 void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model)
@@ -388,6 +388,7 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
     // Hide this dialog before opening the new one
     this->hide();
     int dialogCode  = runSpecsDialog->exec();
+
     // If the dialog was accepted by the user, run the analysis
     BaseResultsDialog* resultDialog = 0;
     if(dialogCode == QDialog::Accepted)
