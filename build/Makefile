@@ -78,7 +78,8 @@ SOURCES       = ../dialogs/general/CSVViewerDialog.cpp \
 		../specs/SweepSpecs.cpp \
 		../specs/VectSpecs.cpp \
 		../OMSensPlugin.cpp \
-		../omedit_plugin/model.cpp qrc_resources.cpp \
+		../omedit_plugin/model.cpp \
+		../dialogs/sweep/sweepfromdatadialog.cpp qrc_resources.cpp \
 		moc_CSVViewerDialog.cpp \
 		moc_ImageViewerDialog.cpp \
 		moc_IndivParamSensAnalysisDialog.cpp \
@@ -106,7 +107,8 @@ SOURCES       = ../dialogs/general/CSVViewerDialog.cpp \
 		moc_HelpBrowser.cpp \
 		moc_PerturbationTab.cpp \
 		moc_SciNotationDoubleSpinbox.cpp \
-		moc_OMSensPlugin.cpp
+		moc_OMSensPlugin.cpp \
+		moc_sweepfromdatadialog.cpp
 OBJECTS       = CSVViewerDialog.o \
 		ImageViewerDialog.o \
 		IndivParamSensAnalysisDialog.o \
@@ -136,6 +138,7 @@ OBJECTS       = CSVViewerDialog.o \
 		VectSpecs.o \
 		OMSensPlugin.o \
 		model.o \
+		sweepfromdatadialog.o \
 		qrc_resources.o \
 		moc_CSVViewerDialog.o \
 		moc_ImageViewerDialog.o \
@@ -164,7 +167,8 @@ OBJECTS       = CSVViewerDialog.o \
 		moc_HelpBrowser.o \
 		moc_PerturbationTab.o \
 		moc_SciNotationDoubleSpinbox.o \
-		moc_OMSensPlugin.o
+		moc_OMSensPlugin.o \
+		moc_sweepfromdatadialog.o
 DIST          = ../resource/ModelWithVariousParams.mo \
 		../dialogs/indiv/help.html \
 		../dialogs/sweep/help.html \
@@ -288,7 +292,8 @@ DIST          = ../resource/ModelWithVariousParams.mo \
 		../specs/VectSpecs.h \
 		../OMSensPlugin.h \
 		../omedit_plugin/interfaces.h \
-		../omedit_plugin/model.h ../dialogs/general/CSVViewerDialog.cpp \
+		../omedit_plugin/model.h \
+		../dialogs/sweep/sweepfromdatadialog.h ../dialogs/general/CSVViewerDialog.cpp \
 		../dialogs/general/ImageViewerDialog.cpp \
 		../dialogs/indiv/IndivParamSensAnalysisDialog.cpp \
 		../dialogs/indiv/IndivSensAnalTypeDialog.cpp \
@@ -316,7 +321,8 @@ DIST          = ../resource/ModelWithVariousParams.mo \
 		../specs/SweepSpecs.cpp \
 		../specs/VectSpecs.cpp \
 		../OMSensPlugin.cpp \
-		../omedit_plugin/model.cpp
+		../omedit_plugin/model.cpp \
+		../dialogs/sweep/sweepfromdatadialog.cpp
 QMAKE_TARGET  = omsensplugin
 DESTDIR       = 
 TARGET        = libomsensplugin.so.1.0.0
@@ -333,10 +339,8 @@ first: all
 $(TARGET):  $(OBJECTS) $(SUBLIBS) $(OBJCOMP)  
 	-$(DEL_FILE) $(TARGET) $(TARGET0) $(TARGET1) $(TARGET2)
 	$(LINK) $(LFLAGS) -o $(TARGET) $(OBJECTS) $(LIBS) $(OBJCOMP)
-	-ln -s $(TARGET) $(TARGET0)
-	-ln -s $(TARGET) $(TARGET1)
-	-ln -s $(TARGET) $(TARGET2)
 	-cp --remove-destination $(TARGET) /home/omsens/plugins/libomsensplugin.so
+
 
 
 staticlib: $(TARGETA)
@@ -542,8 +546,8 @@ distdir: FORCE
 	$(COPY_FILE) --parents $(DIST) $(DISTDIR)/
 	$(COPY_FILE) --parents ../resources.qrc $(DISTDIR)/
 	$(COPY_FILE) --parents /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp $(DISTDIR)/
-	$(COPY_FILE) --parents ../dialogs/general/CSVViewerDialog.h ../dialogs/general/ImageViewerDialog.h ../dialogs/indiv/IndivParamSensAnalysisDialog.h ../dialogs/indiv/IndivSensAnalTypeDialog.h ../dialogs/indiv/IndivSensResultsDialog.h ../dialogs/sweep/MultiParamSweepDialog.h ../dialogs/sweep/SweepResultDialog.h ../dialogs/vect/VectorialParamSensAnalysisDialog.h ../dialogs/vect/VectorialResultsDialog.h ../tabs/HelpTab.h ../tabs/OptimizationTab.h ../tabs/ParametersExtendedTab.h ../tabs/ParametersSimpleTab.h ../tabs/SensitivityMethodResultsTab.h ../tabs/SimulationTab.h ../tabs/VariablesTab.h ../DualLists.h ../OMSensDialog.h ../TableItemDelegate.h ../tabs/optim_result/OptimizationResultParametersTab.h ../tabs/optim_result/OptimizationResultOtherTab.h ../dialogs/BaseRunSpecsDialog.h ../dialogs/BaseResultsDialog.h ../tabs/sweep_result/SweepResultVariableTab.h ../dialogs/help/HelpBrowser.h ../tabs/PerturbationTab.h ../ForceSignDoubleSpinbox.h ../SciNotationDoubleSpinbox.h ../specs/IndivSpecs.h ../specs/RunSpecifications.h ../specs/VectSpecs.h ../OMSensPlugin.h ../omedit_plugin/interfaces.h ../omedit_plugin/model.h $(DISTDIR)/
-	$(COPY_FILE) --parents ../dialogs/general/CSVViewerDialog.cpp ../dialogs/general/ImageViewerDialog.cpp ../dialogs/indiv/IndivParamSensAnalysisDialog.cpp ../dialogs/indiv/IndivSensAnalTypeDialog.cpp ../dialogs/indiv/IndivSensResultsDialog.cpp ../dialogs/sweep/MultiParamSweepDialog.cpp ../dialogs/sweep/SweepResultDialog.cpp ../dialogs/vect/VectorialParamSensAnalysisDialog.cpp ../dialogs/vect/VectorialResultsDialog.cpp ../tabs/HelpTab.cpp ../tabs/OptimizationTab.cpp ../tabs/ParametersExtendedTab.cpp ../tabs/ParametersSimpleTab.cpp ../tabs/SensitivityMethodResultsTab.cpp ../tabs/SimulationTab.cpp ../tabs/VariablesTab.cpp ../DualLists.cpp ../main.cpp ../OMSensDialog.cpp ../tabs/optim_result/OptimizationResultParametersTab.cpp ../tabs/optim_result/OptimizationResultOtherTab.cpp ../tabs/sweep_result/SweepResultVariableTab.cpp ../dialogs/help/HelpBrowser.cpp ../tabs/PerturbationTab.cpp ../specs/IndivSpecs.cpp ../specs/SweepSpecs.cpp ../specs/VectSpecs.cpp ../OMSensPlugin.cpp ../omedit_plugin/model.cpp $(DISTDIR)/
+	$(COPY_FILE) --parents ../dialogs/general/CSVViewerDialog.h ../dialogs/general/ImageViewerDialog.h ../dialogs/indiv/IndivParamSensAnalysisDialog.h ../dialogs/indiv/IndivSensAnalTypeDialog.h ../dialogs/indiv/IndivSensResultsDialog.h ../dialogs/sweep/MultiParamSweepDialog.h ../dialogs/sweep/SweepResultDialog.h ../dialogs/vect/VectorialParamSensAnalysisDialog.h ../dialogs/vect/VectorialResultsDialog.h ../tabs/HelpTab.h ../tabs/OptimizationTab.h ../tabs/ParametersExtendedTab.h ../tabs/ParametersSimpleTab.h ../tabs/SensitivityMethodResultsTab.h ../tabs/SimulationTab.h ../tabs/VariablesTab.h ../DualLists.h ../OMSensDialog.h ../TableItemDelegate.h ../tabs/optim_result/OptimizationResultParametersTab.h ../tabs/optim_result/OptimizationResultOtherTab.h ../dialogs/BaseRunSpecsDialog.h ../dialogs/BaseResultsDialog.h ../tabs/sweep_result/SweepResultVariableTab.h ../dialogs/help/HelpBrowser.h ../tabs/PerturbationTab.h ../ForceSignDoubleSpinbox.h ../SciNotationDoubleSpinbox.h ../specs/IndivSpecs.h ../specs/RunSpecifications.h ../specs/VectSpecs.h ../OMSensPlugin.h ../omedit_plugin/interfaces.h ../omedit_plugin/model.h ../dialogs/sweep/sweepfromdatadialog.h $(DISTDIR)/
+	$(COPY_FILE) --parents ../dialogs/general/CSVViewerDialog.cpp ../dialogs/general/ImageViewerDialog.cpp ../dialogs/indiv/IndivParamSensAnalysisDialog.cpp ../dialogs/indiv/IndivSensAnalTypeDialog.cpp ../dialogs/indiv/IndivSensResultsDialog.cpp ../dialogs/sweep/MultiParamSweepDialog.cpp ../dialogs/sweep/SweepResultDialog.cpp ../dialogs/vect/VectorialParamSensAnalysisDialog.cpp ../dialogs/vect/VectorialResultsDialog.cpp ../tabs/HelpTab.cpp ../tabs/OptimizationTab.cpp ../tabs/ParametersExtendedTab.cpp ../tabs/ParametersSimpleTab.cpp ../tabs/SensitivityMethodResultsTab.cpp ../tabs/SimulationTab.cpp ../tabs/VariablesTab.cpp ../DualLists.cpp ../main.cpp ../OMSensDialog.cpp ../tabs/optim_result/OptimizationResultParametersTab.cpp ../tabs/optim_result/OptimizationResultOtherTab.cpp ../tabs/sweep_result/SweepResultVariableTab.cpp ../dialogs/help/HelpBrowser.cpp ../tabs/PerturbationTab.cpp ../specs/IndivSpecs.cpp ../specs/SweepSpecs.cpp ../specs/VectSpecs.cpp ../OMSensPlugin.cpp ../omedit_plugin/model.cpp ../dialogs/sweep/sweepfromdatadialog.cpp $(DISTDIR)/
 
 
 clean: compiler_clean 
@@ -586,9 +590,9 @@ compiler_moc_predefs_clean:
 moc_predefs.h: /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 	g++ -pipe -O2 -Wall -W -dM -E -o moc_predefs.h /usr/lib/x86_64-linux-gnu/qt5/mkspecs/features/data/dummy.cpp
 
-compiler_moc_header_make_all: moc_CSVViewerDialog.cpp moc_ImageViewerDialog.cpp moc_IndivParamSensAnalysisDialog.cpp moc_IndivSensAnalTypeDialog.cpp moc_IndivSensResultsDialog.cpp moc_MultiParamSweepDialog.cpp moc_SweepResultDialog.cpp moc_VectorialParamSensAnalysisDialog.cpp moc_VectorialResultsDialog.cpp moc_HelpTab.cpp moc_OptimizationTab.cpp moc_ParametersExtendedTab.cpp moc_ParametersSimpleTab.cpp moc_SensitivityMethodResultsTab.cpp moc_SimulationTab.cpp moc_VariablesTab.cpp moc_DualLists.cpp moc_OMSensDialog.cpp moc_TableItemDelegate.cpp moc_OptimizationResultParametersTab.cpp moc_OptimizationResultOtherTab.cpp moc_BaseRunSpecsDialog.cpp moc_BaseResultsDialog.cpp moc_SweepResultVariableTab.cpp moc_HelpBrowser.cpp moc_PerturbationTab.cpp moc_SciNotationDoubleSpinbox.cpp moc_OMSensPlugin.cpp
+compiler_moc_header_make_all: moc_CSVViewerDialog.cpp moc_ImageViewerDialog.cpp moc_IndivParamSensAnalysisDialog.cpp moc_IndivSensAnalTypeDialog.cpp moc_IndivSensResultsDialog.cpp moc_MultiParamSweepDialog.cpp moc_SweepResultDialog.cpp moc_VectorialParamSensAnalysisDialog.cpp moc_VectorialResultsDialog.cpp moc_HelpTab.cpp moc_OptimizationTab.cpp moc_ParametersExtendedTab.cpp moc_ParametersSimpleTab.cpp moc_SensitivityMethodResultsTab.cpp moc_SimulationTab.cpp moc_VariablesTab.cpp moc_DualLists.cpp moc_OMSensDialog.cpp moc_TableItemDelegate.cpp moc_OptimizationResultParametersTab.cpp moc_OptimizationResultOtherTab.cpp moc_BaseRunSpecsDialog.cpp moc_BaseResultsDialog.cpp moc_SweepResultVariableTab.cpp moc_HelpBrowser.cpp moc_PerturbationTab.cpp moc_SciNotationDoubleSpinbox.cpp moc_OMSensPlugin.cpp moc_sweepfromdatadialog.cpp
 compiler_moc_header_clean:
-	-$(DEL_FILE) moc_CSVViewerDialog.cpp moc_ImageViewerDialog.cpp moc_IndivParamSensAnalysisDialog.cpp moc_IndivSensAnalTypeDialog.cpp moc_IndivSensResultsDialog.cpp moc_MultiParamSweepDialog.cpp moc_SweepResultDialog.cpp moc_VectorialParamSensAnalysisDialog.cpp moc_VectorialResultsDialog.cpp moc_HelpTab.cpp moc_OptimizationTab.cpp moc_ParametersExtendedTab.cpp moc_ParametersSimpleTab.cpp moc_SensitivityMethodResultsTab.cpp moc_SimulationTab.cpp moc_VariablesTab.cpp moc_DualLists.cpp moc_OMSensDialog.cpp moc_TableItemDelegate.cpp moc_OptimizationResultParametersTab.cpp moc_OptimizationResultOtherTab.cpp moc_BaseRunSpecsDialog.cpp moc_BaseResultsDialog.cpp moc_SweepResultVariableTab.cpp moc_HelpBrowser.cpp moc_PerturbationTab.cpp moc_SciNotationDoubleSpinbox.cpp moc_OMSensPlugin.cpp
+	-$(DEL_FILE) moc_CSVViewerDialog.cpp moc_ImageViewerDialog.cpp moc_IndivParamSensAnalysisDialog.cpp moc_IndivSensAnalTypeDialog.cpp moc_IndivSensResultsDialog.cpp moc_MultiParamSweepDialog.cpp moc_SweepResultDialog.cpp moc_VectorialParamSensAnalysisDialog.cpp moc_VectorialResultsDialog.cpp moc_HelpTab.cpp moc_OptimizationTab.cpp moc_ParametersExtendedTab.cpp moc_ParametersSimpleTab.cpp moc_SensitivityMethodResultsTab.cpp moc_SimulationTab.cpp moc_VariablesTab.cpp moc_DualLists.cpp moc_OMSensDialog.cpp moc_TableItemDelegate.cpp moc_OptimizationResultParametersTab.cpp moc_OptimizationResultOtherTab.cpp moc_BaseRunSpecsDialog.cpp moc_BaseResultsDialog.cpp moc_SweepResultVariableTab.cpp moc_HelpBrowser.cpp moc_PerturbationTab.cpp moc_SciNotationDoubleSpinbox.cpp moc_OMSensPlugin.cpp moc_sweepfromdatadialog.cpp
 moc_CSVViewerDialog.cpp: ../dialogs/general/CSVViewerDialog.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
@@ -787,6 +791,13 @@ moc_OMSensPlugin.cpp: ../omedit_plugin/interfaces.h \
 		moc_predefs.h \
 		/usr/lib/qt5/bin/moc
 	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/shared/Documents_REAL/OMSens_Qt -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../OMSensPlugin.h -o moc_OMSensPlugin.cpp
+
+moc_sweepfromdatadialog.cpp: ../dialogs/BaseResultsDialog.h \
+		../tabs/sweep_result/SweepResultVariableTab.h \
+		../dialogs/sweep/sweepfromdatadialog.h \
+		moc_predefs.h \
+		/usr/lib/qt5/bin/moc
+	/usr/lib/qt5/bin/moc $(DEFINES) --include ./moc_predefs.h -I/usr/lib/x86_64-linux-gnu/qt5/mkspecs/linux-g++ -I/shared/Documents_REAL/OMSens_Qt -I/usr/include/x86_64-linux-gnu/qt5 -I/usr/include/x86_64-linux-gnu/qt5/QtWidgets -I/usr/include/x86_64-linux-gnu/qt5/QtGui -I/usr/include/x86_64-linux-gnu/qt5/QtCore -I. -I/usr/include/c++/7 -I/usr/include/x86_64-linux-gnu/c++/7 -I/usr/include/c++/7/backward -I/usr/lib/gcc/x86_64-linux-gnu/7/include -I/usr/local/include -I/usr/lib/gcc/x86_64-linux-gnu/7/include-fixed -I/usr/include/x86_64-linux-gnu -I/usr/include ../dialogs/sweep/sweepfromdatadialog.h -o moc_sweepfromdatadialog.cpp
 
 compiler_moc_source_make_all:
 compiler_moc_source_clean:
@@ -1019,6 +1030,11 @@ OMSensPlugin.o: ../OMSensPlugin.cpp ../OMSensPlugin.h \
 model.o: ../omedit_plugin/model.cpp ../omedit_plugin/model.h
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o model.o ../omedit_plugin/model.cpp
 
+sweepfromdatadialog.o: ../dialogs/sweep/sweepfromdatadialog.cpp ../dialogs/sweep/sweepfromdatadialog.h \
+		../dialogs/BaseResultsDialog.h \
+		../tabs/sweep_result/SweepResultVariableTab.h
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o sweepfromdatadialog.o ../dialogs/sweep/sweepfromdatadialog.cpp
+
 qrc_resources.o: qrc_resources.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o qrc_resources.o qrc_resources.cpp
 
@@ -1105,6 +1121,9 @@ moc_SciNotationDoubleSpinbox.o: moc_SciNotationDoubleSpinbox.cpp
 
 moc_OMSensPlugin.o: moc_OMSensPlugin.cpp 
 	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_OMSensPlugin.o moc_OMSensPlugin.cpp
+
+moc_sweepfromdatadialog.o: moc_sweepfromdatadialog.cpp 
+	$(CXX) -c $(CXXFLAGS) $(INCPATH) -o moc_sweepfromdatadialog.o moc_sweepfromdatadialog.cpp
 
 ####### Install
 

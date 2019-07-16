@@ -101,10 +101,10 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
 
     // Load experiment
-    mpLoadExperimentButton = new QPushButton(tr("Load"));
-    mpLoadExperimentButton->setAutoDefault(true);
-    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+//    mpLoadExperimentButton = new QPushButton(tr("Load"));
+//    mpLoadExperimentButton->setAutoDefault(true);
+//    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+//    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;

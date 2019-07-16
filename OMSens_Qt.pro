@@ -56,7 +56,8 @@ SOURCES += \
     specs/SweepSpecs.cpp \
     specs/VectSpecs.cpp \
     OMSensPlugin.cpp \
-    omedit_plugin/model.cpp
+    omedit_plugin/model.cpp \
+    dialogs/sweep/sweepfromdatadialog.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -92,7 +93,8 @@ HEADERS += \
     specs/VectSpecs.h \
     OMSensPlugin.h \
     omedit_plugin/interfaces.h \
-    omedit_plugin/model.h
+    omedit_plugin/model.h \
+    dialogs/sweep/sweepfromdatadialog.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

@@ -21,8 +21,8 @@ QT_BEGIN_MOC_NAMESPACE
 QT_WARNING_PUSH
 QT_WARNING_DISABLE_DEPRECATED
 struct qt_meta_stringdata_OMSensDialog_t {
-    QByteArrayData data[11];
-    char stringdata0[236];
+    QByteArrayData data[14];
+    char stringdata0[316];
 };
 #define QT_MOC_LITERAL(idx, ofs, len) \
     Q_STATIC_BYTE_ARRAY_DATA_HEADER_INITIALIZER_WITH_OFFSET(len, \
@@ -36,17 +36,23 @@ QT_MOC_LITERAL(1, 13, 20), // "runIndivSensAnalysis"
 QT_MOC_LITERAL(2, 34, 0), // ""
 QT_MOC_LITERAL(3, 35, 22), // "runMultiParameterSweep"
 QT_MOC_LITERAL(4, 58, 24), // "runVectorialSensAnalysis"
-QT_MOC_LITERAL(5, 83, 22), // "openSensAnalysisResult"
-QT_MOC_LITERAL(6, 106, 21), // "openSensAnalysisImage"
-QT_MOC_LITERAL(7, 128, 37), // "launchOMSensBackendChooseFold..."
-QT_MOC_LITERAL(8, 166, 33), // "launchPythonBinChooseFolderDi..."
-QT_MOC_LITERAL(9, 200, 10), // "helpDialog"
-QT_MOC_LITERAL(10, 211, 24) // "loadExperimentFileDialog"
+QT_MOC_LITERAL(5, 83, 31), // "showMultiParameterSweepAnalysis"
+QT_MOC_LITERAL(6, 115, 25), // "showVectorialSensAnalysis"
+QT_MOC_LITERAL(7, 141, 21), // "showIndivSensAnalysis"
+QT_MOC_LITERAL(8, 163, 22), // "openSensAnalysisResult"
+QT_MOC_LITERAL(9, 186, 21), // "openSensAnalysisImage"
+QT_MOC_LITERAL(10, 208, 37), // "launchOMSensBackendChooseFold..."
+QT_MOC_LITERAL(11, 246, 33), // "launchPythonBinChooseFolderDi..."
+QT_MOC_LITERAL(12, 280, 10), // "helpDialog"
+QT_MOC_LITERAL(13, 291, 24) // "loadExperimentFileDialog"
 
     },
     "OMSensDialog\0runIndivSensAnalysis\0\0"
     "runMultiParameterSweep\0runVectorialSensAnalysis\0"
-    "openSensAnalysisResult\0openSensAnalysisImage\0"
+    "showMultiParameterSweepAnalysis\0"
+    "showVectorialSensAnalysis\0"
+    "showIndivSensAnalysis\0openSensAnalysisResult\0"
+    "openSensAnalysisImage\0"
     "launchOMSensBackendChooseFolderDialog\0"
     "launchPythonBinChooseFolderDialog\0"
     "helpDialog\0loadExperimentFileDialog"
@@ -59,7 +65,7 @@ static const uint qt_meta_data_OMSensDialog[] = {
        7,       // revision
        0,       // classname
        0,    0, // classinfo
-       9,   14, // methods
+      12,   14, // methods
        0,    0, // properties
        0,    0, // enums/sets
        0,    0, // constructors
@@ -67,17 +73,23 @@ static const uint qt_meta_data_OMSensDialog[] = {
        0,       // signalCount
 
  // slots: name, argc, parameters, tag, flags
-       1,    0,   59,    2, 0x0a /* Public */,
-       3,    0,   60,    2, 0x0a /* Public */,
-       4,    0,   61,    2, 0x0a /* Public */,
-       5,    0,   62,    2, 0x0a /* Public */,
-       6,    0,   63,    2, 0x0a /* Public */,
-       7,    0,   64,    2, 0x0a /* Public */,
-       8,    0,   65,    2, 0x0a /* Public */,
-       9,    0,   66,    2, 0x0a /* Public */,
-      10,    0,   67,    2, 0x0a /* Public */,
+       1,    0,   74,    2, 0x0a /* Public */,
+       3,    0,   75,    2, 0x0a /* Public */,
+       4,    0,   76,    2, 0x0a /* Public */,
+       5,    0,   77,    2, 0x0a /* Public */,
+       6,    0,   78,    2, 0x0a /* Public */,
+       7,    0,   79,    2, 0x0a /* Public */,
+       8,    0,   80,    2, 0x0a /* Public */,
+       9,    0,   81,    2, 0x0a /* Public */,
+      10,    0,   82,    2, 0x0a /* Public */,
+      11,    0,   83,    2, 0x0a /* Public */,
+      12,    0,   84,    2, 0x0a /* Public */,
+      13,    0,   85,    2, 0x0a /* Public */,
 
  // slots: parameters
+    QMetaType::Void,
+    QMetaType::Void,
+    QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
     QMetaType::Void,
@@ -100,12 +112,15 @@ void OMSensDialog::qt_static_metacall(QObject *_o, QMetaObject::Call _c, int _id
         case 0: _t->runIndivSensAnalysis(); break;
         case 1: _t->runMultiParameterSweep(); break;
         case 2: _t->runVectorialSensAnalysis(); break;
-        case 3: _t->openSensAnalysisResult(); break;
-        case 4: _t->openSensAnalysisImage(); break;
-        case 5: _t->launchOMSensBackendChooseFolderDialog(); break;
-        case 6: _t->launchPythonBinChooseFolderDialog(); break;
-        case 7: _t->helpDialog(); break;
-        case 8: _t->loadExperimentFileDialog(); break;
+        case 3: _t->showMultiParameterSweepAnalysis(); break;
+        case 4: _t->showVectorialSensAnalysis(); break;
+        case 5: _t->showIndivSensAnalysis(); break;
+        case 6: _t->openSensAnalysisResult(); break;
+        case 7: _t->openSensAnalysisImage(); break;
+        case 8: _t->launchOMSensBackendChooseFolderDialog(); break;
+        case 9: _t->launchPythonBinChooseFolderDialog(); break;
+        case 10: _t->helpDialog(); break;
+        case 11: _t->loadExperimentFileDialog(); break;
         default: ;
         }
     }
@@ -137,13 +152,13 @@ int OMSensDialog::qt_metacall(QMetaObject::Call _c, int _id, void **_a)
     if (_id < 0)
         return _id;
     if (_c == QMetaObject::InvokeMetaMethod) {
-        if (_id < 9)
+        if (_id < 12)
             qt_static_metacall(this, _c, _id, _a);
-        _id -= 9;
+        _id -= 12;
     } else if (_c == QMetaObject::RegisterMethodArgumentMetaType) {
-        if (_id < 9)
+        if (_id < 12)
             *reinterpret_cast<int*>(_a[0]) = -1;
-        _id -= 9;
+        _id -= 12;
     }
     return _id;
 }
