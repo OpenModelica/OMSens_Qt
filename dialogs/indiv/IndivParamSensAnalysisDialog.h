@@ -34,7 +34,8 @@ public:
     QStringList getParametersToPerturb() const;
 
     // Conventions
-    QString pythonScriptName();
+    QString pythonScriptPath();
+    QString pythonScriptDirPath();
 
 private:
     // GUI members

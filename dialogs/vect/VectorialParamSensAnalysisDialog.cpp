@@ -9,9 +9,15 @@
 #include <QTextStream>
 
 // Conventions
-QString VectorialSensAnalysisDialog::pythonScriptName()
+QString VectorialSensAnalysisDialog::pythonScriptPath()
 {
-    return "vectorial_analysis.py" ;
+    return "/home/omsens/Documents/OMSens/callable_methods/vectorial_analysis.py" ;
+}
+QString VectorialSensAnalysisDialog::pythonScriptDirPath()
+{
+    // return "/home/omsens/Documents/experiments_results/vectorial_analysis/" ;
+    // OMSens
+    return "/home/omsens/Documents/OMSens/" ;
 }
 
 // Constructors

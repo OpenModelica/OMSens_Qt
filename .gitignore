@@ -31,8 +31,8 @@
 *.out
 *.app
 /OMSens_Qt.pro.user
-/build/*.cpp
-/build/*.o
-/build/OMSens_Qt
-/build/*.h
-/build/libomsensplugin.so.1.0.0
+/build
+/build-debug
+
+# Makefile
+Makefile

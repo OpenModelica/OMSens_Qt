@@ -9,8 +9,11 @@
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
 #include "dialogs/indiv/IndivSensResultsDialog.h"
+
 #include "dialogs/sweep/MultiParamSweepDialog.h"
 #include "dialogs/sweep/SweepResultDialog.h"
+#include "dialogs/sweep/SweepFromDataDialog.h"
+
 #include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
 #include "dialogs/vect/VectorialResultsDialog.h"
 #include "dialogs/general/ImageViewerDialog.h"
@@ -30,7 +33,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     setWindowTitle("OMSens");
 
     // OMSens python backend path
-    mOMSensPath = "/home/omsens/Documents/OMSens/" ;
+    mOMSensPath = "/home/omsens/Documents/OMSens/";
 
     // Python executable path
     mPythonBinPath = "/home/omsens/anaconda3/bin/python";
@@ -61,6 +64,8 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpHorizontalLineOne= new QFrame;
     mpHorizontalLineOne->setFrameShape(QFrame::HLine);
     mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
+
+
 
     // Individual parameters
     mpIndivButton = new QPushButton(tr("Run"));
@@ -224,14 +229,18 @@ QString OMSensDialog::progressDialogTextForCurrentTime()
 bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
 {
     QProcess pythonScriptProcess;
+
     // Set working dir path
     pythonScriptProcess.setWorkingDirectory(scriptDirPath);
+
     // Initialize dialog showing progress
     QString progressDialogText = progressDialogTextForCurrentTime();
     QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
     dialog->setAttribute(Qt::WA_DeleteOnClose);
+
     // Connect command "close" with dialog close
     connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
+
     // Connect dialog "cancel"  with command kill
     connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
 
@@ -307,11 +316,13 @@ QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBin
     return command;
 }
 
-bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
+bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath,
+                                       QString scriptPath, QString pythonBinPath)
 {
-    QString command = commandCallFromPaths(scriptPath, pythonBinPath, jsonSpecsPath, resultsFolderPath);
-    bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command);
+    QString command = pythonBinPath + " " + scriptPath;
+    command += " " + jsonSpecsPath + " --dest_folder_path " + resultsFolderPath;
 
+    bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command);
     return processEndedCorrectly;
 }
 
@@ -354,13 +365,10 @@ BaseResultsDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runTy
             resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
             break;
         case Sweep:
-            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Multiparameter Sweep: Choose results folder"),
-                                                              "/home/omsens/Documents/results_experiments/sweep_results",
-                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-            if(resultsFolderPath == "") break;
+            resultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
             analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
             jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-            resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+            resultsDialog = new SweepFromDataDialog(jsonPathsDocument, resultsFolderPath, this);
             break;
         case Individual:
             resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Individual Sensitivity analysis: Choose results folder"),
@@ -394,8 +402,9 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
     if(dialogCode == QDialog::Accepted)
     {
         // Get script path from OMSens dir and script file name
-        QString scriptFileName = runSpecsDialog->pythonScriptName();
-        QString scriptPath = QDir::cleanPath(mOMSensPath + QDir::separator() + scriptFileName);
+        QString scriptDirPath = runSpecsDialog->pythonScriptDirPath();
+        QString scriptPath = runSpecsDialog->pythonScriptPath();
+
         // python executable path from class member
         QString pythonBinPath = mPythonBinPath;
 
@@ -412,9 +421,10 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
         QString model_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + model_specs_file_name);
         QJsonDocument model_specs = model.toJson();
         writeJsonToDisk(model_specs_path, model_specs);
+
         // Run command
-        QString scriptDirPath = dirPathForFilePath(scriptPath);
         bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, resultsFolderPath, scriptPath, pythonBinPath);
+
         // If the process ended correctly, show the results dialog
         if (processEndedCorrectly)
         {

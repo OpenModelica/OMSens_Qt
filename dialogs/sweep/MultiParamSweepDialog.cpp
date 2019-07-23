@@ -14,10 +14,15 @@
 #include "../../tabs/HelpTab.h"
 
 // Conventions
-QString MultiParamSweepDialog::pythonScriptName()
+QString MultiParamSweepDialog::pythonScriptPath()
 {
     // Conventions
-    return "multiparam_sweep.py";
+    return "/home/omsens/Documents/OMSens/callable_methods/multiparam_sweep.py";
+}
+QString MultiParamSweepDialog::pythonScriptDirPath()
+{
+    // Conventions
+    return "/home/omsens/Documents/experiments_results/sweep_results/";
 }
 
 // Constructors

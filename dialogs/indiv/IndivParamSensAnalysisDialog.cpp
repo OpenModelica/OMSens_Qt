@@ -15,9 +15,13 @@
 #include "../../tabs/HelpTab.h"
 
 // Conventions
-QString IndivParamSensAnalysisDialog::pythonScriptName()
+QString IndivParamSensAnalysisDialog::pythonScriptPath()
 {
-    return "individual_sens_calculator.py";
+    return "/home/omsens/Documents/OMSens/callable_methods/individual_sens_calculator.py";
+}
+QString IndivParamSensAnalysisDialog::pythonScriptDirPath()
+{
+    return "/home/omsens/Documents/experiments_results/indiv_sens_results/";
 }
 
 // Constructors

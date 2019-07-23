@@ -14,7 +14,8 @@ public:
     virtual QString getDestFolderPath() const = 0;
 
     // Convention
-    virtual QString pythonScriptName() = 0;
+    virtual QString pythonScriptPath() = 0;
+    virtual QString pythonScriptDirPath() = 0;
 
 signals:
 
