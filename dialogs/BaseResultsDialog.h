@@ -48,7 +48,7 @@ public:
 public slots:
    void fileBrowserInResultsFolder(bool)
    {
-       QString folderPath =mpResultsFolderPathValue->text();
+       QString folderPath = mpResultsFolderPathValue->text();
        QDesktopServices::openUrl(QUrl::fromLocalFile(folderPath));
    }
 };

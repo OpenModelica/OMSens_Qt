@@ -105,12 +105,6 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
 
-    // Load experiment
-//    mpLoadExperimentButton = new QPushButton(tr("Load"));
-//    mpLoadExperimentButton->setAutoDefault(true);
-//    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-//    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
-
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     // OMSens folder
@@ -155,11 +149,6 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
 
     // Separator
     mainLayout->addWidget(mpHorizontalLineTwo);
-
-    // Don't show the help for now
-    //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
-
-    // mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignLeft);
 
     // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);
@@ -402,8 +391,8 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
     if(dialogCode == QDialog::Accepted)
     {
         // Get script path from OMSens dir and script file name
-        QString scriptDirPath = runSpecsDialog->pythonScriptDirPath();
-        QString scriptPath = runSpecsDialog->pythonScriptPath();
+        QString scriptPath = runSpecsDialog->mPythonScriptPath;
+        QString scriptDirPath = runSpecsDialog->mPythonScriptLibraryPath;
 
         // python executable path from class member
         QString pythonBinPath = mPythonBinPath;

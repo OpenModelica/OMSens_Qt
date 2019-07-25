@@ -14,16 +14,6 @@
 #include "../../tabs/SimulationTab.h"
 #include "../../tabs/HelpTab.h"
 
-// Conventions
-QString IndivParamSensAnalysisDialog::pythonScriptPath()
-{
-    return "/home/omsens/Documents/OMSens/callable_methods/individual_sens_calculator.py";
-}
-QString IndivParamSensAnalysisDialog::pythonScriptDirPath()
-{
-    return "/home/omsens/Documents/experiments_results/indiv_sens_results/";
-}
-
 // Constructors
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, IndivSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
@@ -72,10 +62,15 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget 
 // Initialize
 void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
 {
+    // Conventions
+    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
+    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/individual_sens_calculator.py";
+    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/indiv_sens_results";
+
     // Help text description
     QString helpText = readHelpText();
+
     // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/indiv_sens_results";
     QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);

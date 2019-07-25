@@ -28,6 +28,11 @@ private:
     QList<QString> mVariables;
 
     QString progressDialogTextForCurrentTime();
+
+    QString mPythonScriptLibraryPath;
+    QString mPythonScriptPath;
+    QString defaultResultsFolderPath;
+
     int makePlot();
 
 };

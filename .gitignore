@@ -31,8 +31,8 @@
 *.out
 *.app
 /OMSens_Qt.pro.user
-/build
-/build-debug
-
+/build_debug
+/build_release
+/build_profile
 # Makefile
 Makefile

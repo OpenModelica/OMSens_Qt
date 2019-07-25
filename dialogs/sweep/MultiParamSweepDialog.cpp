@@ -13,18 +13,6 @@
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
 
-// Conventions
-QString MultiParamSweepDialog::pythonScriptPath()
-{
-    // Conventions
-    return "/home/omsens/Documents/OMSens/callable_methods/multiparam_sweep.py";
-}
-QString MultiParamSweepDialog::pythonScriptDirPath()
-{
-    // Conventions
-    return "/home/omsens/Documents/experiments_results/sweep_results/";
-}
-
 // Constructors
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, SweepSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
@@ -68,13 +56,17 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     initialize(vars_inclusion, pert_rows, modelName, modelFilePath, startTime, stopTime);
 }
 void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime)
-    {
+{
     initializeWindowSettings();
+
+    // Conventions
+    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
+    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/multiparam_sweep.py";
+    defaultResultsFolderPath = mPythonScriptLibraryPath + "results_experiments/sweep_results";
 
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
     mpParametersTab         = new ParametersExtendedTab(pert_rows);

@@ -31,10 +31,6 @@ public:
     QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
 
-    // Conventions
-    QString pythonScriptPath();
-    QString pythonScriptDirPath();
-
     QString helpTextPath = ":/OMSens/sweep/help.html";
     // Conventions for parameters perturbation rows
     int    default_perturbation_type_id = ParametersExtendedTab::NoPerturbationId;

@@ -8,18 +8,6 @@
 #include <QJsonDocument>
 #include <QTextStream>
 
-// Conventions
-QString VectorialSensAnalysisDialog::pythonScriptPath()
-{
-    return "/home/omsens/Documents/OMSens/callable_methods/vectorial_analysis.py" ;
-}
-QString VectorialSensAnalysisDialog::pythonScriptDirPath()
-{
-    // return "/home/omsens/Documents/experiments_results/vectorial_analysis/" ;
-    // OMSens
-    return "/home/omsens/Documents/OMSens/" ;
-}
-
 // Constructors
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
@@ -76,10 +64,14 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString t
     {
     initializeWindowSettings();
 
+    // Conventions
+    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
+    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/vectorial_analysis.py";
+    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/vectorial_analysis";
+
     // Help text description
     QString helpText = readHelpText();
-    // Initialize tabs
-    QString defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/vectorial_analysis";
+
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
     mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);

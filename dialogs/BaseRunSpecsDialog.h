@@ -14,8 +14,9 @@ public:
     virtual QString getDestFolderPath() const = 0;
 
     // Convention
-    virtual QString pythonScriptPath() = 0;
-    virtual QString pythonScriptDirPath() = 0;
+    QString mPythonScriptLibraryPath;
+    QString mPythonScriptPath;
+    QString defaultResultsFolderPath;
 
 signals:
 

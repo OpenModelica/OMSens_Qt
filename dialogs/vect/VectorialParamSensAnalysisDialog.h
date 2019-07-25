@@ -29,9 +29,6 @@ public:
     // Getters
     QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
-    // Conventions
-    QString pythonScriptPath();
-    QString pythonScriptDirPath();
 
 private:
     void initialize(QList<QString> variables, QString target_var, bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
