@@ -9,7 +9,7 @@
 
 SweepFromDataDialog::SweepFromDataDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent) : BaseResultsDialog(pParent)
 {
-    initialize();
+
     QJsonObject sweepResultsObject = sweepResults.object();
 
     // Choose type of plot (Histogram, etc.)
@@ -17,7 +17,7 @@ SweepFromDataDialog::SweepFromDataDialog(QJsonDocument sweepResults, QString res
     // Buttons
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Okey", QDialogButtonBox::AcceptRole);
-    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &SweepFromDataDialog::makeHistogramFromData);
+    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &SweepFromDataDialog::makePlot);
 
     // Dialog settings
     setWindowTitle("Multiparameter Sweep Fetch Results and Plots");
@@ -30,12 +30,12 @@ SweepFromDataDialog::SweepFromDataDialog(QJsonDocument sweepResults, QString res
     setLayout(pMainLayout);
 }
 
-void SweepFromDataDialog::initialize()
-{
-    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
-    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/plot_histogram.py";
-    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
-}
+//void SweepFromDataDialog::initialize()
+//{
+//    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
+//    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/plot_histogram.py";
+//    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
+//}
 
 QString SweepFromDataDialog::progressDialogTextForCurrentTime()
 {
@@ -49,7 +49,7 @@ QString SweepFromDataDialog::progressDialogTextForCurrentTime()
 }
 
 
-int SweepFromDataDialog::makeHistogramFromData()
+int SweepFromDataDialog::makePlot()
 {
     QProcess pythonScriptProcess;
 

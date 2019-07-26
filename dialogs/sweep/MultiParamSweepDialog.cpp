@@ -62,7 +62,7 @@ void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, 
     // Conventions
     mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
     mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/multiparam_sweep.py";
-    defaultResultsFolderPath = mPythonScriptLibraryPath + "results_experiments/sweep_results";
+    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
 
     // Help text description
     QString helpText = readHelpText();
