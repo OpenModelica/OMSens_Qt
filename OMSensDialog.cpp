@@ -335,9 +335,10 @@ BaseResultsDialog* OMSensDialog::showResultsDialog(RunType runType, QString resu
     return resultsDialog;
 }
 
-BaseResultsDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runType)
+QDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runType)
 {
     BaseResultsDialog *resultsDialog = 0;
+
     QString resultsFolderPath;
     QString analysisResultsJSONPath;
     QJsonDocument jsonPathsDocument;
@@ -357,7 +358,7 @@ BaseResultsDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runTy
             resultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
             analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
             jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-            resultsDialog = new SweepFromDataDialog(jsonPathsDocument, resultsFolderPath, this);
+            resultsDialog = new SweepFromDataDialog(this);
             break;
         case Individual:
             resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Individual Sensitivity analysis: Choose results folder"),
@@ -374,7 +375,8 @@ BaseResultsDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runTy
 
 void OMSensDialog::showResult(RunType runType)
 {
-    BaseResultsDialog* resultDialog = showResultsDialogAndGetFolderPath(runType);
+    //BaseResultsDialog* resultDialog = showResultsDialogAndGetFolderPath(runType);
+    QDialog *resultDialog = showResultsDialogAndGetFolderPath(runType);
     if(resultDialog) {
         resultDialog->show();
     }

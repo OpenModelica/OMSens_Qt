@@ -69,7 +69,7 @@ private:
     BaseResultsDialog* showResultsDialog(RunType runType, QString resultsFolderPath);
 
     void showResult(RunType runType);
-    BaseResultsDialog* showResultsDialogAndGetFolderPath(RunType runType);
+    QDialog* showResultsDialogAndGetFolderPath(RunType runType);
 
 
 signals:

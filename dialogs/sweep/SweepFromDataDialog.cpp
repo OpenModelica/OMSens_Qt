@@ -1,5 +1,7 @@
 #include "SweepFromDataDialog.h"
+#include "../functions/HistogramCreator.h"
 #include <QProcess>
+#include <QDialog>
 #include <QDateTime>
 #include <QProgressDialog>
 #include <QWidget>
@@ -7,17 +9,17 @@
 #include <QFormLayout>
 #include <QPushButton>
 
-SweepFromDataDialog::SweepFromDataDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent) : BaseResultsDialog(pParent)
+SweepFromDataDialog::SweepFromDataDialog(QWidget *pParent) : BaseResultsDialog(pParent)
 {
-
-    QJsonObject sweepResultsObject = sweepResults.object();
 
     // Choose type of plot (Histogram, etc.)
 
     // Buttons
     mpButtonBox = new QDialogButtonBox;
-    mpButtonBox->addButton("Okey", QDialogButtonBox::AcceptRole);
-    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &SweepFromDataDialog::makePlot);
+    mpButtonBox->addButton("Histogram", QDialogButtonBox::AcceptRole);
+
+    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &SweepFromDataDialog::makeHistogram);
+
 
     // Dialog settings
     setWindowTitle("Multiparameter Sweep Fetch Results and Plots");
@@ -30,64 +32,62 @@ SweepFromDataDialog::SweepFromDataDialog(QJsonDocument sweepResults, QString res
     setLayout(pMainLayout);
 }
 
-//void SweepFromDataDialog::initialize()
+int SweepFromDataDialog::makeHistogram()
+{
+    HistogramCreator *h = new HistogramCreator(this);
+    h->show();
+}
+
+//QString SweepFromDataDialog::progressDialogTextForCurrentTime()
 //{
-//    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
-//    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/plot_histogram.py";
-//    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
+//    QDateTime currentTime = QDateTime::currentDateTime();
+//    QString date = currentTime.toString("dd/MM/yyyy");
+//    QString h_m_s = currentTime.toString("H:m:s");
+//    QString scriptRunStartString = "(started on " + date + " at " + h_m_s + ")";
+//    QString progressDialogText = "Running python script... " + scriptRunStartString;
+
+//    return progressDialogText;
 //}
 
-QString SweepFromDataDialog::progressDialogTextForCurrentTime()
-{
-    QDateTime currentTime = QDateTime::currentDateTime();
-    QString date = currentTime.toString("dd/MM/yyyy");
-    QString h_m_s = currentTime.toString("H:m:s");
-    QString scriptRunStartString = "(started on " + date + " at " + h_m_s + ")";
-    QString progressDialogText = "Running python script... " + scriptRunStartString;
+//int SweepFromDataDialog::makeHistogram()
+//{
+//    QProcess pythonScriptProcess;
 
-    return progressDialogText;
-}
+//    QString scriptPathBaseDir = "/home/omsens/Documents/OMSens/";
+//    QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
+//    QString scriptPath = "/home/omsens/Documents/OMSens/callable_methods/plot_histogram.py";
 
+//    QString command = pythonBinPath + " " + scriptPath;
 
-int SweepFromDataDialog::makePlot()
-{
-    QProcess pythonScriptProcess;
+//    // Set working dir path
+//    pythonScriptProcess.setWorkingDirectory(scriptPathBaseDir);
 
-    QString scriptPathBaseDir = "/home/omsens/Documents/OMSens/";
-    QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
-    QString scriptPath = "/home/omsens/Documents/OMSens/callable_methods/plot_histogram.py";
+//    // Initialize dialog showing progress
+//    QString progressDialogText = progressDialogTextForCurrentTime();
+//    QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
+//    dialog->setAttribute(Qt::WA_DeleteOnClose);
+//    connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
 
-    QString command = pythonBinPath + " " + scriptPath;
+//    // Connect dialog "cancel"  with command kill
+//    connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
 
-    // Set working dir path
-    pythonScriptProcess.setWorkingDirectory(scriptPathBaseDir);
+//    // Start process
+//    pythonScriptProcess.start(command);
 
-    // Initialize dialog showing progress
-    QString progressDialogText = progressDialogTextForCurrentTime();
-    QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
-    connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
+//    // Show dialog with progress
+//    dialog->exec();
 
-    // Connect dialog "cancel"  with command kill
-    connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
+//    // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
+//    pythonScriptProcess.waitForFinished(3000);
 
-    // Start process
-    pythonScriptProcess.start(command);
+//    // See if the process ended correctly
+//    QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
+//    int exitCode = pythonScriptProcess.exitCode();
 
-    // Show dialog with progress
-    dialog->exec();
+//    bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
 
-    // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
-    pythonScriptProcess.waitForFinished(3000);
-
-    // See if the process ended correctly
-    QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
-    int exitCode = pythonScriptProcess.exitCode();
-
-    bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
-
-    return processEndedCorrectly;
-}
+//    return processEndedCorrectly;
+//}
 
 
 

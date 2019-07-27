@@ -17,7 +17,7 @@ class SweepFromDataDialog: public BaseResultsDialog
 {
     Q_OBJECT
 public:
-    SweepFromDataDialog(QJsonDocument sweepResults, QString resultsFolderPath, QWidget *pParent = 0);
+    SweepFromDataDialog(QWidget *pParent = 0);
 private:
     // GUI (there are some components defined in the superclass)
     QTabWidget *mpTabWidget;
@@ -33,7 +33,7 @@ private:
     QString mPythonScriptPath;
     QString defaultResultsFolderPath;
 
-    int makePlot();
+    int makeHistogram();
 
 };
 
