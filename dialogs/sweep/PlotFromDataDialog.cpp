@@ -13,11 +13,14 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 {
     plot_mPythonBinPath     = mPythonBinPath;
     plot_mOMSensPath        = mOMSensPath;
-    plot_mOMSensResultsPath = mOMSensResultsPath;
+    plot_mOMSensResultsPath = mOMSensResultsPath + "sweep_results/";
 
     // Dialog settings
     setMinimumWidth(410);
     setWindowTitle("Multiparameter Sweep Plots");
+
+    // TODO: seleccionar experimento especifico
+    // TODO: dar opciones de parametros sobre los cuales hacer el histograma (van a depender de cada experimento)
 
     // Choose type of plot (Histogram, etc.)
     QDialogButtonBox *histogramButtonBox = new QDialogButtonBox;
@@ -38,7 +41,10 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 
 int PlotFromDataDialog::openHistogramDialog()
 {
-    HistogramCreator *h = new HistogramCreator(plot_mPythonBinPath, plot_mOMSensPath, plot_mOMSensResultsPath, this);
+    // TODO: pasar el el results folder que se haya seleccionado con los widgets (NO HARCODEAR!)
+    HistogramCreator *h = new HistogramCreator(plot_mPythonBinPath,
+                                               plot_mOMSensPath,
+                                               plot_mOMSensResultsPath + "2019-07-26/8_8_3/results/", this);
     h->show();
 }
 

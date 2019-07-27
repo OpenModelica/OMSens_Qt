@@ -6,6 +6,9 @@
 #include <QVBoxLayout>
 #include <QImageReader>
 #include "../dialogs/general/ImageViewerDialog.h"
+#include <string>
+
+using namespace std;
 
 HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent) : QDialog(pParent)
 {
@@ -24,11 +27,12 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     // t_{obs}: time of simulation for which the histogram will be made
     // var    : variable for which the histogram will me made (for it's value on time t=t_{obs})
 
-    // parameters buttons
+    // TODO: el nombre especifico del plot va a depender de los parametros especificos del histograma
+    plotName = "plots/zzz.png";
 
-    // ok button
+    // parameters buttons
     mpButtonBox = new QDialogButtonBox;
-    mpButtonBox->addButton("OK", QDialogButtonBox::AcceptRole);
+    mpButtonBox->addButton("Show Plot", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogram);
     pMainLayout->addWidget(mpButtonBox, 0, Qt::AlignCenter);
 
@@ -39,32 +43,34 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
 void HistogramCreator::showHistogram()
 {
     // Generate filename of png to fetch/generate, using the input parameters entered by the user
-    QString fileName = resultsPath + "plots/zzz.png";
+    QString fileNamePath = resultsPath + plotName;
 
     // Check if PNG is available. If it is not, generate it
-    QImageReader reader(fileName);
+    QImageReader reader(fileNamePath);
     const QImage newImage = reader.read();
     if (newImage.isNull()) {
-        makePNG(fileName);
+        makePNG(fileNamePath);
     }
     else{
-        ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileName, this);
+        ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
         pImageViewer->show();
     }
 }
 
-int HistogramCreator::makePNG(QString png_filename)
+int HistogramCreator::makePNG(QString png_filename_path)
 {
     // Get parameters
     QString scriptPathBaseDir = librariesPath;
-    QString scriptPath = librariesPath + "callable_methods/plot_histogram.py";
-    QString pythonBinPath = executablePath;
+    QString scriptPath        = librariesPath + "callable_methods/plot_histogram.py";
+    QString pythonBinPath     = executablePath;
+
+    QString args = "--filename_path=" + png_filename_path;
 
     // GENERATE COMMAND FROM SELECTED PARAMETERS
-    QString command = pythonBinPath + " " + scriptPath;
+
 
     // TODO: Append parameter to command
-
+    QString command = pythonBinPath + " " + scriptPath + " " + args;
 
     // RUN PROCESS
     QProcess pythonScriptProcess;

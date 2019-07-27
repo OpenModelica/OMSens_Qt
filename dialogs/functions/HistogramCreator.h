@@ -21,6 +21,8 @@ private:
     QString librariesPath;
     QString resultsPath;
 
+    QString plotName;
+
     int makePNG(QString png_filename);
 
     QTabWidget *mpTabWidget;
