@@ -11,12 +11,16 @@ class HistogramCreator : public QDialog
 {
     Q_OBJECT
 public:
-    HistogramCreator(QWidget *parent = nullptr);
+    HistogramCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *parent = nullptr);
 
     QString progressDialogTextForCurrentTime();
     int makeHistogram();
 
 private:
+    QString executablePath;
+    QString librariesPath;
+    QString resultsPath;
+
     QTabWidget *mpTabWidget;
     QDialogButtonBox   *mpButtonBox;
 };

@@ -32,7 +32,10 @@
 *.app
 /OMSens_Qt.pro.user
 /build_debug
+/build-debug
 /build_release
+/build-release
 /build_profile
+/build-profile
 # Makefile
 Makefile

@@ -30,8 +30,10 @@ public:
 private:
     // Data
     Model mActiveModel;
+
     QString mOMSensPath;
     QString mPythonBinPath;
+    QString mOMSensResultsPath;
 
     // Dialogs
     VectorialSensAnalysisDialog  *mpVectSensDialog;
@@ -68,8 +70,7 @@ private:
     void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model);
     BaseResultsDialog* showResultsDialog(RunType runType, QString resultsFolderPath);
 
-    void showResult(RunType runType);
-    QDialog* showResultsDialogAndGetFolderPath(RunType runType);
+    void showSpecificAnalysis(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, RunType runType);
 
 
 signals:

@@ -5,16 +5,21 @@
 #include <QDateTime>
 #include <QVBoxLayout>
 
-HistogramCreator::HistogramCreator(QWidget *pParent) : QDialog(pParent)
+HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent) : QDialog(pParent)
 {
+    executablePath = mPythonBinPath;
+    librariesPath  = mOMSensPath;
+    resultsPath    = mOMSensResultsPath;
+
+    // Dialog settings
+    setMinimumWidth(410);
+    setWindowTitle("Histogram Creator");
+
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("OK", QDialogButtonBox::AcceptRole);
 
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::makeHistogram);
 
-
-    // Dialog settings
-    setWindowTitle("Multiparameter Sweep Fetch Results and Plots");
     QVBoxLayout *pMainLayout = new QVBoxLayout;
 
     // Accept button
@@ -39,9 +44,14 @@ int HistogramCreator::makeHistogram()
 {
     QProcess pythonScriptProcess;
 
-    QString scriptPathBaseDir = "/home/omsens/Documents/OMSens/";
-    QString pythonBinPath = "/home/omsens/anaconda3/bin/python";
-    QString scriptPath = "/home/omsens/Documents/OMSens/callable_methods/plot_histogram.py";
+    QString scriptPathBaseDir = librariesPath;
+    // "/home/omsens/Documents/OMSens/";
+
+    QString scriptPath = librariesPath + "callable_methods/plot_histogram.py";
+    // "/home/omsens/Documents/OMSens/callable_methods/plot_histogram.py";
+
+    QString pythonBinPath = executablePath;
+    //"/home/omsens/anaconda3/bin/python";
 
     QString command = pythonBinPath + " " + scriptPath;
 

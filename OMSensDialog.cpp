@@ -12,7 +12,7 @@
 
 #include "dialogs/sweep/MultiParamSweepDialog.h"
 #include "dialogs/sweep/SweepResultDialog.h"
-#include "dialogs/sweep/SweepFromDataDialog.h"
+#include "dialogs/sweep/PlotFromDataDialog.h"
 
 #include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
 #include "dialogs/vect/VectorialResultsDialog.h"
@@ -29,14 +29,13 @@
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
 {
     // Dialog settings
-    setMinimumWidth(400);
+    setMinimumWidth(600);
     setWindowTitle("OMSens");
 
     // OMSens python backend path
-    mOMSensPath = "/home/omsens/Documents/OMSens/";
-
-    // Python executable path
-    mPythonBinPath = "/home/omsens/anaconda3/bin/python";
+    mPythonBinPath      = "/home/omsens/anaconda3/bin/python";
+    mOMSensPath         = "/home/omsens/Documents/OMSens/";
+    mOMSensResultsPath  = "/home/omsens/Documents/results_experiments/";
 
     // Initialize dialogs
     mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
@@ -176,17 +175,17 @@ void OMSensDialog::runVectorialSensAnalysis()
 void OMSensDialog::showIndivSensAnalysis()
 {
     RunType runType = Individual;
-    showResult(runType);
+    showSpecificAnalysis(mPythonBinPath, mOMSensPath, mOMSensResultsPath, runType);
 }
 void OMSensDialog::showMultiParameterSweepAnalysis()
 {
     RunType runType = Sweep;
-    showResult( runType);
+    showSpecificAnalysis(mPythonBinPath, mOMSensPath, mOMSensResultsPath, runType);
 }
 void OMSensDialog::showVectorialSensAnalysis()
 {
     RunType runType = Vectorial;
-    showResult( runType);
+    showSpecificAnalysis(mPythonBinPath, mOMSensPath, mOMSensResultsPath, runType);
 }
 
 QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
@@ -335,50 +334,24 @@ BaseResultsDialog* OMSensDialog::showResultsDialog(RunType runType, QString resu
     return resultsDialog;
 }
 
-QDialog* OMSensDialog::showResultsDialogAndGetFolderPath(RunType runType)
+void OMSensDialog::showSpecificAnalysis(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, RunType runType)
 {
     BaseResultsDialog *resultsDialog = 0;
-
-    QString resultsFolderPath;
-    QString analysisResultsJSONPath;
-    QJsonDocument jsonPathsDocument;
 
     switch (runType)
     {
         case Vectorial:
-            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Vectorial analysis: Choose results folder"),
-                                                                  "/home/omsens/Documents/results_experiments/vectorial_analysis",
-                                                                  QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-            if(resultsFolderPath == "") break;
-            analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
-            jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-            resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+            resultsDialog = new PlotFromDataDialog(mPythonBinPath, mOMSensPath, mOMSensResultsPath, this);
             break;
         case Sweep:
-            resultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
-            analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
-            jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-            resultsDialog = new SweepFromDataDialog(this);
+            resultsDialog = new PlotFromDataDialog(mPythonBinPath, mOMSensPath, mOMSensResultsPath, this);
             break;
         case Individual:
-            resultsFolderPath = QFileDialog::getExistingDirectory(this, tr("Individual Sensitivity analysis: Choose results folder"),
-                                                              "/home/omsens/Documents/results_experiments/indiv_sens_results",
-                                                              QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-            if(resultsFolderPath == "") break;
-            analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
-            jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-            resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+            resultsDialog = new PlotFromDataDialog(mPythonBinPath, mOMSensPath, mOMSensResultsPath, this);
             break;
     }
-    return resultsDialog;
-}
-
-void OMSensDialog::showResult(RunType runType)
-{
-    //BaseResultsDialog* resultDialog = showResultsDialogAndGetFolderPath(runType);
-    QDialog *resultDialog = showResultsDialogAndGetFolderPath(runType);
-    if(resultDialog) {
-        resultDialog->show();
+    if(resultsDialog) {
+        resultsDialog->show();
     }
 }
 
@@ -511,56 +484,56 @@ void OMSensDialog::helpDialog()
 }
 
 
-void OMSensDialog::loadExperimentFileDialog()
-{
-    // Launch
-    QString exp_specs_path = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                            "/home",
-                                                            tr("Experiments (*.json)"));
-    if(!exp_specs_path.isEmpty() && !exp_specs_path.isNull())
-    {
-        // Load file
-        QJsonDocument json_specs_doc = readJsonFile(exp_specs_path);
-        // Get object from top
-        QJsonObject json_specs = json_specs_doc.object();
-        // Check if contains key specifying analysis type
-        QString analysis_type_key = "analysis_type";
-        if(json_specs.contains(analysis_type_key))
-        {
-            // Get analysis type
-            QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
-            // Find the corresponding analysis type
-            BaseRunSpecsDialog *runSpecsDialog;
-            RunType             runType;
-            // Get specs file folder path
-            QFileInfo exp_specs_file_info = QFileInfo(exp_specs_path);
-            QDir exp_specs_dir = exp_specs_file_info.absoluteDir();
-            // We assume that the model information is available in the same folder as the experiment specifications
-            QString model_specs_path = QDir::cleanPath(exp_specs_dir.absolutePath() + QDir::separator() + model_specs_file_name);
-            // Read model info from file
-            QJsonDocument model_info_json = readJsonFile(model_specs_path);
-            Model               model = Model(model_info_json);
-            if (analysis_type == IndivSpecs::analysis_id_str)
-            {
-                IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
-                runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs, this);
-                runType = Individual;
+//void OMSensDialog::loadExperimentFileDialog()
+//{
+//    // Launch
+//    QString exp_specs_path = QFileDialog::getOpenFileName(this, tr("Open File"),
+//                                                            mOMSensFrontEndPath,
+//                                                            tr("Experiments (*.json)"));
+//    if(!exp_specs_path.isEmpty() && !exp_specs_path.isNull())
+//    {
+//        // Load file
+//        QJsonDocument json_specs_doc = readJsonFile(exp_specs_path);
+//        // Get object from top
+//        QJsonObject json_specs = json_specs_doc.object();
+//        // Check if contains key specifying analysis type
+//        QString analysis_type_key = "analysis_type";
+//        if(json_specs.contains(analysis_type_key))
+//        {
+//            // Get analysis type
+//            QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
+//            // Find the corresponding analysis type
+//            BaseRunSpecsDialog *runSpecsDialog;
+//            RunType             runType;
+//            // Get specs file folder path
+//            QFileInfo exp_specs_file_info = QFileInfo(exp_specs_path);
+//            QDir exp_specs_dir = exp_specs_file_info.absoluteDir();
+//            // We assume that the model information is available in the same folder as the experiment specifications
+//            QString model_specs_path = QDir::cleanPath(exp_specs_dir.absolutePath() + QDir::separator() + model_specs_file_name);
+//            // Read model info from file
+//            QJsonDocument model_info_json = readJsonFile(model_specs_path);
+//            Model               model = Model(model_info_json);
+//            if (analysis_type == IndivSpecs::analysis_id_str)
+//            {
+//                IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
+//                runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs, this);
+//                runType = Individual;
 
-            }
-            else if (analysis_type == SweepSpecs::analysis_id_str)
-            {
-                SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
-                runSpecsDialog = new MultiParamSweepDialog(model, runSpecs, this);
-                runType = Sweep;
-            }
-            else if (analysis_type == VectSpecs::analysis_id_str)
-            {
-                VectSpecs runSpecs = VectSpecs(json_specs_doc);
-                runSpecsDialog = new VectorialSensAnalysisDialog(model, runSpecs, this);
-                runType = Vectorial;
-            }
+//            }
+//            else if (analysis_type == SweepSpecs::analysis_id_str)
+//            {
+//                SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
+//                runSpecsDialog = new MultiParamSweepDialog(model, runSpecs, this);
+//                runType = Sweep;
+//            }
+//            else if (analysis_type == VectSpecs::analysis_id_str)
+//            {
+//                VectSpecs runSpecs = VectSpecs(json_specs_doc);
+//                runSpecsDialog = new VectorialSensAnalysisDialog(model, runSpecs, this);
+//                runType = Vectorial;
+//            }
 
-            runAnalysisAndShowResult(runSpecsDialog,runType,model);
-        }
-    }
-}
+//            runAnalysisAndShowResult(runSpecsDialog,runType,model);
+//        }
+//    }
+//}

@@ -1,5 +1,5 @@
-#ifndef SWEEPFROMDATADIALOG_H
-#define SWEEPFROMDATADIALOG_H
+#ifndef PLOTFROMDATADIALOG_H
+#define PLOTFROMDATADIALOG_H
 
 #include <QDialog>
 #include <QJsonDocument>
@@ -13,12 +13,17 @@
 #include "../../tabs/sweep_result/SweepResultVariableTab.h"
 
 
-class SweepFromDataDialog: public BaseResultsDialog
+class PlotFromDataDialog: public BaseResultsDialog
 {
     Q_OBJECT
 public:
-    SweepFromDataDialog(QWidget *pParent = 0);
+    PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent = 0);
 private:
+
+    QString plot_mPythonBinPath;
+    QString plot_mOMSensPath;
+    QString plot_mOMSensResultsPath;
+
     // GUI (there are some components defined in the superclass)
     QTabWidget *mpTabWidget;
     SweepResultVariableTab *mpVariablesResultTab;
@@ -33,8 +38,9 @@ private:
     QString mPythonScriptPath;
     QString defaultResultsFolderPath;
 
-    int makeHistogram();
+    int openHistogramDialog();
+    int openScatterplotDialog();
 
 };
 
-#endif // SWEEPFROMDATADIALOG_H
+#endif // PLOTFROMDATADIALOG_H
