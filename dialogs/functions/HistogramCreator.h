@@ -14,12 +14,14 @@ public:
     HistogramCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *parent = nullptr);
 
     QString progressDialogTextForCurrentTime();
-    int makeHistogram();
+    void showHistogram();
 
 private:
     QString executablePath;
     QString librariesPath;
     QString resultsPath;
+
+    int makePNG(QString png_filename);
 
     QTabWidget *mpTabWidget;
     QDialogButtonBox   *mpButtonBox;
