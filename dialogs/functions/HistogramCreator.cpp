@@ -21,6 +21,8 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     setWindowTitle("Histogram Creator");
     QVBoxLayout *pMainLayout = new QVBoxLayout;
 
+    // TODO: dar opciones de parametros sobre los cuales hacer el histograma (van a depender de cada experimento)
+    //       set parameters for later using in makePNG function.
     // Interface for selecting desired histogram parameters
     // result filename path (where to go and fetch the PNG)
     // input csv file
@@ -43,7 +45,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
 void HistogramCreator::showHistogram()
 {
     // Generate filename of png to fetch/generate, using the input parameters entered by the user
-    QString fileNamePath = resultsPath + plotName;
+    QString fileNamePath = resultsPath + "/" + plotName;
 
     // Check if PNG is available. If it is not, generate it
     QImageReader reader(fileNamePath);

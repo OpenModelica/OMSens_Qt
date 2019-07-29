@@ -64,8 +64,6 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpHorizontalLineOne->setFrameShape(QFrame::HLine);
     mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
 
-
-
     // Individual parameters
     mpIndivButton = new QPushButton(tr("Run"));
     mpIndivButton->setAutoDefault(true);

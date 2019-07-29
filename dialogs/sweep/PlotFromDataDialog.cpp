@@ -8,19 +8,44 @@
 #include <QJsonObject>
 #include <QFormLayout>
 #include <QPushButton>
+#include <QFileDialog>
+
+void PlotFromDataDialog::setSpecificExperiment()
+{
+
+    // Launch dialog
+    QString path = QFileDialog::getExistingDirectory(this, tr("Choose Specific experiment results folder"),
+                                                 plot_mOMSensResultsPath,
+                                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if(!path.isEmpty() && !path.isNull())
+    {
+        // Save path into member variable
+        plot_specific_experiment = path;
+        plot_specific_experiment_label->setText(plot_specific_experiment);
+    }
+}
 
 PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent) : BaseResultsDialog(pParent)
 {
-    plot_mPythonBinPath     = mPythonBinPath;
-    plot_mOMSensPath        = mOMSensPath;
-    plot_mOMSensResultsPath = mOMSensResultsPath + "sweep_results/";
+    plot_mPythonBinPath      = mPythonBinPath;
+    plot_mOMSensPath         = mOMSensPath;
+    plot_mOMSensResultsPath  = mOMSensResultsPath + "sweep_results/";
+    plot_specific_experiment = "";
 
     // Dialog settings
     setMinimumWidth(410);
     setWindowTitle("Multiparameter Sweep Plots");
 
     // TODO: seleccionar experimento especifico
-    // TODO: dar opciones de parametros sobre los cuales hacer el histograma (van a depender de cada experimento)
+    QLabel *plot_specific_experiment_title = new QLabel("Specific experiment folder:");
+
+    plot_specific_experiment_label = new QLabel(plot_specific_experiment);
+    plot_specific_experiment_label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+
+    plot_specific_experiment_label_browse_button = new QPushButton("Browse");
+    plot_specific_experiment_label_browse_button->setAutoDefault(true);
+    plot_specific_experiment_label_browse_button->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(plot_specific_experiment_label_browse_button, SIGNAL(clicked()), this, SLOT(setSpecificExperiment()));
 
     // Choose type of plot (Histogram, etc.)
     QDialogButtonBox *histogramButtonBox = new QDialogButtonBox;
@@ -32,6 +57,15 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 
     // Layout
     QVBoxLayout *pMainLayout = new QVBoxLayout;
+
+    // Set specific experiment
+    pMainLayout->addWidget(plot_specific_experiment_title, 0, Qt::AlignLeft);
+    QHBoxLayout *set_specific_experiment_layout = new QHBoxLayout;
+    set_specific_experiment_layout->addWidget(plot_specific_experiment_label);
+    set_specific_experiment_layout->addWidget(plot_specific_experiment_label_browse_button);
+    pMainLayout->addLayout(set_specific_experiment_layout);
+
+    // Choose type of plot
     pMainLayout->addWidget(histogramButtonBox, 0, Qt::AlignLeft);
     pMainLayout->addWidget(scatterButtonBox, 0, Qt::AlignLeft);
 
@@ -41,11 +75,13 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 
 int PlotFromDataDialog::openHistogramDialog()
 {
-    // TODO: pasar el el results folder que se haya seleccionado con los widgets (NO HARCODEAR!)
-    HistogramCreator *h = new HistogramCreator(plot_mPythonBinPath,
-                                               plot_mOMSensPath,
-                                               plot_mOMSensResultsPath + "2019-07-26/8_8_3/results/", this);
-    h->show();
+    // TODO: raise warning if plot_specific_experiment == ""
+    if(plot_specific_experiment != "") {
+        HistogramCreator *h = new HistogramCreator(plot_mPythonBinPath,
+                                                   plot_mOMSensPath, plot_specific_experiment,
+                                                   this);
+        h->show();
+    }
 }
 
 int PlotFromDataDialog::openScatterplotDialog()

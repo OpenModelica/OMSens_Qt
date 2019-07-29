@@ -24,6 +24,10 @@ private:
     QString plot_mOMSensPath;
     QString plot_mOMSensResultsPath;
 
+    QString plot_specific_experiment;
+    QLabel *plot_specific_experiment_label;
+    QPushButton *plot_specific_experiment_label_browse_button;
+
     // GUI (there are some components defined in the superclass)
     QTabWidget *mpTabWidget;
     SweepResultVariableTab *mpVariablesResultTab;
@@ -40,6 +44,11 @@ private:
 
     int openHistogramDialog();
     int openScatterplotDialog();
+
+signals:
+
+public slots:
+    void setSpecificExperiment();
 
 };
 
