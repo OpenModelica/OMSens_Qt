@@ -58,7 +58,8 @@ SOURCES += \
     OMSensPlugin.cpp \
     omedit_plugin/model.cpp \
     dialogs/functions/HistogramCreator.cpp \
-    dialogs/sweep/PlotFromDataDialog.cpp
+    dialogs/sweep/PlotFromDataDialog.cpp \
+    helpers/CSVReader.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -96,7 +97,8 @@ HEADERS += \
     omedit_plugin/interfaces.h \
     omedit_plugin/model.h \
     dialogs/functions/HistogramCreator.h \
-    dialogs/sweep/PlotFromDataDialog.h
+    dialogs/sweep/PlotFromDataDialog.h \
+    helpers/CSVReader.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

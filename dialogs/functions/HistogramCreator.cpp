@@ -5,8 +5,11 @@
 #include <QDateTime>
 #include <QVBoxLayout>
 #include <QImageReader>
-#include "../dialogs/general/ImageViewerDialog.h"
+#include <QVector>
+#include <QComboBox>
 #include <string>
+#include "../dialogs/general/ImageViewerDialog.h"
+#include "../helpers/CSVReader.h"
 
 using namespace std;
 
@@ -19,7 +22,6 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     // Dialog settings
     setMinimumWidth(410);
     setWindowTitle("Histogram Creator");
-    QVBoxLayout *pMainLayout = new QVBoxLayout;
 
     // TODO: dar opciones de parametros sobre los cuales hacer el histograma (van a depender de cada experimento)
     //       set parameters for later using in makePNG function.
@@ -28,15 +30,36 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     // input csv file
     // t_{obs}: time of simulation for which the histogram will be made
     // var    : variable for which the histogram will me made (for it's value on time t=t_{obs})
+    CSVReader *csv_reader = new CSVReader();
+    QVector<QString> columns = csv_reader->getColumnsNames(resultsPath + "/" + "runs/std_run.csv");
 
-    // TODO: el nombre especifico del plot va a depender de los parametros especificos del histograma
-    plotName = "plots/zzz.png";
+    // Layout
+    QVBoxLayout *pMainLayout = new QVBoxLayout;
+
+    // Options parameters
+    QLabel *time_label = new QLabel("Time: ");
+    options_time_box = new QComboBox;
+    options_time_box->addItem("2");
+    QHBoxLayout *row1 = new QHBoxLayout;
+    row1->addWidget(time_label);
+    row1->addWidget(options_time_box);
+    pMainLayout->addItem(row1);
+
+    QLabel *options_parameters_label = new QLabel("Parameter: ");
+    options_parameters_box = new QComboBox;
+    for (QString columnName: columns) {
+        options_parameters_box->addItem(columnName);
+    }
+    QHBoxLayout *row2 = new QHBoxLayout;
+    row2->addWidget(options_parameters_label);
+    row2->addWidget(options_parameters_box);
+    pMainLayout->addItem(row2);
 
     // parameters buttons
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Show Plot", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogram);
-    pMainLayout->addWidget(mpButtonBox, 0, Qt::AlignCenter);
+    pMainLayout->addWidget(mpButtonBox, 0, Qt::AlignLeft);
 
     // Layout settings
     setLayout(pMainLayout);
@@ -45,7 +68,14 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
 void HistogramCreator::showHistogram()
 {
     // Generate filename of png to fetch/generate, using the input parameters entered by the user
-    QString fileNamePath = resultsPath + "/" + plotName;
+
+//    QString fileNamePath = resultsPath + "/" + "plots/" + options_time_box->currentText()
+//            + "_" + options_parameters_box->currentText() + ".png";
+    QString fileNamePath = resultsPath + "/" + "plots/"
+            + "h_"
+            + QString::number(options_time_box->currentIndex())
+            + "_" + QString::number(options_parameters_box->currentIndex())
+            + ".png";
 
     // Check if PNG is available. If it is not, generate it
     QImageReader reader(fileNamePath);
@@ -53,10 +83,10 @@ void HistogramCreator::showHistogram()
     if (newImage.isNull()) {
         makePNG(fileNamePath);
     }
-    else{
-        ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
-        pImageViewer->show();
-    }
+//    else{
+    ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
+    pImageViewer->show();
+//    }
 }
 
 int HistogramCreator::makePNG(QString png_filename_path)
@@ -66,15 +96,16 @@ int HistogramCreator::makePNG(QString png_filename_path)
     QString scriptPath        = librariesPath + "callable_methods/plot_histogram.py";
     QString pythonBinPath     = executablePath;
 
-    QString args = "--filename_path=" + png_filename_path;
+    QString args = "--filename_path=" + png_filename_path
+            + " " + "--parameter=" + options_parameters_box->currentText()
+            + " " + "--time_value=" + options_time_box->currentText()
+            + " " + "--runs_path=" + resultsPath + "/runs";
 
     // GENERATE COMMAND FROM SELECTED PARAMETERS
 
 
-    // TODO: Append parameter to command
-    QString command = pythonBinPath + " " + scriptPath + " " + args;
-
     // RUN PROCESS
+    QString command = pythonBinPath + " " + scriptPath + " " + args;
     QProcess pythonScriptProcess;
     pythonScriptProcess.setWorkingDirectory(scriptPathBaseDir);
 
@@ -106,6 +137,5 @@ QString HistogramCreator::progressDialogTextForCurrentTime()
     QString h_m_s = currentTime.toString("H:m:s");
     QString scriptRunStartString = "(started on " + date + " at " + h_m_s + ")";
     QString progressDialogText = "Running python script... " + scriptRunStartString;
-
     return progressDialogText;
 }

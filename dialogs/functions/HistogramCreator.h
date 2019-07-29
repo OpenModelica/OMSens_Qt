@@ -5,6 +5,7 @@
 #include <QLabel>
 #include <QTabWidget>
 #include <QDialogButtonBox>
+#include <QComboBox>
 #include "../BaseResultsDialog.h"
 
 class HistogramCreator : public QDialog
@@ -21,7 +22,8 @@ private:
     QString librariesPath;
     QString resultsPath;
 
-    QString plotName;
+    QComboBox *options_parameters_box;
+    QComboBox *options_time_box;
 
     int makePNG(QString png_filename);
 
