@@ -69,7 +69,6 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpIndivButton->setAutoDefault(true);
     mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
-
     mpIndivButtonAnalysis = new QPushButton(tr("Analisis"));
     connect(mpIndivButtonAnalysis, SIGNAL(clicked()), SLOT(showIndivSensAnalysis()));
 
@@ -78,7 +77,6 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpSweepButton->setAutoDefault(true);
     mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
-
     mpSweepButtonAnalysis = new QPushButton(tr("Analisis"));
     connect(mpSweepButtonAnalysis, SIGNAL(clicked()), SLOT(showMultiParameterSweepAnalysis()));
 
@@ -87,9 +85,17 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpVectButton->setAutoDefault(true);
     mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
-
     mpVectButtonAnalysis = new QPushButton(tr("Analisis"));
     connect(mpVectButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
+
+    // Constrained (TODO: do connections the right way)
+    mpConstrainedButton = new QPushButton(tr("Run"));
+    mpConstrainedButton->setAutoDefault(true);
+    mpConstrainedButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    connect(mpConstrainedButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
+    mpConstrainedButtonAnalysis = new QPushButton(tr("Analisis"));
+    connect(mpConstrainedButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
+
 
     // Division between features and help
     mpHorizontalLineTwo= new QFrame;
@@ -143,6 +149,14 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     row3->addWidget(mpVectButton);
     row3->addWidget(mpVectButtonAnalysis);
     mainLayout->addItem(row3);
+
+    // LABEL 4
+    QLabel *label4 = new QLabel("Constrained Interval Parameter Based Sensitivity Analysis");
+    mainLayout->addWidget(label4, 0, Qt::AlignLeft);
+    QHBoxLayout *row4 = new QHBoxLayout;
+    row4->addWidget(mpConstrainedButton);
+    row4->addWidget(mpConstrainedButtonAnalysis);
+    mainLayout->addItem(row4);
 
     // Separator
     mainLayout->addWidget(mpHorizontalLineTwo);

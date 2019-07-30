@@ -60,7 +60,9 @@ SOURCES += \
     dialogs/functions/HistogramCreator.cpp \
     dialogs/sweep/PlotFromDataDialog.cpp \
     helpers/CSVReader.cpp \
-    dialogs/functions/ScatterPlotCreator.cpp
+    dialogs/functions/ScatterPlotCreator.cpp \
+    specs/ConstrainedIntervalSpecs.cpp \
+    dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -100,7 +102,9 @@ HEADERS += \
     dialogs/functions/HistogramCreator.h \
     dialogs/sweep/PlotFromDataDialog.h \
     helpers/CSVReader.h \
-    dialogs/functions/ScatterPlotCreator.h
+    dialogs/functions/ScatterPlotCreator.h \
+    specs/ConstrainedIntervalSpecs.h \
+    dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

@@ -1,7 +1,6 @@
 #ifndef MULTIPARAMSWEEPDIALOG_H
 #define MULTIPARAMSWEEPDIALOG_H
 
-
 #include <QDialog>
 #include <QDoubleSpinBox>
 #include <QFrame>

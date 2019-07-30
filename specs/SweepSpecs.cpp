@@ -17,10 +17,12 @@ SweepSpecs::SweepSpecs(QJsonDocument json_specs_doc)
     this->start_time          = json_specs.value(QString("start_time")).toDouble();
     this->stop_time           = json_specs.value(QString("stop_time")).toDouble();
     this->vars_to_analyze     = json_specs.value(QString("vars_to_analyze")).toVariant().toStringList();
+
     // Complex data
     // Sweep params
     QJsonArray sweep_params_jsonarray = json_specs.value(QString("parameters_to_sweep")).toArray();
     this->parameters_to_sweep = fromQJsonArrayToSweepingPerts(sweep_params_jsonarray);
+
     // Fixed params
     QJsonArray fixed_params_jsonarray = json_specs.value(QString("fixed_params")).toArray();
     this->fixed_params        =  fromQJsonArrayToFixedPerts(fixed_params_jsonarray);;

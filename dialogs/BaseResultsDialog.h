@@ -15,6 +15,7 @@ public:
     // Constructors
     BaseResultsDialog(QWidget *parent = nullptr) : QDialog(parent) {}
 
+
     // Components shared between all results dialogs
     QLabel      *mpResultsFolderPathLabel;
     QLabel      *mpResultsFolderPathValue;

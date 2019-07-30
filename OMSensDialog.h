@@ -52,6 +52,7 @@ private:
     QPushButton *mpIndivButton; QPushButton *mpIndivButtonAnalysis;
     QPushButton *mpSweepButton; QPushButton *mpSweepButtonAnalysis;
     QPushButton *mpVectButton; QPushButton *mpVectButtonAnalysis;
+    QPushButton *mpConstrainedButton; QPushButton *mpConstrainedButtonAnalysis;
 
     QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton; // Not shown for now
