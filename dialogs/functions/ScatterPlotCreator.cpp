@@ -1,4 +1,4 @@
-#include "HistogramCreator.h"
+#include "ScatterPlotCreator.h"
 #include <QProcess>
 #include <QProgressBar>
 #include <QProgressDialog>
@@ -11,9 +11,7 @@
 #include "../dialogs/general/ImageViewerDialog.h"
 #include "../helpers/CSVReader.h"
 
-using namespace std;
-
-HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent) : QDialog(pParent)
+ScatterPlotCreator::ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent) : QDialog(pParent)
 {
     executablePath = mPythonBinPath;
     librariesPath  = mOMSensPath;
@@ -21,7 +19,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
 
     // Dialog settings
     setMinimumWidth(410);
-    setWindowTitle("Histogram Creator");
+    setWindowTitle("Scatter Plot Creator");
 
     // TODO: dar opciones de parametros sobre los cuales hacer el histograma (van a depender de cada experimento)
     //       set parameters for later using in makePNG function.
@@ -58,20 +56,20 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     // parameters buttons
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Show Plot", QDialogButtonBox::AcceptRole);
-    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogram);
+    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &ScatterPlotCreator::showScatterPlot);
     pMainLayout->addWidget(mpButtonBox, 0, Qt::AlignLeft);
 
     // Layout settings
     setLayout(pMainLayout);
 }
 
-void HistogramCreator::showHistogram()
+void ScatterPlotCreator::showScatterPlot()
 {
     // Generate filename of png to fetch/generate, using the input parameters entered by the user
 //    QString fileNamePath = resultsPath + "/" + "plots/" + options_time_box->currentText()
 //            + "_" + options_parameters_box->currentText() + ".png";
     QString fileNamePath = resultsPath + "/" + "plots/"
-            + "h_"
+            + "s_"
             + QString::number(options_time_box->currentIndex())
             + "_" + QString::number(options_parameters_box->currentIndex())
             + ".png";
@@ -88,11 +86,11 @@ void HistogramCreator::showHistogram()
 //    }
 }
 
-int HistogramCreator::makePNG(QString png_filename_path)
+int ScatterPlotCreator::makePNG(QString png_filename_path)
 {
     // Get parameters
     QString scriptPathBaseDir = librariesPath;
-    QString scriptPath        = librariesPath + "callable_methods/plot_histogram.py";
+    QString scriptPath        = librariesPath + "callable_methods/plot_scatter.py";
     QString pythonBinPath     = executablePath;
 
     QString args = "--filename_path=" + png_filename_path
@@ -129,7 +127,7 @@ int HistogramCreator::makePNG(QString png_filename_path)
     return processEndedCorrectly;
 }
 
-QString HistogramCreator::progressDialogTextForCurrentTime()
+QString ScatterPlotCreator::progressDialogTextForCurrentTime()
 {
     QDateTime currentTime = QDateTime::currentDateTime();
     QString date = currentTime.toString("dd/MM/yyyy");

@@ -1,5 +1,6 @@
 #include "PlotFromDataDialog.h"
 #include "../functions/HistogramCreator.h"
+#include "../functions/ScatterPlotCreator.h"
 #include <QProcess>
 #include <QDialog>
 #include <QDateTime>
@@ -54,6 +55,7 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 
     QDialogButtonBox *scatterButtonBox = new QDialogButtonBox;
     scatterButtonBox->addButton("Scatter plot", QDialogButtonBox::AcceptRole);
+    connect(scatterButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openScatterplotDialog);
 
     // Layout
     QVBoxLayout *pMainLayout = new QVBoxLayout;
@@ -73,7 +75,7 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     setLayout(pMainLayout);
 }
 
-int PlotFromDataDialog::openHistogramDialog()
+void PlotFromDataDialog::openHistogramDialog()
 {
     // TODO: raise warning if plot_specific_experiment == ""
     if(plot_specific_experiment != "") {
@@ -84,9 +86,15 @@ int PlotFromDataDialog::openHistogramDialog()
     }
 }
 
-int PlotFromDataDialog::openScatterplotDialog()
+void PlotFromDataDialog::openScatterplotDialog()
 {
-
+    // TODO: raise warning if plot_specific_experiment == ""
+    if(plot_specific_experiment != "") {
+        ScatterPlotCreator *h = new ScatterPlotCreator(plot_mPythonBinPath,
+                                                   plot_mOMSensPath, plot_specific_experiment,
+                                                   this);
+        h->show();
+    }
 }
 
 
