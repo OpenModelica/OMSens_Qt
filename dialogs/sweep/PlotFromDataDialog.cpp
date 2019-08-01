@@ -1,7 +1,7 @@
 #include "PlotFromDataDialog.h"
 #include "../functions/HistogramCreator.h"
 #include "../functions/ScatterPlotCreator.h"
-#include "../tabs/PlotsTab.h"
+#include "../dialogs/PlotsDialog.h"
 #include <QProcess>
 #include <QDialog>
 #include <QDateTime>
@@ -50,9 +50,9 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     connect(plot_specific_experiment_label_browse_button, SIGNAL(clicked()), this, SLOT(setSpecificExperiment()));
 
     // Choose type of plot (Histogram, etc.)
-    QDialogButtonBox *plotsTabButtonBox = new QDialogButtonBox;
-    plotsTabButtonBox->addButton("Plots analysis (multi-tab)", QDialogButtonBox::AcceptRole);
-    connect(plotsTabButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openPlotsTabDialog);
+    QDialogButtonBox *plotsDialogButtonBox = new QDialogButtonBox;
+    plotsDialogButtonBox->addButton("Plots analysis (multi-tab)", QDialogButtonBox::AcceptRole);
+    connect(plotsDialogButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openPlotsDialog);
 
     // Choose type of plot (Histogram, etc.)
     QDialogButtonBox *histogramButtonBox = new QDialogButtonBox;
@@ -74,7 +74,7 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     pMainLayout->addLayout(set_specific_experiment_layout);
 
     // Choose type of plot
-    pMainLayout->addWidget(plotsTabButtonBox, 0, Qt::AlignLeft);
+    pMainLayout->addWidget(plotsDialogButtonBox, 0, Qt::AlignLeft);
     pMainLayout->addWidget(histogramButtonBox, 0, Qt::AlignLeft);
     pMainLayout->addWidget(scatterButtonBox, 0, Qt::AlignLeft);
 
@@ -82,9 +82,9 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     setLayout(pMainLayout);
 }
 
-void PlotFromDataDialog::openPlotsTabDialog()
+void PlotFromDataDialog::openPlotsDialog()
 {
-    PlotsTab *p = new PlotsTab(plot_mPythonBinPath,
+    PlotsDialog *p = new PlotsDialog(plot_mPythonBinPath,
                                plot_mOMSensPath, plot_specific_experiment,
                                this);
     p->show();
