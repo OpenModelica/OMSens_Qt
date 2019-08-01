@@ -1,6 +1,7 @@
 #include "PlotFromDataDialog.h"
 #include "../functions/HistogramCreator.h"
 #include "../functions/ScatterPlotCreator.h"
+#include "../tabs/PlotsTab.h"
 #include <QProcess>
 #include <QDialog>
 #include <QDateTime>
@@ -49,6 +50,11 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     connect(plot_specific_experiment_label_browse_button, SIGNAL(clicked()), this, SLOT(setSpecificExperiment()));
 
     // Choose type of plot (Histogram, etc.)
+    QDialogButtonBox *plotsTabButtonBox = new QDialogButtonBox;
+    plotsTabButtonBox->addButton("Plots analysis (multi-tab)", QDialogButtonBox::AcceptRole);
+    connect(plotsTabButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openPlotsTabDialog);
+
+    // Choose type of plot (Histogram, etc.)
     QDialogButtonBox *histogramButtonBox = new QDialogButtonBox;
     histogramButtonBox->addButton("Histogram", QDialogButtonBox::AcceptRole);
     connect(histogramButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openHistogramDialog);
@@ -68,11 +74,20 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     pMainLayout->addLayout(set_specific_experiment_layout);
 
     // Choose type of plot
+    pMainLayout->addWidget(plotsTabButtonBox, 0, Qt::AlignLeft);
     pMainLayout->addWidget(histogramButtonBox, 0, Qt::AlignLeft);
     pMainLayout->addWidget(scatterButtonBox, 0, Qt::AlignLeft);
 
     // Initialize layouts
     setLayout(pMainLayout);
+}
+
+void PlotFromDataDialog::openPlotsTabDialog()
+{
+    PlotsTab *p = new PlotsTab(plot_mPythonBinPath,
+                               plot_mOMSensPath, plot_specific_experiment,
+                               this);
+    p->show();
 }
 
 void PlotFromDataDialog::openHistogramDialog()

@@ -42,6 +42,7 @@ private:
     QString mPythonScriptPath;
     QString defaultResultsFolderPath;
 
+    void openPlotsTabDialog();
     void openHistogramDialog();
     void openScatterplotDialog();
 

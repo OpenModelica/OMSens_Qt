@@ -58,6 +58,7 @@ SOURCES += \
     OMSensPlugin.cpp \
     omedit_plugin/model.cpp \
     dialogs/functions/HistogramCreator.cpp \
+    tabs/PlotsTab.cpp \
     dialogs/sweep/PlotFromDataDialog.cpp \
     helpers/CSVReader.cpp \
     dialogs/functions/ScatterPlotCreator.cpp \
@@ -100,6 +101,7 @@ HEADERS += \
     omedit_plugin/interfaces.h \
     omedit_plugin/model.h \
     dialogs/functions/HistogramCreator.h \
+    tabs/PlotsTab.h \
     dialogs/sweep/PlotFromDataDialog.h \
     helpers/CSVReader.h \
     dialogs/functions/ScatterPlotCreator.h \

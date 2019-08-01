@@ -31,7 +31,12 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     // t_{obs}: time of simulation for which the histogram will be made
     // var    : variable for which the histogram will me made (for it's value on time t=t_{obs})
     CSVReader *csv_reader = new CSVReader();
+
+    // Obtener nombres de las VARIABLES del modelo (TODO: Ir a buscar al archivo correpondiente)
     QVector<QString> columns = csv_reader->getColumnsNames(resultsPath + "/" + "runs/std_run.csv");
+
+    // TODO: Obtener nombre de los PARAMETROS del modelo (TODO: ir a buscar al archivo correspondiente)
+
 
     // Layout
     QVBoxLayout *pMainLayout = new QVBoxLayout;
@@ -45,7 +50,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     row1->addWidget(options_time_box);
     pMainLayout->addItem(row1);
 
-    QLabel *options_parameters_label = new QLabel("Parameter: ");
+    QLabel *options_parameters_label = new QLabel("Variable: ");
     options_parameters_box = new QComboBox;
     for (QString columnName: columns) {
         options_parameters_box->addItem(columnName);

@@ -67,6 +67,9 @@ void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_incl
     mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/individual_sens_calculator.py";
     defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/indiv_sens_results";
 
+    // Dialog settings
+    setWindowTitle("Run Individual Sensitivity Analysis");
+
     // Help text description
     QString helpText = readHelpText();
 
@@ -92,9 +95,6 @@ void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_incl
     mpButtonBox->addButton("Cancel"      , QDialogButtonBox::RejectRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &IndivParamSensAnalysisDialog::runIndivParamSensAnalysis);
     connect(mpButtonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
-
-    // Dialog settings
-    setWindowTitle("Run Individual Sensitivity Analysis");
 
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
