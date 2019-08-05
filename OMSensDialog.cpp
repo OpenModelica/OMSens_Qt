@@ -294,15 +294,13 @@ QString OMSensDialog::writeJsonToDisk(QString file_path, QJsonDocument runSpecif
     return file_path;
 }
 
-// TODO: cambiar 'results' folder destination
 QString OMSensDialog::createResultsFolder(QString timeStampFolderPath)
 {
-    QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
+    QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");
     QDir resultsFolderPathDir(resultsFolderPath);
     if (!resultsFolderPathDir.exists()){
       resultsFolderPathDir.mkpath(".");
     }
-
     return resultsFolderPath;
 }
 
@@ -394,20 +392,26 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
 
         QJsonDocument exp_specs = runSpecsDialog->getRunSpecifications();
         QString destFolderPath = runSpecsDialog->getDestFolderPath();
+
         // Make timestamp subfolder in dest folder path
         QString timeStampFolderPath = createTimestampDir(destFolderPath);
+
         // Make sub-folder where the results will be written
         QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
+
         // Write Exp specs to disk
         QString exp_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + exp_specs_file_name);
         writeJsonToDisk(exp_specs_path, exp_specs);
+
         // Write model specs to disk
         QString model_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + model_specs_file_name);
         QJsonDocument model_specs = model.toJson();
         writeJsonToDisk(model_specs_path, model_specs);
 
         // Run command
-        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, resultsFolderPath, scriptPath, pythonBinPath);
+        // TODO: change folder results path passed to python process
+//        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, resultsFolderPath, scriptPath, pythonBinPath);
+        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, timeStampFolderPath, scriptPath, pythonBinPath);
 
         // If the process ended correctly, show the results dialog
         if (processEndedCorrectly)
