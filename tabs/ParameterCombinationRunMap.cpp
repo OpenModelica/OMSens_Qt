@@ -9,18 +9,26 @@ ParameterCombinationRunMap::ParameterCombinationRunMap(QString mOMSensResultsPat
 
     CSVReader *r = new CSVReader();
     QVector<QString> parameters = r->getColumnsNames(mOMSensResultsPath + "/" + "results/" + "parameters_run.csv");
-    QVector<QString> variables = r->getColumnsNames(mOMSensResultsPath + "/" + "results/" + "variables.csv");
+    QVector<QVector<double>> rows = r->getNumericData(mOMSensResultsPath + "/" + "results/" + "parameters_run.csv");
 
     // Parameters table/list
-//    QLabel *label1 = new QLabel(mOMSensResultsPath);
-    QLabel *label1 = new QLabel(parameters.at(0));
+    QTableWidget *table = new QTableWidget(0, parameters.size());
+    const QList<QString> headers(parameters.toList());
+    table->setHorizontalHeaderLabels(headers);
 
-    mainLayout->addWidget(label1, 0, Qt::AlignLeft);
+    // Declare the QPair outside the foreach because the commas are ambigous for Qt's macro
+    for (int i=0; i<rows.size(); i++)
+    {
+        table->insertRow(table->rowCount());
+        for (int j=0; j<rows[i].size(); j++)
+        {
+            QString new_item = QString::number(rows[i][j]);
+            table->setItem( i, j, new QTableWidgetItem(new_item));
+        }
+    }
 
-
-    // model_info.json
-    // parameters, aux_variables, input_variables
-
+    // SET Layout
+    mainLayout->addWidget(table);
 
     setLayout(mainLayout);
 }

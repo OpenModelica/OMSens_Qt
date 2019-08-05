@@ -23,58 +23,71 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     setMinimumWidth(410);
     setWindowTitle("Histogram Creator");
 
-    // TODO: dar opciones de parametros sobre los cuales hacer el histograma (van a depender de cada experimento)
-    //       set parameters for later using in makePNG function.
-    // Interface for selecting desired histogram parameters
-    // result filename path (where to go and fetch the PNG)
-    // input csv file
-    // t_{obs}: time of simulation for which the histogram will be made
-    // var    : variable for which the histogram will me made (for it's value on time t=t_{obs})
     CSVReader *csv_reader = new CSVReader();
-
-    // Obtener nombres de las VARIABLES del modelo (TODO: Ir a buscar al archivo correpondiente)
-    QVector<QString> columns = csv_reader->getColumnsNames(resultsPath + "/results/" + "runs/std_run.csv");
-
-    // TODO: Obtener nombre de los PARAMETROS del modelo (TODO: ir a buscar al archivo correspondiente)
-
+    // TODO: for reuse in different contexts (apart from multiparameter sweep), these 3 files must be generated!
+    QVector<QString> parameters = csv_reader->getColumnsNames(mOMSensResultsPath + "/" + "results/" + "parameters_run.csv");
+    QVector<QString> variables = csv_reader->getColumnsNames(mOMSensResultsPath + "/" + "results/" + "variables.csv");
+    QVector<double> time_values = csv_reader->getColumnValues(mOMSensResultsPath + "/" + "results/runs/std_run.csv", "time");
 
     // Layout
     QVBoxLayout *pMainLayout = new QVBoxLayout;
 
-    // Options parameters
-    QLabel *time_label = new QLabel("Time: ");
+    // Time value
+    int precisionVal = 3;
+    double min = time_values[0];
+    double max = time_values[time_values.size() - 1];
+    QString min_str = QString::fromStdString(std::to_string(min).substr(0, std::to_string(min).find(".") + precisionVal + 1));
+    QString max_str = QString::fromStdString(std::to_string(max).substr(0, std::to_string(max).find(".") + precisionVal + 1));
+    QString str = "Time: (Min=" + min_str + ", Max=" + max_str + ")";
+    QLabel *time_label = new QLabel(str);
     options_time_box = new QComboBox;
-    options_time_box->addItem("2");
+    options_time_box->setEditable(true);
     QHBoxLayout *row1 = new QHBoxLayout;
     row1->addWidget(time_label);
     row1->addWidget(options_time_box);
     pMainLayout->addItem(row1);
 
-    QLabel *options_parameters_label = new QLabel("Variable: ");
-    options_parameters_box = new QComboBox;
-    for (QString columnName: columns) {
-        options_parameters_box->addItem(columnName);
+    // Show histogram for variable
+    QLabel *options_variables_label = new QLabel("Variable: ");
+    mpButtonBox = new QDialogButtonBox;
+    mpButtonBox->addButton("Show", QDialogButtonBox::AcceptRole);
+    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogramVariable);
+    options_variables_box = new QComboBox;
+    for (QString varName: variables) {
+        options_variables_box->addItem(varName);
     }
     QHBoxLayout *row2 = new QHBoxLayout;
-    row2->addWidget(options_parameters_label);
-    row2->addWidget(options_parameters_box);
+    row2->addWidget(options_variables_label);
+    row2->addWidget(options_variables_box);
+    row2->addWidget(mpButtonBox);
     pMainLayout->addItem(row2);
 
-    // parameters buttons
-    mpButtonBox = new QDialogButtonBox;
-    mpButtonBox->addButton("Show Plot", QDialogButtonBox::AcceptRole);
-    connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogram);
-    pMainLayout->addWidget(mpButtonBox, 0, Qt::AlignLeft);
+    // Show historam for parameter
+    QLabel *options_parameters_label = new QLabel("Parameter: ");
+    options_parameters_box = new QComboBox;
+    for (QString parameterName : parameters) {
+        options_parameters_box->addItem(parameterName);
+    }
+    QDialogButtonBox *mpButtonBoxParameters = new QDialogButtonBox;
+    mpButtonBoxParameters->addButton("Show", QDialogButtonBox::AcceptRole);
+    connect(mpButtonBoxParameters, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogramParameter);
+    QHBoxLayout *row3 = new QHBoxLayout;
+    row3->addWidget(options_parameters_label);
+    row3->addWidget(options_parameters_box);
+    row3->addWidget(mpButtonBoxParameters);
+    pMainLayout->addItem(row3);
 
     // Layout settings
     setLayout(pMainLayout);
 }
 
-void HistogramCreator::showHistogram()
+void HistogramCreator::showHistogramParameter()
 {
-    // Generate filename of png to fetch/generate, using the input parameters entered by the user
-//    QString fileNamePath = resultsPath + "/results/" + "plots/" + options_time_box->currentText()
-//            + "_" + options_parameters_box->currentText() + ".png";
+    showHistogramVariable();
+}
+
+void HistogramCreator::showHistogramVariable()
+{
     QString fileNamePath = resultsPath + "/results/" + "plots/"
             + "h_"
             + QString::number(options_time_box->currentIndex())
@@ -87,10 +100,8 @@ void HistogramCreator::showHistogram()
     if (newImage.isNull()) {
         makePNG(fileNamePath);
     }
-//    else{
     ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
     pImageViewer->show();
-//    }
 }
 
 int HistogramCreator::makePNG(QString png_filename_path)

@@ -15,13 +15,15 @@ public:
     HistogramCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *parent = nullptr);
 
     QString progressDialogTextForCurrentTime();
-    void showHistogram();
+    void showHistogramVariable();
+    void showHistogramParameter();
 
 private:
     QString executablePath;
     QString librariesPath;
     QString resultsPath;
 
+    QComboBox *options_variables_box;
     QComboBox *options_parameters_box;
     QComboBox *options_time_box;
 
