@@ -115,8 +115,8 @@ void ScatterPlotCreator::showScatterPlotParameters()
 void ScatterPlotCreator::showScatterPlotVariables()
 {
     QString fileNamePath = resultsPath + "/results/" + "plots/"
-            + "sv_"
-            + options_time_box->currentText()
+            + "sv"
+            + "_" + options_time_box->currentText()
             + "_" + options_variables_box->currentText()
             + ".png";
 
@@ -161,6 +161,7 @@ int ScatterPlotCreator::makePNG(QString args)
     dialog->exec();
     // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
     pythonScriptProcess.waitForFinished(3000);
+
     // See if the process ended correctly
     QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
     int exitCode = pythonScriptProcess.exitCode();

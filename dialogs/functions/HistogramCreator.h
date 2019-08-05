@@ -27,7 +27,7 @@ private:
     QComboBox *options_parameters_box;
     QComboBox *options_time_box;
 
-    int makePNG(QString png_filename);
+    int makePNG(QString args);
 
     QTabWidget *mpTabWidget;
     QDialogButtonBox   *mpButtonBox;

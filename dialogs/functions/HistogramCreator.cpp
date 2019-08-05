@@ -83,44 +83,63 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
 
 void HistogramCreator::showHistogramParameter()
 {
-    showHistogramVariable();
-}
-
-void HistogramCreator::showHistogramVariable()
-{
     QString fileNamePath = resultsPath + "/results/" + "plots/"
-            + "h_"
-            + QString::number(options_time_box->currentIndex())
-            + "_" + QString::number(options_parameters_box->currentIndex())
+            + "hp"
+            + "_" + options_time_box->currentText()
+            + "_" + options_parameters_box->currentText()
             + ".png";
+
+    QString args = "--filename_path=" + fileNamePath
+            + " " + "--parameter=" + options_parameters_box->currentText()
+            + " " + "--variable=" + options_variables_box->currentText()
+            + " " + "--time_value=" + options_time_box->currentText()
+            + " " + "--results_path=" + resultsPath;
 
     // Check if PNG is available. If it is not, generate it
     QImageReader reader(fileNamePath);
     const QImage newImage = reader.read();
     if (newImage.isNull()) {
-        makePNG(fileNamePath);
+        makePNG(args);
     }
     ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
     pImageViewer->show();
 }
 
-int HistogramCreator::makePNG(QString png_filename_path)
+void HistogramCreator::showHistogramVariable()
+{
+    QString fileNamePath = resultsPath + "/results/" + "plots/"
+            + "hv"
+            + "_" + options_time_box->currentText()
+            + "_" + options_variables_box->currentText()
+            + ".png";
+
+    QString args = "--filename_path=" + fileNamePath
+            + " " + "--parameter=" + options_parameters_box->currentText()
+            + " " + "--variable=" + options_variables_box->currentText()
+            + " " + "--time_value=" + options_time_box->currentText()
+            + " " + "--results_path=" + resultsPath;
+
+    // Check if PNG is available. If it is not, generate it
+    QImageReader reader(fileNamePath);
+    const QImage newImage = reader.read();
+    if (newImage.isNull()) {
+        makePNG(args);
+    }
+    ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
+    pImageViewer->show();
+}
+
+int HistogramCreator::makePNG(QString args)
 {
     // Get parameters
     QString scriptPathBaseDir = librariesPath;
     QString scriptPath        = librariesPath + "callable_methods/plot_histogram.py";
     QString pythonBinPath     = executablePath;
 
-    QString args = "--filename_path=" + png_filename_path
-            + " " + "--parameter=" + options_parameters_box->currentText()
-            + " " + "--time_value=" + options_time_box->currentText()
-            + " " + "--runs_path=" + resultsPath + "/results/runs";
-
-    // GENERATE COMMAND FROM SELECTED PARAMETERS
-
-
     // RUN PROCESS
     QString command = pythonBinPath + " " + scriptPath + " " + args;
+//    QString command = "/home/omsens/anaconda3/bin/python /home/omsens/Documents/OMSens/callable_methods/plot_histogram.py --filename_path=/home/omsens/Documents/results_experiments/sweep_results/2019-08-05/14_25_27/results/plots/hv__pred_pop.png --parameter=alpha --variable=pred_pop --time_value= --results_path=/home/omsens/Documents/results_experiments/sweep_results/2019-08-05/14_25_27";
+
     QProcess pythonScriptProcess;
     pythonScriptProcess.setWorkingDirectory(scriptPathBaseDir);
 
@@ -138,6 +157,7 @@ int HistogramCreator::makePNG(QString png_filename_path)
     dialog->exec();
     // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
     pythonScriptProcess.waitForFinished(3000);
+
     // See if the process ended correctly
     QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
     int exitCode = pythonScriptProcess.exitCode();
