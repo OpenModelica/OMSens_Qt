@@ -33,7 +33,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     CSVReader *csv_reader = new CSVReader();
 
     // Obtener nombres de las VARIABLES del modelo (TODO: Ir a buscar al archivo correpondiente)
-    QVector<QString> columns = csv_reader->getColumnsNames(resultsPath + "/" + "runs/std_run.csv");
+    QVector<QString> columns = csv_reader->getColumnsNames(resultsPath + "/results/" + "runs/std_run.csv");
 
     // TODO: Obtener nombre de los PARAMETROS del modelo (TODO: ir a buscar al archivo correspondiente)
 
@@ -73,9 +73,9 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
 void HistogramCreator::showHistogram()
 {
     // Generate filename of png to fetch/generate, using the input parameters entered by the user
-//    QString fileNamePath = resultsPath + "/" + "plots/" + options_time_box->currentText()
+//    QString fileNamePath = resultsPath + "/results/" + "plots/" + options_time_box->currentText()
 //            + "_" + options_parameters_box->currentText() + ".png";
-    QString fileNamePath = resultsPath + "/" + "plots/"
+    QString fileNamePath = resultsPath + "/results/" + "plots/"
             + "h_"
             + QString::number(options_time_box->currentIndex())
             + "_" + QString::number(options_parameters_box->currentIndex())
@@ -103,7 +103,7 @@ int HistogramCreator::makePNG(QString png_filename_path)
     QString args = "--filename_path=" + png_filename_path
             + " " + "--parameter=" + options_parameters_box->currentText()
             + " " + "--time_value=" + options_time_box->currentText()
-            + " " + "--runs_path=" + resultsPath + "/runs";
+            + " " + "--runs_path=" + resultsPath + "/results/runs";
 
     // GENERATE COMMAND FROM SELECTED PARAMETERS
 

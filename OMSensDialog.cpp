@@ -294,6 +294,7 @@ QString OMSensDialog::writeJsonToDisk(QString file_path, QJsonDocument runSpecif
     return file_path;
 }
 
+// TODO: cambiar 'results' folder destination
 QString OMSensDialog::createResultsFolder(QString timeStampFolderPath)
 {
     QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;

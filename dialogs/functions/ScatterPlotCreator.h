@@ -7,7 +7,7 @@
 #include <QDialogButtonBox>
 #include <QComboBox>
 
-class ScatterPlotCreator: public QDialog
+class ScatterPlotCreator: public QWidget
 {
 public:
     ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *parent = nullptr);

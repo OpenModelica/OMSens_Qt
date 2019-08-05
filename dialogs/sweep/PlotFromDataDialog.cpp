@@ -1,6 +1,4 @@
 #include "PlotFromDataDialog.h"
-#include "../functions/HistogramCreator.h"
-#include "../functions/ScatterPlotCreator.h"
 #include "../dialogs/PlotsDialog.h"
 #include <QProcess>
 #include <QDialog>
@@ -39,7 +37,7 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     setWindowTitle("Multiparameter Sweep Plots");
 
     // TODO: seleccionar experimento especifico
-    QLabel *plot_specific_experiment_title = new QLabel("Specific experiment folder:");
+    QLabel *plot_specific_experiment_title = new QLabel("Choose experiment's directory:");
 
     plot_specific_experiment_label = new QLabel(plot_specific_experiment);
     plot_specific_experiment_label->setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -54,15 +52,6 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
     plotsDialogButtonBox->addButton("Plots analysis (multi-tab)", QDialogButtonBox::AcceptRole);
     connect(plotsDialogButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openPlotsDialog);
 
-    // Choose type of plot (Histogram, etc.)
-    QDialogButtonBox *histogramButtonBox = new QDialogButtonBox;
-    histogramButtonBox->addButton("Histogram", QDialogButtonBox::AcceptRole);
-    connect(histogramButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openHistogramDialog);
-
-    QDialogButtonBox *scatterButtonBox = new QDialogButtonBox;
-    scatterButtonBox->addButton("Scatter plot", QDialogButtonBox::AcceptRole);
-    connect(scatterButtonBox, &QDialogButtonBox::accepted, this, &PlotFromDataDialog::openScatterplotDialog);
-
     // Layout
     QVBoxLayout *pMainLayout = new QVBoxLayout;
 
@@ -75,8 +64,6 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 
     // Choose type of plot
     pMainLayout->addWidget(plotsDialogButtonBox, 0, Qt::AlignLeft);
-    pMainLayout->addWidget(histogramButtonBox, 0, Qt::AlignLeft);
-    pMainLayout->addWidget(scatterButtonBox, 0, Qt::AlignLeft);
 
     // Initialize layouts
     setLayout(pMainLayout);
@@ -84,31 +71,13 @@ PlotFromDataDialog::PlotFromDataDialog(QString mPythonBinPath, QString mOMSensPa
 
 void PlotFromDataDialog::openPlotsDialog()
 {
-    PlotsDialog *p = new PlotsDialog(plot_mPythonBinPath,
-                               plot_mOMSensPath, plot_specific_experiment,
-                               this);
-    p->show();
-}
-
-void PlotFromDataDialog::openHistogramDialog()
-{
     // TODO: raise warning if plot_specific_experiment == ""
     if(plot_specific_experiment != "") {
-        HistogramCreator *h = new HistogramCreator(plot_mPythonBinPath,
-                                                   plot_mOMSensPath, plot_specific_experiment,
-                                                   this);
-        h->show();
-    }
-}
-
-void PlotFromDataDialog::openScatterplotDialog()
-{
-    // TODO: raise warning if plot_specific_experiment == ""
-    if(plot_specific_experiment != "") {
-        ScatterPlotCreator *h = new ScatterPlotCreator(plot_mPythonBinPath,
-                                                   plot_mOMSensPath, plot_specific_experiment,
-                                                   this);
-        h->show();
+        PlotsDialog *p = new PlotsDialog(plot_mPythonBinPath,
+                                         plot_mOMSensPath,
+                                         plot_specific_experiment,
+                                         this);
+        p->show();
     }
 }
 
