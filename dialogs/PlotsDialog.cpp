@@ -19,14 +19,13 @@ PlotsDialog::PlotsDialog(QString mPythonBinPath, QString mOMSensPath, QString mO
     ParameterCombinationRunMap *params = new ParameterCombinationRunMap(mOMSensResultsPath);
     mpParametersContainer->addTab(params , tr("Parameters:run id"));
 
-    // TAB: Histogram plotter
-    HistogramCreator *params2 = new HistogramCreator(mPythonBinPath, mOMSensPath, mOMSensResultsPath);
-    mpParametersContainer->addTab(params2 , tr("Histogram Plot"));
-
     // TAB: Scatter plotter
     ScatterPlotCreator *params3 = new ScatterPlotCreator(mPythonBinPath, mOMSensPath, mOMSensResultsPath);
     mpParametersContainer->addTab(params3 , tr("Scatter Plot"));
 
+    // TAB: Histogram plotter
+    HistogramCreator *params2 = new HistogramCreator(mPythonBinPath, mOMSensPath, mOMSensResultsPath);
+    mpParametersContainer->addTab(params2 , tr("Histogram Plot"));
 
     // Layout settings
     mainLayout->addWidget(mpParametersContainer);

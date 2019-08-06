@@ -40,15 +40,13 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     QString max_str = QString::fromStdString(std::to_string(max).substr(0, std::to_string(max).find(".") + precisionVal + 1));
     QString str = "Time: (Min=" + min_str + ", Max=" + max_str + ")";
     QLabel *time_label = new QLabel(str);
-    options_time_box = new QComboBox;
-    options_time_box->setEditable(true);
+    options_time_box = new QLineEdit;
     QHBoxLayout *row1 = new QHBoxLayout;
     row1->addWidget(time_label);
     row1->addWidget(options_time_box);
-    pMainLayout->addItem(row1);
 
     // Show histogram for variable
-    QLabel *options_variables_label = new QLabel("Variable: ");
+    QLabel *options_variables_label = new QLabel("Variables (init vs. end): ");
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Show", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogramVariable);
@@ -60,24 +58,32 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     row2->addWidget(options_variables_label);
     row2->addWidget(options_variables_box);
     row2->addWidget(mpButtonBox);
-    pMainLayout->addItem(row2);
 
     // Show historam for parameter
-    QLabel *options_parameters_label = new QLabel("Parameter: ");
+    QLabel *options_parameters_label_parameter = new QLabel("Parameter: ");
+    QLabel *options_parameters_label_variable = new QLabel("Variable: ");
     options_parameters_box = new QComboBox;
     for (QString parameterName : parameters) {
-        options_parameters_box->addItem(parameterName);
+        if (parameterName != "run_id") options_parameters_box->addItem(parameterName);
+    }
+    options_variables_box_2 = new QComboBox;
+    for (QString variableName : variables) {
+        options_variables_box_2->addItem(variableName);
     }
     QDialogButtonBox *mpButtonBoxParameters = new QDialogButtonBox;
     mpButtonBoxParameters->addButton("Show", QDialogButtonBox::AcceptRole);
     connect(mpButtonBoxParameters, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogramParameter);
     QHBoxLayout *row3 = new QHBoxLayout;
-    row3->addWidget(options_parameters_label);
+    row3->addWidget(options_parameters_label_parameter);
     row3->addWidget(options_parameters_box);
+    row3->addWidget(options_parameters_label_variable);
+    row3->addWidget(options_variables_box_2);
     row3->addWidget(mpButtonBoxParameters);
-    pMainLayout->addItem(row3);
 
     // Layout settings
+    pMainLayout->addItem(row1);
+    pMainLayout->addItem(row3);
+    pMainLayout->addItem(row2);
     setLayout(pMainLayout);
 }
 
@@ -85,14 +91,14 @@ void HistogramCreator::showHistogramParameter()
 {
     QString fileNamePath = resultsPath + "/results/" + "plots/"
             + "hp"
-            + "_" + options_time_box->currentText()
+            + "_" + options_time_box->text()
             + "_" + options_parameters_box->currentText()
             + ".png";
 
     QString args = "--filename_path=" + fileNamePath
             + " " + "--parameter=" + options_parameters_box->currentText()
             + " " + "--variable=" + options_variables_box->currentText()
-            + " " + "--time_value=" + options_time_box->currentText()
+            + " " + "--time_value=" + options_time_box->text()
             + " " + "--results_path=" + resultsPath;
 
     // Check if PNG is available. If it is not, generate it
@@ -109,14 +115,14 @@ void HistogramCreator::showHistogramVariable()
 {
     QString fileNamePath = resultsPath + "/results/" + "plots/"
             + "hv"
-            + "_" + options_time_box->currentText()
+            + "_" + options_time_box->text()
             + "_" + options_variables_box->currentText()
             + ".png";
 
     QString args = "--filename_path=" + fileNamePath
             + " " + "--parameter=" + options_parameters_box->currentText()
             + " " + "--variable=" + options_variables_box->currentText()
-            + " " + "--time_value=" + options_time_box->currentText()
+            + " " + "--time_value=" + options_time_box->text()
             + " " + "--results_path=" + resultsPath;
 
     // Check if PNG is available. If it is not, generate it

@@ -6,6 +6,7 @@
 #include <QTabWidget>
 #include <QDialogButtonBox>
 #include <QComboBox>
+#include <QLineEdit>
 
 class ScatterPlotCreator: public QWidget
 {
@@ -20,7 +21,9 @@ private:
     QString librariesPath;
     QString resultsPath;
 
-    QComboBox *options_time_box;
+//    QComboBox *options_time_box;
+    QLineEdit *options_time_box;
+
     QComboBox *options_variables_box;
 
     QComboBox *options_parameters_box;
