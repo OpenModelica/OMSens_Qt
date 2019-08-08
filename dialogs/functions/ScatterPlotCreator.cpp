@@ -40,6 +40,7 @@ ScatterPlotCreator::ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPa
     QString str = "Time: (Min=" + min_str + ", Max=" + max_str + ")";
     QLabel *time_label = new QLabel(str);
     options_time_box = new QLineEdit;
+    options_time_box->setText(max_str);
     QHBoxLayout *row1 = new QHBoxLayout;
     row1->addWidget(time_label);
     row1->addWidget(options_time_box);

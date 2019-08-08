@@ -41,6 +41,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     QString str = "Time: (Min=" + min_str + ", Max=" + max_str + ")";
     QLabel *time_label = new QLabel(str);
     options_time_box = new QLineEdit;
+    options_time_box->setText(max_str);
     QHBoxLayout *row1 = new QHBoxLayout;
     row1->addWidget(time_label);
     row1->addWidget(options_time_box);
@@ -120,7 +121,6 @@ void HistogramCreator::showHistogramVariable()
             + ".png";
 
     QString args = "--filename_path=" + fileNamePath
-            + " " + "--parameter=" + options_parameters_box->currentText()
             + " " + "--variable=" + options_variables_box->currentText()
             + " " + "--time_value=" + options_time_box->text()
             + " " + "--results_path=" + resultsPath;
