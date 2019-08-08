@@ -6,6 +6,7 @@
 #include <QVBoxLayout>
 #include <QImageReader>
 #include <QVector>
+#include <QMessageBox>
 #include <QComboBox>
 #include <string>
 #include "../dialogs/general/ImageViewerDialog.h"
@@ -86,6 +87,7 @@ ScatterPlotCreator::ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPa
     pMainLayout->addItem(row1);
     pMainLayout->addItem(row3);
     pMainLayout->addItem(row2);
+
     setLayout(pMainLayout);
 }
 
@@ -130,11 +132,14 @@ void ScatterPlotCreator::showScatterPlotVariables()
     // Check if PNG is available. If it is not, generate it
     QImageReader reader(fileNamePath);
     const QImage newImage = reader.read();
+    bool image_available = true;
     if (newImage.isNull()) {
-        makePNG(args);
+        image_available = makePNG(args);
     }
-    ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
-    pImageViewer->show();
+    if (image_available) {
+        ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
+        pImageViewer->show();
+    }
 }
 
 int ScatterPlotCreator::makePNG(QString args)
@@ -159,6 +164,7 @@ int ScatterPlotCreator::makePNG(QString args)
 
     // Start process
     pythonScriptProcess.start(command);
+
     // Show dialog with progress
     dialog->exec();
     // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
@@ -168,6 +174,15 @@ int ScatterPlotCreator::makePNG(QString args)
     QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
     int exitCode = pythonScriptProcess.exitCode();
     bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+
+    if(!processEndedCorrectly) {
+        QString error_string(pythonScriptProcess.readAllStandardError());
+        QMessageBox msg;
+        msg.setText("ERROR: \n" + error_string);
+        msg.exec();
+    }
+
+
     return processEndedCorrectly;
 }
 

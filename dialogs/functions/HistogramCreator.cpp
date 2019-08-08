@@ -7,6 +7,7 @@
 #include <QImageReader>
 #include <QVector>
 #include <QComboBox>
+#include <QMessageBox>
 #include <string>
 #include "../dialogs/general/ImageViewerDialog.h"
 #include "../helpers/CSVReader.h"
@@ -128,11 +129,14 @@ void HistogramCreator::showHistogramVariable()
     // Check if PNG is available. If it is not, generate it
     QImageReader reader(fileNamePath);
     const QImage newImage = reader.read();
+    bool image_available = true;
     if (newImage.isNull()) {
-        makePNG(args);
+        image_available = makePNG(args);
     }
-    ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
-    pImageViewer->show();
+    if(image_available) {
+        ImageViewerDialog *pImageViewer = new ImageViewerDialog(fileNamePath, this);
+        pImageViewer->show();
+    }
 }
 
 int HistogramCreator::makePNG(QString args)
@@ -168,6 +172,13 @@ int HistogramCreator::makePNG(QString args)
     QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
     int exitCode = pythonScriptProcess.exitCode();
     bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+
+    if(!processEndedCorrectly) {
+        QString error_string(pythonScriptProcess.readAllStandardError());
+        QMessageBox msg;
+        msg.setText("ERROR: \n" + error_string);
+        msg.exec();
+    }
     return processEndedCorrectly;
 }
 

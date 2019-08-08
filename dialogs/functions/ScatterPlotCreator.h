@@ -7,6 +7,7 @@
 #include <QDialogButtonBox>
 #include <QComboBox>
 #include <QLineEdit>
+#include <QTextEdit>
 
 class ScatterPlotCreator: public QWidget
 {
