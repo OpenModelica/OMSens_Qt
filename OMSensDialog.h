@@ -40,7 +40,9 @@ private:
     MultiParamSweepDialog        *mpSweepDialog;
     IndivParamSensAnalysisDialog *mpIndivSensDialog;
 
-    // GUI
+    QLabel *executionOutput;
+
+    // GUI   
     QLabel      *mpOMSensPathLabel;
     QLabel      *mpOMSensPathValue;
     QPushButton *mpOMSensPathBrowseButton;
@@ -77,6 +79,9 @@ private:
 signals:
 
 public slots:
+  void readOut();
+  void readErr();
+
   // RUN AND SHOW ANALYSIS
   void runIndivSensAnalysis();
   void runMultiParameterSweep();

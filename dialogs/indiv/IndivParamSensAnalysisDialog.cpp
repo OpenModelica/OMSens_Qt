@@ -110,7 +110,8 @@ QJsonDocument IndivParamSensAnalysisDialog::getRunSpecifications() const
         mpSimulationSettingsTab->getModelPath(),
         mpSimulationSettingsTab->getModelName(),
         this->getParametersToPerturb(),
-        mpPerturbationTab->getPerturbationValue(),
+        mpPerturbationTab->
+                getPerturbationValue(),
         mpSimulationSettingsTab->getStartTimeValue(),
         mpSimulationSettingsTab->getStopTimeValue(),
         this->getVarsToAnalize()
