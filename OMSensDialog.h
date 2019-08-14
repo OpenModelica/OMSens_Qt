@@ -10,6 +10,9 @@
 #include "dialogs/sweep/MultiParamSweepDialog.h"
 #include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
 #include "dialogs/BaseResultsDialog.h"
+#include <QProgressDialog>
+#include <QProgressBar>
+
 
 // Enum so we can pseudo-reference classes
 enum RunType {Individual, Sweep, Vectorial};
@@ -40,7 +43,8 @@ private:
     MultiParamSweepDialog        *mpSweepDialog;
     IndivParamSensAnalysisDialog *mpIndivSensDialog;
 
-    QLabel *executionOutput;
+    QProgressBar *q_progress_bar;
+    QProgressDialog *q_progress_dialog;
 
     // GUI   
     QLabel      *mpOMSensPathLabel;

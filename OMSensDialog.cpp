@@ -169,9 +169,6 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
     mainLayout->addWidget(mpLoadExperimentButton, 0, Qt::AlignRight);
 
-    executionOutput->setText("0");
-    mainLayout->addWidget(executionOutput, 0, Qt::AlignLeft);
-
     // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);
     setLayout(mainLayout);
@@ -244,15 +241,19 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
     // Set working dir path
     pythonScriptProcess.setWorkingDirectory(scriptDirPath);
 
+//    q_progress_bar = new QProgressBar(this);
+
     // Initialize dialog showing progress
     QString progressDialogText = progressDialogTextForCurrentTime();
-    QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
-    dialog->setAttribute(Qt::WA_DeleteOnClose);
+    q_progress_dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
+    q_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
 
     // Connect command "close" with dialog close
-    connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
+    connect(&pythonScriptProcess, SIGNAL(finished(int)), q_progress_dialog, SLOT(close()));
+    connect(&pythonScriptProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readOut()));
+
     // Connect dialog "cancel"  with command kill
-    connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
+    connect(q_progress_dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
 
     // Added
     pythonScriptProcess.setEnvironment(QProcess::systemEnvironment());
@@ -260,34 +261,30 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
 
     // Start process
     pythonScriptProcess.start(command);
+
     // Show dialog with progress
-    dialog->exec();
+    q_progress_dialog->exec();
+//    q_progress_dialog->setValue(0.2);
 
-//     Show output after proccess ended
-//    QString output_string(pythonScriptProcess.readAllStandardOutput());
-//    QMessageBox msg;
-//    msg.setText(output_string);
-//    msg.exec();
-
-    connect(&pythonScriptProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readOut()));
-    //connect(pythonScriptProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readErr()));
-
-    //
     // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
     pythonScriptProcess.waitForFinished(3000);
-
-    // See if the process ended correctly
     QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
     int exitCode = pythonScriptProcess.exitCode();
-
     bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+
+    //     Show output after proccess ended
+    QString output_string(pythonScriptProcess.readAllStandardOutput());
+    QMessageBox msg;
+    msg.setText(output_string);
+    msg.exec();
 
     return processEndedCorrectly;
 }
 
 void OMSensDialog::readOut()
 {
-    executionOutput->setText("1");
+//    TODO
+//    q_progress_dialog->set;
 }
 
 void OMSensDialog::readErr()
