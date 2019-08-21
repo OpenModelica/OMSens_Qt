@@ -11,6 +11,26 @@ CSVReader::CSVReader()
 
 }
 
+QString CSVReader::getLastRow(QString path)
+{
+    QString value = "";
+    QFile file(path);
+    if ( !file.open(QFile::ReadOnly | QFile::Text) ) {
+        qDebug() << "File not exists";
+    } else {
+        // Create a thread to retrieve data from a file
+        QTextStream in(&file);
+        QString line = in.readLine();
+
+        while (!in.atEnd()){
+          QString s = in.readLine(); // reads line from file
+          value = s;
+        }
+        file.close();
+    }
+    return value;
+}
+
 QVector<QVector<double>> CSVReader::getNumericData(QString path)
 {
     QVector<QVector<double>> data;
