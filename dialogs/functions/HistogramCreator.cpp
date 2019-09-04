@@ -9,8 +9,8 @@
 #include <QComboBox>
 #include <QMessageBox>
 #include <string>
-#include "../dialogs/general/ImageViewerDialog.h"
-#include "../helpers/CSVReader.h"
+#include "dialogs/general/ImageViewerDialog.h"
+#include "helpers/CSVReader.h"
 
 using namespace std;
 

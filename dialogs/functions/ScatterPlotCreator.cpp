@@ -9,8 +9,8 @@
 #include <QMessageBox>
 #include <QComboBox>
 #include <string>
-#include "../dialogs/general/ImageViewerDialog.h"
-#include "../helpers/CSVReader.h"
+#include "dialogs/general/ImageViewerDialog.h"
+#include "helpers/CSVReader.h"
 
 ScatterPlotCreator::ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *pParent) : QWidget(pParent)
 {

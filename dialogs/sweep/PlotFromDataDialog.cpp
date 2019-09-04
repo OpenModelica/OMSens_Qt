@@ -1,5 +1,5 @@
 #include "PlotFromDataDialog.h"
-#include "../dialogs/PlotsDialog.h"
+#include "dialogs/PlotsDialog.h"
 #include <QProcess>
 #include <QDialog>
 #include <QDateTime>

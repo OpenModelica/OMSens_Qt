@@ -5,7 +5,7 @@
 #include <QWidget>
 #include "../BaseRunSpecsDialog.h"
 #include "omedit_plugin/model.h"
-#include "../specs/ConstrainedIntervalSpecs.h"
+#include "specs/ConstrainedIntervalSpecs.h"
 
 class ConstrainedIntervalSensAnalysisDialog : public BaseRunSpecsDialog
 {

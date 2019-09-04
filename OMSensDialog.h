@@ -12,6 +12,7 @@
 #include "dialogs/BaseResultsDialog.h"
 #include <QProgressDialog>
 #include <QProgressBar>
+#include <QProcess>
 
 
 // Enum so we can pseudo-reference classes
@@ -33,6 +34,7 @@ public:
 private:
     // Data
     Model mActiveModel;
+    QProcess pythonScriptProcess;
 
     QString mOMSensPath;
     QString mPythonBinPath;

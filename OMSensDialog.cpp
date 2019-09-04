@@ -26,6 +26,7 @@
 #include "specs/VectSpecs.h"
 #include <QMessageBox>
 #include <QTimer>
+#include <string>
 
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
@@ -237,7 +238,7 @@ QString OMSensDialog::progressDialogTextForCurrentTime()
 
 bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
 {
-    QProcess pythonScriptProcess;
+//    QProcess pythonScriptProcess;
 
     // Set working dir path
     pythonScriptProcess.setWorkingDirectory(scriptDirPath);
@@ -283,8 +284,22 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
 
 void OMSensDialog::readOut()
 {
-
-    q_progress_dialog->setValue(q_progress_dialog->value() + 5);
+    QString output_string(pythonScriptProcess.readAllStandardOutput());
+    int val = 0;
+    if (output_string != "") {
+        try {
+            std::string last_element = output_string.split(",").back().toStdString();
+            last_element.erase(last_element.begin(),
+                               std::find_if(last_element.begin(), last_element.end(),
+                                            std::bind1st(std::not_equal_to<char>(), ',')));
+            val = std::stoi(last_element);
+            q_progress_dialog->setValue(val);
+        } catch (int e) {
+            QMessageBox msg;
+            msg.setText("ERROR");
+            msg.exec();
+        }
+    }
 }
 
 void OMSensDialog::readErr()
