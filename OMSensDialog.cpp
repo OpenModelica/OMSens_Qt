@@ -238,8 +238,6 @@ QString OMSensDialog::progressDialogTextForCurrentTime()
 
 bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
 {
-//    QProcess pythonScriptProcess;
-
     // Set working dir path
     pythonScriptProcess.setWorkingDirectory(scriptDirPath);
 
