@@ -64,7 +64,8 @@ SOURCES += \
     dialogs/functions/ScatterPlotCreator.cpp \
     specs/ConstrainedIntervalSpecs.cpp \
     dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.cpp \
-    tabs/ParameterCombinationRunMap.cpp
+    tabs/ParameterCombinationRunMap.cpp \
+    dialogs/functions/LinesPlotVisualizer.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -108,7 +109,8 @@ HEADERS += \
     dialogs/functions/ScatterPlotCreator.h \
     specs/ConstrainedIntervalSpecs.h \
     dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.h \
-    tabs/ParameterCombinationRunMap.h
+    tabs/ParameterCombinationRunMap.h \
+    dialogs/functions/LinesPlotVisualizer.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
