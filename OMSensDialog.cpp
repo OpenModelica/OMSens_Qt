@@ -68,35 +68,40 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
 
     // Individual parameters
-    mpIndivButton = new QPushButton(tr("Run"));
+    mpIndivButton = new QPushButton(tr("Run new"));
     mpIndivButton->setAutoDefault(true);
     mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
-    mpIndivButtonAnalysis = new QPushButton(tr("Analisis"));
+    mpIndivButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    mpIndivButtonAnalysis->setEnabled(false);
     connect(mpIndivButtonAnalysis, SIGNAL(clicked()), SLOT(showIndivSensAnalysis()));
 
     // Parameter Sweep
-    mpSweepButton = new QPushButton(tr("Run"));
+    mpSweepButton = new QPushButton(tr("Run new"));
     mpSweepButton->setAutoDefault(true);
     mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
-    mpSweepButtonAnalysis = new QPushButton(tr("Analisis"));
+    mpSweepButtonAnalysis = new QPushButton(tr("Analyze Results"));
     connect(mpSweepButtonAnalysis, SIGNAL(clicked()), SLOT(showMultiParameterSweepAnalysis()));
 
     // Vectorial
-    mpVectButton = new QPushButton(tr("Run"));
+    mpVectButton = new QPushButton(tr("Run new"));
     mpVectButton->setAutoDefault(true);
     mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
-    mpVectButtonAnalysis = new QPushButton(tr("Analisis"));
+    mpVectButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    mpVectButtonAnalysis->setEnabled(false);
     connect(mpVectButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
 
     // Constrained (TODO: do connections the right way)
-    mpConstrainedButton = new QPushButton(tr("Run"));
+    mpConstrainedButton = new QPushButton(tr("Run new"));
     mpConstrainedButton->setAutoDefault(true);
     mpConstrainedButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
     connect(mpConstrainedButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
-    mpConstrainedButtonAnalysis = new QPushButton(tr("Analisis"));
+    mpConstrainedButton->setEnabled(false);
+
+    mpConstrainedButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    mpConstrainedButtonAnalysis->setEnabled(false);
     connect(mpConstrainedButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
 
 
@@ -129,12 +134,35 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     mainLayout->addWidget(mpHorizontalLineOne);
 
     // Buttons
+    // LOAD EXPERIMENT PARAMETERIZATION
+    mpLoadExperimentButton = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton->setAutoDefault(true);
+    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+
+    mpLoadExperimentButton2 = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton2->setAutoDefault(true);
+    mpLoadExperimentButton2->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton2, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+
+    mpLoadExperimentButton3 = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton3->setAutoDefault(true);
+    mpLoadExperimentButton3->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton3, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+
+    mpLoadExperimentButton4 = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton4->setAutoDefault(true);
+    mpLoadExperimentButton4->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton4, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+    mpLoadExperimentButton4->setEnabled(false);
+
     // LABEL 1
     QLabel *label1 = new QLabel("Individual Parameter Based Sensitivity ");
     mainLayout->addWidget(label1, 0, Qt::AlignLeft);
     QHBoxLayout *row1 = new QHBoxLayout;
     row1->addWidget(mpIndivButton);
     row1->addWidget(mpIndivButtonAnalysis);
+    row1->addWidget(mpLoadExperimentButton);
     mainLayout->addItem(row1);
 
     // LABEL 2
@@ -143,6 +171,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     QHBoxLayout *row2 = new QHBoxLayout;
     row2->addWidget(mpSweepButton);
     row2->addWidget(mpSweepButtonAnalysis);
+    row2->addWidget(mpLoadExperimentButton2);
     mainLayout->addItem(row2);
 
     // LABEL 3
@@ -151,6 +180,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     QHBoxLayout *row3 = new QHBoxLayout;
     row3->addWidget(mpVectButton);
     row3->addWidget(mpVectButtonAnalysis);
+    row3->addWidget(mpLoadExperimentButton3);
     mainLayout->addItem(row3);
 
     // LABEL 4
@@ -159,17 +189,8 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     QHBoxLayout *row4 = new QHBoxLayout;
     row4->addWidget(mpConstrainedButton);
     row4->addWidget(mpConstrainedButtonAnalysis);
+    row4->addWidget(mpLoadExperimentButton4);
     mainLayout->addItem(row4);
-
-    // Separator
-    mainLayout->addWidget(mpHorizontalLineTwo);
-
-//    loadExperimentFileDialog
-    mpLoadExperimentButton = new QPushButton(tr("Load"));
-    mpLoadExperimentButton->setAutoDefault(true);
-    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
-    mainLayout->addWidget(mpLoadExperimentButton, 0, Qt::AlignRight);
 
     // Layout settings
     mainLayout->setAlignment(Qt::AlignCenter);

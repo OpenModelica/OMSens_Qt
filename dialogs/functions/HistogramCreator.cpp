@@ -30,6 +30,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     QVector<QString> variables = csv_reader->getColumnsNames(mOMSensResultsPath + "/" + "results/" + "variables.csv");
     QVector<double> time_values = csv_reader->getColumnValues(mOMSensResultsPath + "/" + "results/runs/std_run.csv", "time");
 
+
     // Layout
     QVBoxLayout *pMainLayout = new QVBoxLayout;
 
@@ -50,7 +51,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
     // Show histogram for variable
     QLabel *options_variables_label = new QLabel("Variables (init vs. end): ");
     mpButtonBox = new QDialogButtonBox;
-    mpButtonBox->addButton("Show", QDialogButtonBox::AcceptRole);
+    mpButtonBox->addButton("One variable (init vs. end)", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogramVariable);
     options_variables_box = new QComboBox;
     for (QString varName: variables) {
@@ -73,7 +74,7 @@ HistogramCreator::HistogramCreator(QString mPythonBinPath, QString mOMSensPath, 
         options_variables_box_2->addItem(variableName);
     }
     QDialogButtonBox *mpButtonBoxParameters = new QDialogButtonBox;
-    mpButtonBoxParameters->addButton("Show", QDialogButtonBox::AcceptRole);
+    mpButtonBoxParameters->addButton("One Parameter / One variable", QDialogButtonBox::AcceptRole);
     connect(mpButtonBoxParameters, &QDialogButtonBox::accepted, this, &HistogramCreator::showHistogramParameter);
     QHBoxLayout *row3 = new QHBoxLayout;
     row3->addWidget(options_parameters_label_parameter);

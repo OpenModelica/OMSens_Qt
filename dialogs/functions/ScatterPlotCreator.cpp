@@ -49,7 +49,7 @@ ScatterPlotCreator::ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPa
     // Variables
     // parameters buttons
     mpButtonBox = new QDialogButtonBox;
-    mpButtonBox->addButton("Show", QDialogButtonBox::AcceptRole);
+    mpButtonBox->addButton("One variable (init vs. end)", QDialogButtonBox::AcceptRole);
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &ScatterPlotCreator::showScatterPlotVariables);
 
     QLabel *options_variables_label = new QLabel("Variables (init vs. end): ");
@@ -64,7 +64,7 @@ ScatterPlotCreator::ScatterPlotCreator(QString mPythonBinPath, QString mOMSensPa
 
     // Parameters
     QDialogButtonBox *mpButtonBoxParameters = new QDialogButtonBox;
-    mpButtonBoxParameters->addButton("Show", QDialogButtonBox::AcceptRole);
+    mpButtonBoxParameters->addButton("One Parameter / One variable", QDialogButtonBox::AcceptRole);
     connect(mpButtonBoxParameters, &QDialogButtonBox::accepted, this, &ScatterPlotCreator::showScatterPlotParameters);
     QLabel *options_label_parameter = new QLabel("Parameter: ");
     QLabel *options_label_variable = new QLabel("Variable: ");
@@ -146,7 +146,7 @@ int ScatterPlotCreator::makePNG(QString args)
 {
     // Get parameters
     QString scriptPathBaseDir = librariesPath;
-    QString scriptPath        = librariesPath + "callable_methods/plot_scatter.py";
+    QString scriptPath        = librariesPath + "callable_methods/plot_scatterplot.py";
     QString pythonBinPath     = executablePath;
 
     // RUN PROCESS

@@ -3,6 +3,7 @@
 #include "../tabs/ParameterCombinationRunMap.h"
 #include "functions/HistogramCreator.h"
 #include "functions/ScatterPlotCreator.h"
+#include "functions/LinesPlotVisualizer.h"
 
 
 PlotsDialog::PlotsDialog(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, QWidget *parent) : QDialog(parent)
@@ -26,6 +27,9 @@ PlotsDialog::PlotsDialog(QString mPythonBinPath, QString mOMSensPath, QString mO
     // TAB: Histogram plotter
     HistogramCreator *params2 = new HistogramCreator(mPythonBinPath, mOMSensPath, mOMSensResultsPath);
     mpParametersContainer->addTab(params2 , tr("Histogram Plot"));
+
+    LinesPlotVisualizer *params4 = new LinesPlotVisualizer(mPythonBinPath, mOMSensPath, mOMSensResultsPath);
+    mpParametersContainer->addTab(params4 , tr("Line Plots"));
 
     // Layout settings
     mainLayout->addWidget(mpParametersContainer);

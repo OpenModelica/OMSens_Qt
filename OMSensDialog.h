@@ -65,6 +65,10 @@ private:
     QFrame      *mpHorizontalLineTwo;
     QPushButton *mpHelpButton; // Not shown for now
     QPushButton *mpLoadExperimentButton;
+    QPushButton *mpLoadExperimentButton2;
+    QPushButton *mpLoadExperimentButton3;
+    QPushButton *mpLoadExperimentButton4;
+
     // Auxs
     QJsonDocument readJsonFile(QString analysisResultsJSONPath);
     bool runProcessAndShowProgress(QString scriptDirPath, QString command);
