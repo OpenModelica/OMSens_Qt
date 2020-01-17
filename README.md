@@ -3,7 +3,7 @@ A GUI interface for OMSens which can be loaded into OMEdit as a plugin.
 
 ## Dependencies
 
-- [OpenModelica](https://openmodelica.org) Just the plugin interface header files are needed.
+- [OpenModelica](https://openmodelica.org) - Just the plugin interface header files are needed.
 
 ## Build instructions
 
@@ -30,5 +30,5 @@ $ make -f Makefile.omdev.mingw omsens_qt
 
 ## Bug Reports
 
-- Submit bugs through the [issues](../../../issues)
-- [Pull requests](../../../pulls) are welcome.
+- Submit bugs through the [issues](../../issues)
+- [Pull requests](../../pulls) are welcome.
