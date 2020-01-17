@@ -7,7 +7,7 @@
 #include <QDateTime>
 #include <QTextStream>
 
-#include "omedit_plugin/model.h"
+#include "OMSensPlugin.h"
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
 #include "dialogs/indiv/IndivSensResultsDialog.h"
@@ -92,7 +92,7 @@ QString OMSensDialog::pythonExecPath()
         QString sysCallSTDOUT(sysProcc.readAllStandardOutput());
         // Sanitize output
         QStringList paths = sysCallSTDOUT.split("\n");
-        QString firstPath = paths.at(0);	
+        QString firstPath = paths.at(0);
         pythonPath = firstPath;
     }
     else
@@ -109,9 +109,9 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
     setWindowTitle("OMSens");
 
     // OMSens python backend path
-    mOMSensPath    = omsensBackendPath();
+    mOMSensPath    = QDir::cleanPath(OMSensPlugin::OpenModelicaHome + "/OMSens")/*omsensBackendPath()*/;
     // Python executable path
-    mPythonBinPath = pythonExecPath();
+    mPythonBinPath = QDir::cleanPath(pythonExecPath());
     // Initialize dialogs
     mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
     mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);
@@ -521,8 +521,8 @@ void OMSensDialog::loadExperimentFileDialog()
             // Get analysis type
             QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
             // Find the corresponding analysis type
-            BaseRunSpecsDialog *runSpecsDialog;
-            RunType             runType;
+            BaseRunSpecsDialog *runSpecsDialog = 0;
+            RunType             runType = Individual;
             // Get specs file folder path
             QFileInfo exp_specs_file_info = QFileInfo(exp_specs_path);
             QDir exp_specs_dir = exp_specs_file_info.absoluteDir();

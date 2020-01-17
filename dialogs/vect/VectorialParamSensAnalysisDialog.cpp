@@ -10,6 +10,8 @@
 #include <QStandardPaths>
 #include <QDir>
 
+#include "OMSensPlugin.h"
+
 // Conventions
 QString VectorialSensAnalysisDialog::pythonScriptName()
 {
@@ -56,7 +58,7 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *p
     double stopTime   = 1;
     double epsilon    = 0.1;
     QList<ParameterInclusion> params_inclusion = defaultParametersToInclude(parameters);
-    QString target_var = variables.first();
+    QString target_var = variables.isEmpty() ? "" : variables.first();
     bool   maximize = true;
 
     initialize(variables, target_var, maximize, epsilon, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
@@ -75,8 +77,9 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString t
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-    QString homePath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-    QString defaultResultsFolderPath = QDir::cleanPath(homePath + QDir::separator() + "omsens_results" + QDir::separator() + "vect_results");
+//    QString homePath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
+//    QString defaultResultsFolderPath = QDir::cleanPath(homePath + QDir::separator() + "omsens_results" + QDir::separator() + "vect_results");
+    QString defaultResultsFolderPath = QDir::cleanPath(OMSensPlugin::tempPath + "/omsens_results/vect_results");
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
     mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);
@@ -132,7 +135,7 @@ QStringList VectorialSensAnalysisDialog::getParametersToPerturb() const
 bool VectorialSensAnalysisDialog::getIfMaximization() const
 {
     int goalButtonId = mpOptimizationTab->getGoalId();
-    bool maximize;
+    bool maximize = false;
     if(goalButtonId == mpOptimizationTab->mMinimizeButtonId)
         maximize = false;
     else if(goalButtonId == mpOptimizationTab->mMaximizeButtonId)

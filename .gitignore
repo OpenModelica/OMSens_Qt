@@ -32,3 +32,10 @@
 *.app
 /OMSens_Qt.pro.user
 /build*
+
+/Makefile
+/Makefile.Debug
+/Makefile.Release
+/generatedfiles/*
+/object_script.*
+/OMSens_Qt.pro.*

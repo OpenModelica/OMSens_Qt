@@ -91,7 +91,6 @@ HEADERS += \
     specs/RunSpecifications.h \
     specs/VectSpecs.h \
     OMSensPlugin.h \
-    omedit_plugin/interfaces.h \
     omedit_plugin/model.h
 
 DISTFILES += \
@@ -103,3 +102,11 @@ DISTFILES += \
 
 RESOURCES += \
     resources.qrc
+
+DESTDIR = bin
+
+UI_DIR = generatedfiles/ui
+
+MOC_DIR = generatedfiles/moc
+
+RCC_DIR = generatedfiles/rcc

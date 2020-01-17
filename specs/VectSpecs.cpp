@@ -89,7 +89,7 @@ QString VectSpecs::optimTypeString(bool maximize)
 
 bool VectSpecs::ifMaximizationFromMaxOrMinStr(QString max_or_min)
 {
-    bool maximize;
+    bool maximize = false;
     if(max_or_min == "max") maximize = true;
     else if(max_or_min == "min") maximize = false;
     else
