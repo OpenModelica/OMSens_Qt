@@ -14,7 +14,7 @@ class OptimizationTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize, QWidget *parent = nullptr);
+    explicit OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize, QWidget *parent = 0);
 
     // Conventions
     //   Columns ordering

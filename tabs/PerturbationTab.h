@@ -10,7 +10,7 @@ class PerturbationTab : public QTabWidget
 {
     Q_OBJECT
 public:
-    explicit PerturbationTab(double percentage, QWidget *parent = nullptr);
+    explicit PerturbationTab(double percentage, QWidget *parent = 0);
     double getPerturbationValue() const;
 
 private:

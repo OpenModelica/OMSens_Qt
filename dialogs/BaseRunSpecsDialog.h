@@ -7,7 +7,7 @@ class BaseRunSpecsDialog : public QDialog
 {
     Q_OBJECT
 public:
-    BaseRunSpecsDialog(QWidget *parent = nullptr) : QDialog(parent) {}
+    BaseRunSpecsDialog(QWidget *parent = 0) : QDialog(parent) {}
 
     // Getters
     virtual QJsonDocument getRunSpecifications() const = 0;

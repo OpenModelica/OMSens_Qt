@@ -6,11 +6,11 @@
 
 class HelpTab : public QWidget
 {
-    Q_OBJECT
+  Q_OBJECT
 public:
-    explicit HelpTab(QString description, QWidget *parent = nullptr);
+  explicit HelpTab(QString description, QWidget *parent = 0);
 private:
-    QLabel *mDescription;
+  QLabel *mDescription;
 
 signals:
 
