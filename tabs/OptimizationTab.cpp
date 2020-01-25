@@ -3,9 +3,13 @@
 #include <QGridLayout>
 #include <QHBoxLayout>
 #include <QtMath>
+#include <limits>
 
 OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize, QWidget *parent) : QWidget(parent)
 {
+    // init
+    mMinimizeButtonId = 0;
+    mMaximizeButtonId = 1;
     // Variables
     mpVariablesLabel = new QLabel(tr("Variable:"), this);
     mpVariablesComboBox = new QComboBox(this);

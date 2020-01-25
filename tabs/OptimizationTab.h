@@ -18,8 +18,8 @@ public:
 
     // Conventions
     //   Columns ordering
-    int mMinimizeButtonId = 0;
-    int mMaximizeButtonId = 1;
+    int mMinimizeButtonId;
+    int mMaximizeButtonId;
     // Getters
     double getEpsilon() const;
     QString getTargetVariable() const;
