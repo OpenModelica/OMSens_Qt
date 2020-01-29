@@ -1,6 +1,7 @@
 #include "PerturbationTab.h"
 
 #include <QGridLayout>
+#include <limits>
 
 PerturbationTab::PerturbationTab(double percentage, QWidget *parent) : QTabWidget(parent)
 {
