@@ -344,8 +344,8 @@ QString OMSensDialog::dirPathForFilePath(QString scriptPath)
 QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath)
 {
   QString scriptDestPathFlag = "--dest_folder_path";
-  QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
-  QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
+  QString scriptDestPathFlagAndArg = scriptDestPathFlag + " \"" + resultsFolderPath + "\"";
+  QString command = "\"" + pythonBinPath + "\" \"" + scriptPath + "\" \"" + jsonSpecsPath + "\" " + scriptDestPathFlagAndArg;
 
   return command;
 }
@@ -413,8 +413,7 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
     QString scriptDirPath = dirPathForFilePath(scriptPath);
     bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, resultsFolderPath, scriptPath, pythonBinPath);
     // If the process ended correctly, show the results dialog
-    if (processEndedCorrectly)
-    {
+    if (processEndedCorrectly) {
       // Read JSON in results folder with the paths to the results of the script
       resultDialog = showResultsDialog(runType, resultsFolderPath);
     }
