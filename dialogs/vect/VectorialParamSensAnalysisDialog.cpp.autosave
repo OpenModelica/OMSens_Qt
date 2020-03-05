@@ -31,7 +31,9 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs 
     QList<ParameterInclusion> params_inclusion = paramsInclusionFromSuperAndSubList(exp_params, model_parameters);
 
     // Call the initializer with the parsed data from the specs
-    initialize(model_variables, exp_target_var, exp_maximize, epsilon, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
+    initialize(model_variables, exp_target_var, exp_maximize, 
+               epsilon, params_inclusion, model_name, 
+               model_file_path, percentage, startTime, stopTime);
 }
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   BaseRunSpecsDialog(pParent)
@@ -51,7 +53,9 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *p
     QString target_var = variables.first();
     bool   maximize = true;
 
-    initialize(variables, target_var, maximize, epsilon, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, target_var, maximize, epsilon, 
+               params_inclusion, modelName, modelFilePath, 
+               percentage, startTime, stopTime);
 }
 
 void VectorialSensAnalysisDialog::initializeWindowSettings()
@@ -60,7 +64,10 @@ void VectorialSensAnalysisDialog::initializeWindowSettings()
     setMinimumWidth(550);
 }
 
-void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var, bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var, 
+                                             bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, 
+                                             QString modelName, QString modelFilePath, double percentage, 
+                                             double startTime, double stopTime)
     {
     initializeWindowSettings();
 

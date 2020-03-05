@@ -12,6 +12,7 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
 {
     // Get main object from document
     QJsonObject json_specs = json_specs_doc.object();
+
     // Initialize from specs
     this->model_name      = json_specs.value(QString("model_name")).toString();
     this->model_file_path = json_specs.value(QString("model_mo_path")).toString();
@@ -20,16 +21,36 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     this->stop_time       = json_specs.value(QString("stop_time")).toDouble();
     this->epsilon         = json_specs.value(QString("epsilon")).toDouble();
     this->target_var      = json_specs.value(QString("target_var_name")).toString();
+
+    this->optimizer_name             = json_specs.value(QString("optimizer_name")).toString();
+    this->objective_function_name    = json_specs.value(QString("objective_function_name")).toString();
+    this->alpha_value                = json_specs.value(QString("alpha_value")).toDouble();
+    this->constrained_time_path_file = json_specs.value(QString("constrained_time_path_file")).toString();
+
     // Get parameters QVariant list
     QList<QVariant> parametersQVariant = json_specs.value(QString("parameters_to_perturb")).toArray().toVariantList();
+
     // Transform from list of QVariant to list of QString
     this->parameters_to_perturb = fromListOfVariantToListOfStr(parametersQVariant);
+
     // Get optimization type
     QString max_or_min  = json_specs.value(QString("max_or_min")).toString();
     this->maximize = ifMaximizationFromMaxOrMinStr(max_or_min);}
-VectSpecs::VectSpecs( QString model_file_path, QString model_name, bool maximize,
-               QStringList parameters_to_perturb, double epsilon, double percentage, double start_time,
-               double stop_time, QString target_var):
+
+    VectSpecs::VectSpecs(
+        QString model_file_path,
+        QString model_name,
+        bool maximize,
+        QStringList parameters_to_perturb,
+        double epsilon,
+        double percentage,
+        double start_time,
+        double stop_time,
+        QString target_var,
+        QString optimizer_name,
+        QString objective_function_name,
+        double alpha_value,
+        QString constrained_time_path_file):
     model_file_path(model_file_path),
     model_name(model_name),
     maximize(maximize),
@@ -38,7 +59,11 @@ VectSpecs::VectSpecs( QString model_file_path, QString model_name, bool maximize
     percentage(percentage),
     start_time(start_time),
     stop_time(stop_time),
-    target_var(target_var)
+    target_var(target_var),
+    optimizer_name(optimizer_name),
+    objective_function_name(objective_function_name),
+    alpha_value(alpha_value),
+    constrained_time_path_file(constrained_time_path_file)
 {
     // Do nothing else for now
 }
@@ -58,9 +83,17 @@ QJsonDocument VectSpecs::toJson()
     json_specs["percentage"]            = this->percentage;
     json_specs["epsilon"]               = this->epsilon;
     json_specs["target_var_name"]       = this->target_var;
+
+    json_specs["optimizer_name"] = this->optimizer_name;
+    json_specs["objective_function_name"] = this->objective_function_name;
+    json_specs["alpha_value"] = this->alpha_value;
+    json_specs["constrained_time_path_file"] = this->constrained_time_path_file;
+
     json_specs["parameters_to_perturb"] = QJsonArray::fromStringList(this->parameters_to_perturb);
+
     QString optim_type_string           = optimTypeString(this->maximize);
     json_specs["max_or_min"]            = optim_type_string;
+
     // Initialize JSON doc from JSON object
     QJsonDocument json_specs_doc(json_specs);
 
