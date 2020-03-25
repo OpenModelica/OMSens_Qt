@@ -31,7 +31,13 @@ public:
     QString getDestFolderPath() const;
 
 private:
-    void initialize(QList<QString> variables, QString target_var, bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<QString> variables, QString target_var, bool maximize,
+                    double epsilon, QList<ParameterInclusion> params_inclusion,
+                    QString modelName, QString modelFilePath,
+                    double percentage, double startTime, double stopTime,
+                    QString optimizer_name, QString objective_function_name, double alpha_value,
+                    QString constrained_time_path_file, QString constrained_variable, double constrained_epsilon
+                    );
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;

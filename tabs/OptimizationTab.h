@@ -15,7 +15,10 @@ class OptimizationTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize, QWidget *parent = nullptr);
+    explicit OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize,
+                             QString optimizer_name, QString objective_function_name, double alpha_value,
+                             QString constrained_time_path_file, QString constrained_variable, double constrained_epsilon,
+                             QWidget *parent = nullptr);
 
     // Conventions
     // Columns ordering
@@ -24,7 +27,9 @@ public:
 
     // Getters
     double getEpsilon() const;
+    double getConstrainedEpsilon() const;
     QString getTargetVariable() const;
+    QString getConstrainedVariable() const;
     int getGoalId() const;
     double  getBoundariesValue() const;
 
@@ -35,8 +40,8 @@ public:
 
 private:
     // Variable
-    QLabel    *mpVariablesLabel;
-    QComboBox *mpVariablesComboBox;
+    QLabel    *mpVariablesLabel, *mpConstrainedVariablesLabel;
+    QComboBox *mpVariablesComboBox, *mpConstrainedVariablesComboBox;
     QButtonGroup *mpGoalButtonGroup;
     QRadioButton *mpMinRadio;
     QRadioButton *mpMaxRadio;
@@ -59,8 +64,8 @@ private:
     QLabel *mpConstrainedPathLabel;
 
     // Epsilon
-    QLabel   *mpEpsilonLabel;
-    SciNotationDoubleSpinbox *mpEpsilonBox;
+    QLabel   *mpEpsilonLabel, *mpEpsilonConstrainedLabel;
+    SciNotationDoubleSpinbox *mpEpsilonBox, *mpEpsilonConstrainedComboBox;
     QLabel   *mpEpsilonHintLabel;
 
     // Boundaries

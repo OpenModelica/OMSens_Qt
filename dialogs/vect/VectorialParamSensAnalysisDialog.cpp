@@ -21,6 +21,13 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs 
     QStringList exp_params   = runSpecs.parameters_to_perturb;
     bool exp_maximize        = runSpecs.maximize;
 
+    QString optimizer_name = runSpecs.optimizer_name;
+    QString objective_function_name = runSpecs.objective_function_name;
+    double alpha_value = runSpecs.alpha_value;
+    QString constrained_time_path_file = runSpecs.constrained_time_path_file;
+    QString constrained_variable = runSpecs.constrained_variable;
+    double constrained_epsilon = runSpecs.constrained_epsilon;
+
     // Get model info
     QList<QString> model_variables  = model.getAuxVariables() + model.getOutputVariables();
     QList<QString> model_parameters = model.getParameters();
@@ -31,7 +38,12 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, VectSpecs 
     QList<ParameterInclusion> params_inclusion = paramsInclusionFromSuperAndSubList(exp_params, model_parameters);
 
     // Call the initializer with the parsed data from the specs
-    initialize(model_variables, exp_target_var, exp_maximize, epsilon, params_inclusion, model_name, model_file_path, percentage, startTime, stopTime);
+    initialize(model_variables, exp_target_var, exp_maximize,
+               epsilon, params_inclusion, model_name,
+               model_file_path, percentage, startTime, stopTime,
+               optimizer_name, objective_function_name, alpha_value,
+               constrained_time_path_file, constrained_variable, constrained_epsilon
+    );
 }
 VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *pParent) :
   BaseRunSpecsDialog(pParent)
@@ -47,11 +59,20 @@ VectorialSensAnalysisDialog::VectorialSensAnalysisDialog(Model model, QWidget *p
     double startTime  = 0;
     double stopTime   = 1;
     double epsilon    = 0.1;
+    double constrained_epsilon_initial = 0.1;
+    QString optimizer_name = "CURVIFGR";
+    QString objective_function_name = "Alpha weighted path constrained";
+    double alpha_value = 0.5;
+    QString constrained_time_path_file = "/home/omsens/limit_path.csv";
+
     QList<ParameterInclusion> params_inclusion = defaultParametersToInclude(parameters);
     QString target_var = variables.first();
     bool   maximize = true;
 
-    initialize(variables, target_var, maximize, epsilon, params_inclusion, modelName, modelFilePath, percentage, startTime, stopTime);
+    initialize(variables, target_var, maximize, epsilon,
+               params_inclusion, modelName, modelFilePath,
+               percentage, startTime, stopTime, optimizer_name, objective_function_name,
+               alpha_value, constrained_time_path_file, target_var, constrained_epsilon_initial);
 }
 
 void VectorialSensAnalysisDialog::initializeWindowSettings()
@@ -60,7 +81,13 @@ void VectorialSensAnalysisDialog::initializeWindowSettings()
     setMinimumWidth(550);
 }
 
-void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var, bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
+void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString target_var,
+                                             bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion,
+                                             QString modelName, QString modelFilePath, double percentage,
+                                             double startTime, double stopTime,
+                                             QString optimizer_name, QString objective_function_name, double alpha_value,
+                                             QString constrained_time_path_file, QString constrained_variable, double constrained_epsilon
+                                             )
     {
     initializeWindowSettings();
 
@@ -75,7 +102,11 @@ void VectorialSensAnalysisDialog::initialize(QList<QString> variables, QString t
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     QString parametersQuickExplanation = "The parameters will be perturbed together to find the best combination of values.";
     mpParametersTab         = new ParametersSimpleTab(params_inclusion, parametersQuickExplanation);
-    mpOptimizationTab       = new OptimizationTab(variables, target_var, epsilon, percentage, maximize);
+    mpOptimizationTab       = new OptimizationTab(
+                variables, target_var, epsilon, percentage, maximize,
+                optimizer_name, objective_function_name, alpha_value, constrained_time_path_file,
+                constrained_variable, constrained_epsilon
+                );
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
@@ -152,7 +183,9 @@ QJsonDocument VectorialSensAnalysisDialog::getRunSpecifications() const
         mpOptimizationTab->getOptimizerName(),
         mpOptimizationTab->getObjectiveFunctionName(),
         mpOptimizationTab->getAlphaValue(),
-        mpOptimizationTab->getConstrainedTimePathFile()
+        mpOptimizationTab->getConstrainedTimePathFile(),
+        mpOptimizationTab->getConstrainedVariable(),
+        mpOptimizationTab->getConstrainedEpsilon()
     );
 
     // It's easier to just return the json doc (concrete class) instead of returning a RunSpecifications (abstract class)

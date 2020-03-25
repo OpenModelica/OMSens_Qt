@@ -26,6 +26,8 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     this->objective_function_name    = json_specs.value(QString("objective_function_name")).toString();
     this->alpha_value                = json_specs.value(QString("alpha_value")).toDouble();
     this->constrained_time_path_file = json_specs.value(QString("constrained_time_path_file")).toString();
+    this->constrained_variable       = json_specs.value(QString("constrained_variable")).toString();
+    this->constrained_epsilon        = json_specs.value(QString("constrained_epsilon")).toDouble();
 
     // Get parameters QVariant list
     QList<QVariant> parametersQVariant = json_specs.value(QString("parameters_to_perturb")).toArray().toVariantList();
@@ -50,7 +52,10 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
         QString optimizer_name,
         QString objective_function_name,
         double alpha_value,
-        QString constrained_time_path_file):
+        QString constrained_time_path_file,
+        QString constrained_variable,
+        double constrained_epsilon
+    ):
     model_file_path(model_file_path),
     model_name(model_name),
     maximize(maximize),
@@ -63,7 +68,9 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     optimizer_name(optimizer_name),
     objective_function_name(objective_function_name),
     alpha_value(alpha_value),
-    constrained_time_path_file(constrained_time_path_file)
+    constrained_time_path_file(constrained_time_path_file),
+    constrained_variable(constrained_variable),
+    constrained_epsilon(constrained_epsilon)
 {
     // Do nothing else for now
 }
@@ -88,6 +95,8 @@ QJsonDocument VectSpecs::toJson()
     json_specs["objective_function_name"] = this->objective_function_name;
     json_specs["alpha_value"] = this->alpha_value;
     json_specs["constrained_time_path_file"] = this->constrained_time_path_file;
+    json_specs["constrained_variable"] = this->constrained_variable;
+    json_specs["constrained_epsilon"] = this->constrained_epsilon;
 
     json_specs["parameters_to_perturb"] = QJsonArray::fromStringList(this->parameters_to_perturb);
 

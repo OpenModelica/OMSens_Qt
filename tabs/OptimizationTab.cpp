@@ -4,8 +4,15 @@
 #include <QHBoxLayout>
 #include <QtMath>
 #include <QFileDialog>
+#include <vector>
+#include <algorithm>
+#include <string>
 
-OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, double epsilon, double percentage, bool maximize, QWidget *parent) : QWidget(parent)
+OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, double epsilon,
+                                 double percentage, bool maximize,
+                                 QString optimizer_name, QString objective_function_name, double alpha_value,
+                                 QString constrained_time_path_file, QString constrained_variable, double constrained_epsilon,
+                                 QWidget *parent) : QWidget(parent)
 {
     // Auxiliary : Horizontal line
     mpHorizontalLine = new QFrame;
@@ -13,13 +20,22 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     mpHorizontalLine->setFrameShadow(QFrame::Sunken);
 
     // Variables
-    mpVariablesLabel = new QLabel(tr("Variable:"), this);
+    mpVariablesLabel = new QLabel(tr("Variable to optimize (t_final):"), this);
     mpVariablesComboBox = new QComboBox(this);
     foreach(QString var_name, variables) {
         mpVariablesComboBox->addItem(var_name);
     }
     int target_var_index = mpVariablesComboBox->findText(target_var);
     mpVariablesComboBox->setCurrentIndex(target_var_index);
+
+    // Constrained variables
+    mpConstrainedVariablesLabel = new QLabel(tr("Constrained variable:"), this);
+    mpConstrainedVariablesComboBox = new QComboBox(this);
+    foreach(QString var_name, variables) {
+        mpConstrainedVariablesComboBox->addItem(var_name);
+    }
+    int target_var_index_constrained = mpConstrainedVariablesComboBox->findText(constrained_variable);
+    mpConstrainedVariablesComboBox->setCurrentIndex(target_var_index_constrained);
 
     // Goal
     mpGoalButtonGroup = new QButtonGroup(this); // Has to have "this" as parent because it's never assigned to anything
@@ -30,7 +46,7 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     mpGoalButtonGroup->addButton(mpMaxRadio, mMaximizeButtonId);
 
     // Epsilon
-    mpEpsilonLabel = new QLabel(tr("Epsilon"));
+    mpEpsilonLabel = new QLabel(tr("Accepted numerical error (ε)"));
     mpEpsilonBox = new SciNotationDoubleSpinbox;
     mpEpsilonBox->setRange(std::numeric_limits<double>::min(), 1-std::numeric_limits<double>::min());
     mpEpsilonBox->setValue(epsilon);
@@ -53,38 +69,33 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     // TODO: read optional optimizers from somewhere (config file?)
     mpOptimizerNameLabel = new QLabel(tr("Optimizer Name"));
     mpOptimizerNameComboBox = new QComboBox(this);
-    mpOptimizerNameComboBox->addItem("CURVIF");
-    mpOptimizerNameComboBox->addItem("CURVIFGR");
+    std::vector<QString> optimizers = {"CURVIF", "CURVIFGR"};
+    optimizers.erase(std::remove(optimizers.begin(), optimizers.end(), optimizer_name), optimizers.end());
+    mpOptimizerNameComboBox->addItem(optimizer_name);
+    for (QString opt : optimizers) {
+        mpOptimizerNameComboBox->addItem(opt);
+    }
     pMainLayout->addWidget(mpOptimizerNameLabel);
     pMainLayout->addWidget(mpOptimizerNameComboBox);
 
     // Objective function
     mpObjectiveFunctionNameLabel = new QLabel(tr("Objective function name"));
     mpObjectiveFunctionNameComboBox = new QComboBox(this);
-    mpObjectiveFunctionNameComboBox->addItem("Alpha weighted path constrained");
-    mpObjectiveFunctionNameComboBox->addItem("Single variable");
+    std::vector<QString> functions = {"Alpha weighted path constrained", "Single variable"};
+    functions.erase(std::remove(functions.begin(), functions.end(), objective_function_name), functions.end());
+    mpObjectiveFunctionNameComboBox->addItem(objective_function_name);
+    for (QString func : functions) {
+        mpObjectiveFunctionNameComboBox->addItem(func);
+    }
     pMainLayout->addWidget(mpObjectiveFunctionNameLabel);
     pMainLayout->addWidget(mpObjectiveFunctionNameComboBox);
 
-    // Parameters for objective function (alpha weighted optimization)
-    // TODO: read optional objective functions from somewhere (config file?)
-    mpAlphaLabel = new QLabel(tr("Alpha weighted optimization: set alpha value (α)"));
-    mpAlphaValue = new QDoubleSpinBox;
-    mpAlphaValue->setRange(0, 1);
-    mpAlphaValue->setValue(0.5);
-    mpAlphaValue->setSingleStep(0.05);
+    // Variable to optimize
+    //mpSingleVariableOptimizationLabel = new QLabel(tr("Single variable optimization: set objective variable name"));
+    //pMainLayout->addWidget(mpSingleVariableOptimizationLabel);
 
-    pMainLayout->addWidget(mpHorizontalLine);
-    pMainLayout->addWidget(mpAlphaLabel);
-    pMainLayout->addWidget(mpAlphaValue);
-
-    pMainLayout->addWidget(mpHorizontalLine);
-
-    // Parameters for objective function (single variable optimization)
-    mpSingleVariableOptimizationLabel = new QLabel(tr("Single variable optimization: set objective variable name"));
-    pMainLayout->addWidget(mpSingleVariableOptimizationLabel);
+    // Grid general parameters
     QGridLayout *gridLayout = new QGridLayout;
-
     // Variables
     gridLayout->addWidget(mpVariablesLabel   ,0,0);
     gridLayout->addWidget(mpVariablesComboBox,0,1);
@@ -100,15 +111,37 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     // Add grid layout
     pMainLayout->addLayout(gridLayout);
 
+    // Alpha weighted optimization
+    // TODO: read optional objective functions from somewhere (config file?)
+    QFrame *hline1 = new QFrame; hline1->setFrameShape(QFrame::HLine); hline1->setFrameShadow(QFrame::Sunken);
+    pMainLayout->addWidget(hline1);
+
+    mpAlphaLabel = new QLabel(tr("Alpha weighted optimization: set alpha value (α)"));
+    mpAlphaValue = new QDoubleSpinBox;
+    //mpAlphaValue->setRange(0, 1);
+    mpAlphaValue->setRange(0.0, 1.0);
+    mpAlphaValue->setValue(alpha_value);
+    mpAlphaValue->setSingleStep(0.0001);
+    pMainLayout->addWidget(mpAlphaLabel);
+    pMainLayout->addWidget(mpAlphaValue);
+
+    // Grid constrained parameters
+    QGridLayout *gridLayoutConstrained = new QGridLayout;
+    gridLayoutConstrained->addWidget(mpConstrainedVariablesLabel   ,0,0);
+    gridLayoutConstrained->addWidget(mpConstrainedVariablesComboBox,0,1);
+    mpEpsilonConstrainedLabel = new QLabel(tr("Required closeness to constrained path"));
+    mpEpsilonConstrainedComboBox = new SciNotationDoubleSpinbox;
+    mpEpsilonConstrainedComboBox->setRange(0.0, 100.0);
+    mpEpsilonConstrainedComboBox->setValue(constrained_epsilon);
+    mpEpsilonConstrainedComboBox->setSingleStep(0.01);
+    gridLayoutConstrained->addWidget(mpEpsilonConstrainedLabel   ,1,0);
+    gridLayoutConstrained->addWidget(mpEpsilonConstrainedComboBox,1,1);
+    pMainLayout->addLayout(gridLayoutConstrained);
+
     // Directory of path constrained condition
-    pMainLayout->addWidget(mpHorizontalLine);
-
-    mpConstrainedPathLabel = new QLabel(tr("Constrained path file path"));
+    mpConstrainedPathLabel = new QLabel(tr("Constraints (*.csv file)"));
     pMainLayout->addWidget(mpConstrainedPathLabel);
-
-    QString defaultLimitedPathFolderPath = "/home/omsens/limit_path.csv";
-
-    // TODO: allow manual input of constrain path (optional to csv file)
+    QString defaultLimitedPathFolderPath = constrained_time_path_file;
     mpLimitedPathFolderLabel = new QLabel(tr("Constrained Path File directory path"));
     mpLimitedPathFolderValue = new QLabel(defaultLimitedPathFolderPath);
     mpLimitedPathFolderValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -116,7 +149,6 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     mpChooseCSVFileButton->setAutoDefault(true);
     mpChooseCSVFileButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpChooseCSVFileButton, SIGNAL(clicked()), this, SLOT(launchChooseCSVFileDialog()));
-
     QHBoxLayout *pLimitedPathFolderRowLayout = new QHBoxLayout;
     pLimitedPathFolderRowLayout->addWidget(mpLimitedPathFolderValue);
     pLimitedPathFolderRowLayout->addWidget(mpChooseCSVFileButton);
@@ -159,9 +191,17 @@ double OptimizationTab::getEpsilon() const
 {
     return mpEpsilonBox->value();
 }
+double OptimizationTab::getConstrainedEpsilon() const
+{
+    return mpEpsilonConstrainedComboBox->value();
+}
 QString OptimizationTab::getTargetVariable() const
 {
     return mpVariablesComboBox->currentText();
+}
+QString OptimizationTab::getConstrainedVariable() const
+{
+    return mpConstrainedVariablesComboBox->currentText();
 }
 
 int OptimizationTab::getGoalId() const

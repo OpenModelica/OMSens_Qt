@@ -24,7 +24,9 @@ public:
         QString optimizer_name,
         QString objective_function_name,
         double alpha_value,
-        QString constrained_time_path_file
+        QString constrained_time_path_file,
+        QString constrained_variable,
+        double constrained_epsilon
     );
 
     // Methods
@@ -58,6 +60,8 @@ public:
 
     // Optional Additional simulation specs
     QString constrained_time_path_file;
+    QString constrained_variable;
+    double constrained_epsilon;
 
 private:
     // Auxs
