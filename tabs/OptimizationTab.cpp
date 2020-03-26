@@ -14,10 +14,7 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
                                  QString constrained_time_path_file, QString constrained_variable, double constrained_epsilon,
                                  QWidget *parent) : QWidget(parent)
 {
-    // Auxiliary : Horizontal line
-    mpHorizontalLine = new QFrame;
-    mpHorizontalLine->setFrameShape(QFrame::HLine);
-    mpHorizontalLine->setFrameShadow(QFrame::Sunken);
+    // TODO: read optional objective functions from somewhere (config file?)
 
     // Variables
     mpVariablesLabel = new QLabel(tr("Variable to optimize (t_final):"), this);
@@ -90,10 +87,6 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     pMainLayout->addWidget(mpObjectiveFunctionNameLabel);
     pMainLayout->addWidget(mpObjectiveFunctionNameComboBox);
 
-    // Variable to optimize
-    //mpSingleVariableOptimizationLabel = new QLabel(tr("Single variable optimization: set objective variable name"));
-    //pMainLayout->addWidget(mpSingleVariableOptimizationLabel);
-
     // Grid general parameters
     QGridLayout *gridLayout = new QGridLayout;
     // Variables
@@ -109,16 +102,18 @@ OptimizationTab::OptimizationTab(QList<QString> variables, QString target_var, d
     gridLayout->addWidget(mpBoundariesLabel,3,0);
     gridLayout->addWidget(mpBoundariesBox  ,3,1);
     // Add grid layout
+    QFrame *hline = new QFrame; hline->setFrameShape(QFrame::HLine); hline->setFrameShadow(QFrame::Sunken);
+    pMainLayout->addWidget(hline);
     pMainLayout->addLayout(gridLayout);
 
     // Alpha weighted optimization
-    // TODO: read optional objective functions from somewhere (config file?)
     QFrame *hline1 = new QFrame; hline1->setFrameShape(QFrame::HLine); hline1->setFrameShadow(QFrame::Sunken);
     pMainLayout->addWidget(hline1);
 
     mpAlphaLabel = new QLabel(tr("Alpha weighted optimization: set alpha value (α)"));
+    // TODO: optionally set Smart Alpha calculation
     mpAlphaValue = new QDoubleSpinBox;
-    //mpAlphaValue->setRange(0, 1);
+    mpAlphaValue->setDecimals(7);
     mpAlphaValue->setRange(0.0, 1.0);
     mpAlphaValue->setValue(alpha_value);
     mpAlphaValue->setSingleStep(0.0001);

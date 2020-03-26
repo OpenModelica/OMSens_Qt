@@ -65,7 +65,9 @@ SOURCES += \
     specs/ConstrainedIntervalSpecs.cpp \
     dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.cpp \
     tabs/ParameterCombinationRunMap.cpp \
-    dialogs/functions/LinesPlotVisualizer.cpp
+    dialogs/functions/LinesPlotVisualizer.cpp \
+    tabs/PlotOptimizationTab.cpp \
+    tabs/PlotSweepTab.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -110,7 +112,9 @@ HEADERS += \
     specs/ConstrainedIntervalSpecs.h \
     dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.h \
     tabs/ParameterCombinationRunMap.h \
-    dialogs/functions/LinesPlotVisualizer.h
+    dialogs/functions/LinesPlotVisualizer.h \
+    tabs/PlotOptimizationTab.h \
+    tabs/PlotSweepTab.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \

@@ -19,6 +19,7 @@ public:
         double percentage,
         double start_time,
         double stop_time,
+        QString restriction_path,
         QString target_var,
 
         QString optimizer_name,
@@ -26,7 +27,10 @@ public:
         double alpha_value,
         QString constrained_time_path_file,
         QString constrained_variable,
-        double constrained_epsilon
+        double constrained_epsilon,
+
+        bool plot_restriction,
+        bool plot_std_run
     );
 
     // Methods
@@ -46,6 +50,10 @@ public:
     // Alpha weighted objective function for optimization
     double alpha_value;
 
+    // Plot information
+    bool plot_restriction;
+    bool plot_std_run;
+
     // Single variable objective function for optimization
     QString target_var;
     QString optimTypeString(bool maximize);
@@ -57,6 +65,7 @@ public:
     double epsilon;
     double start_time;
     double stop_time;
+    QString restriction_path;
 
     // Optional Additional simulation specs
     QString constrained_time_path_file;

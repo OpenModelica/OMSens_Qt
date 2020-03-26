@@ -19,6 +19,8 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     this->percentage      = json_specs.value(QString("percentage")).toDouble();
     this->start_time      = json_specs.value(QString("start_time")).toDouble();
     this->stop_time       = json_specs.value(QString("stop_time")).toDouble();
+    this->restriction_path= json_specs.value(QString("restriction_path")).toDouble();
+
     this->epsilon         = json_specs.value(QString("epsilon")).toDouble();
     this->target_var      = json_specs.value(QString("target_var_name")).toString();
 
@@ -28,6 +30,9 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     this->constrained_time_path_file = json_specs.value(QString("constrained_time_path_file")).toString();
     this->constrained_variable       = json_specs.value(QString("constrained_variable")).toString();
     this->constrained_epsilon        = json_specs.value(QString("constrained_epsilon")).toDouble();
+
+    this->plot_restriction = json_specs.value(QString("plot_restriction")).toBool();
+    this->plot_std_run     = json_specs.value(QString("plot_std_run")).toBool();
 
     // Get parameters QVariant list
     QList<QVariant> parametersQVariant = json_specs.value(QString("parameters_to_perturb")).toArray().toVariantList();
@@ -48,13 +53,17 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
         double percentage,
         double start_time,
         double stop_time,
+        QString restriction_path,
+
         QString target_var,
         QString optimizer_name,
         QString objective_function_name,
         double alpha_value,
         QString constrained_time_path_file,
         QString constrained_variable,
-        double constrained_epsilon
+        double constrained_epsilon,
+        bool plot_restriction,
+        bool plot_std_run
     ):
     model_file_path(model_file_path),
     model_name(model_name),
@@ -64,13 +73,16 @@ VectSpecs::VectSpecs(QJsonDocument json_specs_doc)
     percentage(percentage),
     start_time(start_time),
     stop_time(stop_time),
+    restriction_path(restriction_path),
     target_var(target_var),
     optimizer_name(optimizer_name),
     objective_function_name(objective_function_name),
     alpha_value(alpha_value),
     constrained_time_path_file(constrained_time_path_file),
     constrained_variable(constrained_variable),
-    constrained_epsilon(constrained_epsilon)
+    constrained_epsilon(constrained_epsilon),
+    plot_restriction(plot_restriction),
+    plot_std_run(plot_std_run)
 {
     // Do nothing else for now
 }
@@ -87,6 +99,8 @@ QJsonDocument VectSpecs::toJson()
     json_specs["model_mo_path"]         = this->model_file_path;
     json_specs["start_time"]            = this->start_time;
     json_specs["stop_time"]             = this->stop_time;
+    json_specs["restriction_path"]      = this->restriction_path;
+
     json_specs["percentage"]            = this->percentage;
     json_specs["epsilon"]               = this->epsilon;
     json_specs["target_var_name"]       = this->target_var;
@@ -97,6 +111,9 @@ QJsonDocument VectSpecs::toJson()
     json_specs["constrained_time_path_file"] = this->constrained_time_path_file;
     json_specs["constrained_variable"] = this->constrained_variable;
     json_specs["constrained_epsilon"] = this->constrained_epsilon;
+
+    json_specs["plot_restriction"] = this->plot_restriction;
+    json_specs["plot_std_run"]     = this->plot_std_run;
 
     json_specs["parameters_to_perturb"] = QJsonArray::fromStringList(this->parameters_to_perturb);
 

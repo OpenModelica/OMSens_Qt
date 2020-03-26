@@ -12,6 +12,7 @@
 #include "omedit_plugin/model.h"
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
+#include "../../tabs/PlotSweepTab.h"
 
 // Constructors
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, SweepSpecs runSpecs, QWidget *pParent)
@@ -55,7 +56,8 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     // Initialize the dialog with this info
     initialize(vars_inclusion, pert_rows, modelName, modelFilePath, startTime, stopTime);
 }
-void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime)
+void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows,
+                                       QString modelName, QString modelFilePath, double startTime, double stopTime)
 {
     initializeWindowSettings();
 

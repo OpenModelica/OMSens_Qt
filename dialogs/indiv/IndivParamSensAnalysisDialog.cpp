@@ -232,7 +232,7 @@ QList<ParameterInclusion> IndivParamSensAnalysisDialog::defaultParametersToInclu
     QList<ParameterInclusion> params_inclusion;
     foreach (QString param, parameters)
     {
-        bool default_check = true;
+        bool default_check = false;
         ParameterInclusion param_include = ParameterInclusion(param,default_check);
         params_inclusion.append(param_include);
     }
