@@ -18,22 +18,22 @@ struct ParameterInclusion{
 // Class
 class ParametersSimpleTab : public QWidget
 {
-  Q_OBJECT
+    Q_OBJECT
 public:
-  explicit ParametersSimpleTab(QList<ParameterInclusion> params_inclusion, QString quickExplanation, QWidget *parent = 0);
-  // Getters
-  QTableWidget *getParametersTable() const;
-  // Conventions:
-  //   Columns ordering
-  int paramColPos;
-  int cboxColPos;
+    explicit ParametersSimpleTab(QList<ParameterInclusion> params_inclusion, QString quickExplanation, QWidget *parent = 0);
+    // Getters
+    QTableWidget *getParametersTable() const;
+    // Conventions:
+    //   Columns ordering
+    int paramColPos = 0;
+    int cboxColPos  = 1;
 
 
 private:
-  // Description
-  QLabel             *mpBriefDescriptionLabel;
-  // Table
-  QTableWidget *mpParametersTable;
+    // Description
+    QLabel             *mpBriefDescriptionLabel;
+    // Table
+    QTableWidget *mpParametersTable;
 
 signals:
 

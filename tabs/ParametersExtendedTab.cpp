@@ -5,8 +5,6 @@
 #include <QVBoxLayout>
 #include <QComboBox>
 
-#include <limits>
-
 ParametersExtendedTab::ParametersExtendedTab(QList<PerturbationRow> pert_rows, QWidget *parent) : QWidget(parent)
 {
     // Initialize label with brief description of the sweep

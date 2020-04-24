@@ -12,7 +12,7 @@ class OptimizationResultOtherTab : public QTabWidget
 {
     Q_OBJECT
 public:
-    OptimizationResultOtherTab(QJsonDocument vectorialResults, QWidget *pParent = 0);
+    OptimizationResultOtherTab(QJsonDocument vectorialResults, QWidget *pParent = nullptr);
 
 private:
     // GUI members

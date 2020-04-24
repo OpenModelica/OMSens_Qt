@@ -2,7 +2,6 @@
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QList>
-#include <QVariant>
 
 // Conventions
 const QString SweepSpecs::analysis_id_str = "sweep";

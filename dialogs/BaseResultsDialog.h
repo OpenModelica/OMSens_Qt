@@ -13,7 +13,7 @@ class BaseResultsDialog : public QDialog
     Q_OBJECT
 public:
     // Constructors
-    BaseResultsDialog(QWidget *parent = 0) : QDialog(parent) {}
+    BaseResultsDialog(QWidget *parent = nullptr) : QDialog(parent) {}
 
 
     // Components shared between all results dialogs

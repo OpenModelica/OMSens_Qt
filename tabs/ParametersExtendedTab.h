@@ -12,7 +12,7 @@ struct PerturbationRow{
    int iterations;
    double percentage;
    double fixed_value;
-   bool operator< (const PerturbationRow& b) {return (this->name < b.name);}
+   bool operator< (PerturbationRow& b) {return (this->name < b.name);}
 };
 
 // Class
