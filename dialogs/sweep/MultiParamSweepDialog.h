@@ -13,10 +13,12 @@
 #include "../../tabs/VariablesTab.h"
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
+#include "../../tabs/PlotSweepTab.h"
 #include "../../DualLists.h"
 #include "omedit_plugin/model.h"
 #include "../BaseRunSpecsDialog.h"
 #include "../../specs/SweepSpecs.h"
+
 
 class MultiParamSweepDialog : public BaseRunSpecsDialog
 {
@@ -38,10 +40,12 @@ public:
     double default_fixed_value          = 0;
 
 private:
-    void initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime);
+    void initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName,
+                    QString modelFilePath, double startTime, double stopTime, bool plot_upper_lower_limit);
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;
+    PlotSweepTab          *mpPlotSweepTab;
     VariablesTab          *mpVariablesTab;
     ParametersExtendedTab *mpParametersTab;
     HelpTab               *mpHelpTab;

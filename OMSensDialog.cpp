@@ -470,13 +470,16 @@ void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, 
         // Run command
         // MODIFY HERE
         // TODO: change folder results path passed to python process
-        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, timeStampFolderPath, scriptPath, pythonBinPath);
+        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path,
+                                                         timeStampFolderPath, scriptPath, pythonBinPath);
 
         // If the process ended correctly, show the results dialog
         if (processEndedCorrectly)
         {
             // Read JSON in results folder with the paths to the results of the script
             resultDialog = showResultsDialog(runType, resultsFolderPath);
+        } else {
+
         }
     }
     // If the user pressed the "Cancel" button, do nothing for now

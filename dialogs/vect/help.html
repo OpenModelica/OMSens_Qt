@@ -1,13 +1,50 @@
 <p><strong>Vectorial Sensitivity Analysis</strong></p>
-<p>This method uses an optimization algorithm to find the values of a set of
-parameters that maximize/minimize a chosen variable. The method characterizes 
-a given dynamic model as a nonlinear programming problem.</p>
-<p>It can be used to analyze how a model reacts to a set of parameters when they perturbed
-together, instead of analyzing isolated perturbations. This further increases
-the chances of finding, for example, a combination of small parameter
-perturbations that has a non-negligible effect on a variable. It can possibly reveal 
-that the model is not robust to some perturbation combinations even when the model is robust against perturbations of the same parameters but tested individually.</p>
-<p>Nevertheless, this analysis may take several minutes, maybe hours, depending on the following:</p>
+
+<p><strong>Usage instructions</strong></p>
+<p>
+<u>Simulation tab:</u> the model (.mo) file is automatically imported from OMEdit. Specify the destination
+folder for results of the simulation. For now, the only supported start time is 0. The backend optimization engine
+requires a directory where to store intermediate results in a csv file
+</p>
+<p><u>Optimization tab:</u> specify which parameters of the model the optimizer will explore. Note the following:
+<ul>
+  <li>Optimizer name: CURVIF or CURVIFGR. The latter is better than the former</li>
+  <li>Objective function name: with vs. without constrain. If set with constrain, a valid csv filename must be specified in
+  'Contrains (*.csv file)'. The csv file must contain at least two columns: one named'time' and another one with the same name as
+  the variable specified in Constrained Variable</li>
+  <li>Alpha value: proportion of weight applied on the final value of the target variable in the loss function (1-alpha)
+  weight is applied on the deviation from the constrained path. To give more importance to the constrain, you should set a
+  small value of alpha (high value of 1-alpha).</li>
+  <li> Required closeness to constrain path: the simulation's timestamps will probably not match exactly with the constrained path
+  timestamps. The closeness parameter is the maximum distance between a timestamp of the constrained and a timestamp of the simulation,
+  necessary for the points to be considered as if they were the same</li>
+  <li>Constrained variable: if the csv containing the constrained path has a column with it's name, any variable can be used in the
+  constrained function (to be used together with the target variable value in the alpha-weighted function). However, in general this
+  variable will be the same as the target variable.</li>
+</ul>
+</p>
+<p><u>Parameters tab:</u>
+</p>
+<p><u>Plots tab:</u> When using alpha weighted path constrained optimization function, three options are provided.
+Namely, plotting the optimal path with or without either the restriction path or the standard run path of the objective variable
+</p>
+
+<p><strong>Summary</strong></p>
+<p>Provides optimization (maximize of minimize) the target variable or a weighted function of a
+variable and it's deviation from a constrained path, by finding the best combination of perturbation to the parameters</p>
+<p>It allows the analysis of the combined perturbation of a set of parameters, instead of only
+isolated perturbations. This could reveal that the model is not robust to some perturbation
+combinations even when the model is robust against perturbations of the same parameters but tested
+individually.</p>
+
+<p><strong>Known limitations</strong></p>
+<p>Only parameters and variables of type Real are recognized. Renamings like 'type MyType = Real' are not supported either.</p>
+<p>Arrays of any type are also not yet supported.</p>
+<p>The plotting engine only supports one axis. So, if the target variable and constraining variable have different scales, the plot
+will not look so good.</p>
+
+<p><strong>Performance</strong></p>
+<p>This analysis may take several minutes, maybe hours, depending on the following:</p>
 <ul>
    <li>The complexity of the model. Simpler models take less time to
      simulate.</li>
@@ -26,8 +63,4 @@ that the model is not robust to some perturbation combinations even when the mod
 <p>Also, take into account that if a parameter has no effect on the variable under study then its "optimum"
 value returned by this feature can be misleading. For each parameter to analyze, it's recommended to
 check beforehand if it has an effect on the variable. The Individual Sensitivity Analysis, also provided with OMSens, is an useful tool for this verification.</p>
-
-<p><strong>Known limitations</strong></p>
-<p>Only parameters and variables of type Real are recognized. Renamings like 'type MyType = Real' are not supported either.</p>
-<p>Arrays of any type are also not yet supported.</p>
 

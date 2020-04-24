@@ -16,10 +16,9 @@ public:
     explicit PlotSweepTab(bool plot_upper_lower_limit,
                           QWidget *parent = nullptr);
 
-
+    bool getUpperLowerLimitCheckbox() const;
 private:
     QCheckBox *mpUpperLowerLimitCheckBox;
-    bool getUpperLowerLimitCheckbox() const;
 signals:
 
 public slots:
