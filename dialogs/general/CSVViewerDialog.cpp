@@ -10,6 +10,8 @@
 
 CSVViewerDialog::CSVViewerDialog(QString filePath, QWidget *parent) : QDialog(parent)
 {
+    setMinimumWidth(510);
+
     QStandardItemModel *csvModel = standardItemModelFromFilePath(filePath);
     initializeTableWithStandardItemModel(csvModel);
     configureLayout();
@@ -65,12 +67,21 @@ void CSVViewerDialog::initializeTableWithStandardItemModel(QStandardItemModel *c
 {
     mpResultsTable = new QTableView(this);
     mpResultsTable->setModel(csvModel);
+
     // Resize columns to contents
     mpResultsTable->resizeColumnsToContents();
     mpResultsTable->setSortingEnabled(true);
+
+    // RESIZE TABLE
+    mpResultsTable->setColumnWidth(0, this->width()/5);
+    mpResultsTable->setColumnWidth(1, this->width()/5);
+    mpResultsTable->setColumnWidth(2, this->width()/5);
+    mpResultsTable->setColumnWidth(3, this->width()/5);
+
     // Set item delegate to format doubles in specified precision
     TableItemDelegate *decDelegate = new TableItemDelegate(this);
     mpResultsTable->setItemDelegate(decDelegate);
+
     // Set table as readonly
     mpResultsTable->setEditTriggers(QAbstractItemView::NoEditTriggers);
 }

@@ -8,44 +8,36 @@
 #include <QCheckBox>
 #include <QTextStream>
 #include <QComboBox>
-#include <QStandardPaths>
-#include <QDir>
 
-#include "OMSensPlugin.h"
 #include "omedit_plugin/model.h"
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
-
-// Conventions
-QString MultiParamSweepDialog::pythonScriptName()
-{
-    // Conventions
-    return "multiparam_sweep.py";
-}
+#include "../../tabs/PlotSweepTab.h"
 
 // Constructors
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, SweepSpecs runSpecs, QWidget *pParent)
   : BaseRunSpecsDialog(pParent)
 {
     // Get specs info
-    QList<FixedParameterPerturbation>    fixed_params        = runSpecs.fixed_params;
-    QList<SweepingParameterPerturbation> parameters_to_sweep = runSpecs.parameters_to_sweep;
-    double                               start_time          = runSpecs.start_time;
-    double                               stop_time           = runSpecs.stop_time;
-    QStringList                          exp_vars            = runSpecs.vars_to_analyze;
-
+    QList<FixedParameterPerturbation>    fixed_params           = runSpecs.fixed_params;
+    QList<SweepingParameterPerturbation> parameters_to_sweep    = runSpecs.parameters_to_sweep;
+    double                               start_time             = runSpecs.start_time;
+    double                               stop_time              = runSpecs.stop_time;
+    QStringList                          exp_vars               = runSpecs.vars_to_analyze;
+    bool                                 plot_upper_lower_limit = runSpecs.plot_upper_lower_limit;
     // Get model info
     QList<QString> model_variables  = model.getAuxVariables()+model.getOutputVariables();
     QList<QString> model_parameters = model.getParameters();
     QString        model_name       = model.getModelName();
     QString        model_file_path  = model.getFilePath();
 
+
     // Define complex dialog data
     QList<VariableInclusion> vars_inclusion = varsInclusionFromSuperAndSubList(exp_vars, model_variables);
     QList<QString> no_pert_params = model_parameters;
     QList<PerturbationRow> pert_rows = pertRowsFromFIxedAndSweepParamsInfo(fixed_params, parameters_to_sweep, no_pert_params);
 
-    initialize(vars_inclusion, pert_rows, model_name, model_file_path, start_time, stop_time);
+    initialize(vars_inclusion, pert_rows, model_name, model_file_path, start_time, stop_time, plot_upper_lower_limit);
 }
 MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     BaseRunSpecsDialog(pParent)
@@ -59,25 +51,31 @@ MultiParamSweepDialog::MultiParamSweepDialog(Model model, QWidget *pParent) :
     // Default settings
     double startTime  = 0;
     double stopTime   = 1;
+    bool plot_upper_lower_limit = false;
     QList<VariableInclusion> vars_inclusion = defaultVariablesToInclude(variables);
     QList<PerturbationRow> pert_rows        = defaultParametersPerturbations(parameters);
 
     // Initialize the dialog with this info
-    initialize(vars_inclusion, pert_rows, modelName, modelFilePath, startTime, stopTime);
+    initialize(vars_inclusion, pert_rows, modelName, modelFilePath, startTime, stopTime, plot_upper_lower_limit);
 }
-void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime)
-    {
+void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows,
+                                       QString modelName, QString modelFilePath, double startTime, double stopTime,
+                                       bool plot_upper_lower_limit)
+{
     initializeWindowSettings();
+
+    // Conventions
+    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
+    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/multiparam_sweep.py";
+    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/sweep_results";
 
     // Help text description
     QString helpText = readHelpText();
     // Initialize tabs
-//    QString homePath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-//    QString defaultResultsFolderPath = QDir::cleanPath(homePath + QDir::separator() + "omsens_results" + QDir::separator() + "sweep_results");
-    QString defaultResultsFolderPath = QDir::cleanPath(OMSensPlugin::tempPath + "/omsens_results/sweep_results");
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
     mpParametersTab         = new ParametersExtendedTab(pert_rows);
+    mpPlotSweepTab          = new PlotSweepTab(plot_upper_lower_limit);
     mpHelpTab               = new HelpTab(helpText);
 
     // Initialize tabs container widget
@@ -85,6 +83,7 @@ void MultiParamSweepDialog::initialize(QList<VariableInclusion> vars_inclusion, 
     mpTabWidget->addTab(mpSimulationSettingsTab, tr("Simulation"));
     mpTabWidget->addTab(mpVariablesTab, tr("Variables"));
     mpTabWidget->addTab(mpParametersTab, tr("Parameters"));
+    mpTabWidget->addTab(mpPlotSweepTab, tr("Plot"));
     mpTabWidget->addTab(mpHelpTab, tr("Help"));
 
     //Buttons
@@ -189,7 +188,8 @@ QJsonDocument MultiParamSweepDialog::getRunSpecifications() const
         mpSimulationSettingsTab->getStopTimeValue(),
         this->getVarsToAnalyze(),
         parametersToSweep,
-        parametersToSetFixedValue
+        parametersToSetFixedValue,
+        mpPlotSweepTab->getUpperLowerLimitCheckbox()
     );
     // It's easier to just return the json doc (concrete class) instead of returning a RunSpecifications (abstract class)
     //   and having to deal with pointers

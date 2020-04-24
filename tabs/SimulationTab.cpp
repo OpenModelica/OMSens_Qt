@@ -6,9 +6,12 @@
 #include <limits>
 #include <QFormLayout>
 #include <QFileDialog>
+#include <QLineEdit>
 
 
-SimulationTab::SimulationTab(QString modelName, QString modelFilePath, double startTime, double stopTime, QString defaultResultsFolderPath, QWidget *pParent) : QWidget(pParent)
+SimulationTab::SimulationTab(QString modelName, QString modelFilePath,
+                             double startTime, double stopTime, QString defaultResultsFolderPath,
+                             QWidget *pParent) : QWidget(pParent)
 {
     // Model name
     mpModelNameLabel = new QLabel(tr("Model:"));
@@ -38,6 +41,11 @@ SimulationTab::SimulationTab(QString modelName, QString modelFilePath, double st
     mpStopTimeBox->setRange(0, std::numeric_limits<double>::max());
     mpStopTimeBox->setValue(stopTime);
 
+    // Intermediate results path
+    mpIntermediateResultPath = new QLineEdit();
+    QLabel *intermediateLabel = new QLabel(tr("Set path to file where to store intermediate results of simulation (*.csv)"));
+    mpIntermediateResultPath->setText("/home/omsens/Documents/results_experiments/logging/");
+
    QFormLayout *mainLayout = new QFormLayout;
    // Model name
    mainLayout->addRow(mpModelNameLabel);
@@ -58,6 +66,9 @@ SimulationTab::SimulationTab(QString modelName, QString modelFilePath, double st
    // Stop time
    mainLayout->addRow(mpStopTimeLabel);
    mainLayout->addRow(mpStopTimeBox);
+   // Intermediate results
+   mainLayout->addRow(intermediateLabel);
+   mainLayout->addRow(mpIntermediateResultPath);
 
    // Layout settings
    setLayout(mainLayout);
@@ -73,6 +84,9 @@ void SimulationTab::launchChooseFolderDialog()
     mpDestFolderPathValue->setText(destFolderPath);
 }
 
+QString SimulationTab::getRestrictionPath() const {
+    return mpIntermediateResultPath->text();
+}
 
 double SimulationTab::getStartTimeValue() const
 {

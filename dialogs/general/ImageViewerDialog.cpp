@@ -8,6 +8,7 @@
 #include <QVBoxLayout>
 #include <QScreen>
 #include <QDir>
+#include <QStyle>
 
 ImageViewerDialog::ImageViewerDialog(QString filePath, QWidget *parent)
    : QDialog(parent),
@@ -22,14 +23,16 @@ ImageViewerDialog::ImageViewerDialog(QString filePath, QWidget *parent)
     scrollArea->setWidget(imageLabel);
     scrollArea->setVisible(false);
 
-    resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
+    //resize(QGuiApplication::primaryScreen()->availableSize() * 3 / 5);
 
     loadFile(filePath);
 
     // New layout
     QVBoxLayout *mainLayout = new QVBoxLayout();
+
     // Assign table view to layout
     mainLayout->addWidget(scrollArea);
+
     // Set Dialog layout
     setLayout(mainLayout);
 }
@@ -47,10 +50,11 @@ bool ImageViewerDialog::loadFile(const QString &fileName)
          return false;
      }
 
+     int extra_width = 25;
+     this->resize(QSize(newImage.width() + extra_width, newImage.height() + extra_width));
+
      setImage(newImage);
-
      setWindowFilePath(fileName);
-
      return true;
 }
 

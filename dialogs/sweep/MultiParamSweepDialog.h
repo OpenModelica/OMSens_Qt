@@ -1,7 +1,6 @@
 #ifndef MULTIPARAMSWEEPDIALOG_H
 #define MULTIPARAMSWEEPDIALOG_H
 
-
 #include <QDialog>
 #include <QDoubleSpinBox>
 #include <QFrame>
@@ -14,10 +13,12 @@
 #include "../../tabs/VariablesTab.h"
 #include "../../tabs/ParametersExtendedTab.h"
 #include "../../tabs/HelpTab.h"
+#include "../../tabs/PlotSweepTab.h"
 #include "../../DualLists.h"
 #include "omedit_plugin/model.h"
 #include "../BaseRunSpecsDialog.h"
 #include "../../specs/SweepSpecs.h"
+
 
 class MultiParamSweepDialog : public BaseRunSpecsDialog
 {
@@ -31,8 +32,6 @@ public:
     QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
 
-    // Conventions
-    QString pythonScriptName();
     QString helpTextPath = ":/OMSens/sweep/help.html";
     // Conventions for parameters perturbation rows
     int    default_perturbation_type_id = ParametersExtendedTab::NoPerturbationId;
@@ -41,10 +40,12 @@ public:
     double default_fixed_value          = 0;
 
 private:
-    void initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName, QString modelFilePath, double startTime, double stopTime);
+    void initialize(QList<VariableInclusion> vars_inclusion, QList<PerturbationRow> pert_rows, QString modelName,
+                    QString modelFilePath, double startTime, double stopTime, bool plot_upper_lower_limit);
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;
+    PlotSweepTab          *mpPlotSweepTab;
     VariablesTab          *mpVariablesTab;
     ParametersExtendedTab *mpParametersTab;
     HelpTab               *mpHelpTab;

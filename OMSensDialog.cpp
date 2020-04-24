@@ -5,14 +5,15 @@
 #include <QPushButton>
 #include <QFileDialog>
 #include <QDateTime>
-#include <QTextStream>
-
-#include "OMSensPlugin.h"
+#include "omedit_plugin/model.h"
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
 #include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
 #include "dialogs/indiv/IndivSensResultsDialog.h"
+
 #include "dialogs/sweep/MultiParamSweepDialog.h"
 #include "dialogs/sweep/SweepResultDialog.h"
+#include "dialogs/sweep/PlotFromDataDialog.h"
+
 #include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
 #include "dialogs/vect/VectorialResultsDialog.h"
 #include "dialogs/general/ImageViewerDialog.h"
@@ -23,191 +24,180 @@
 #include "specs/IndivSpecs.h"
 #include "specs/SweepSpecs.h"
 #include "specs/VectSpecs.h"
+#include <QMessageBox>
+#include <QTimer>
+#include <string>
 
-QString osName()
-{
-#if defined(Q_OS_ANDROID)
-  return QLatin1String("android");
-#elif defined(Q_OS_BLACKBERRY)
-  return QLatin1String("blackberry");
-#elif defined(Q_OS_IOS)
-  return QLatin1String("ios");
-#elif defined(Q_OS_MACOS)
-  return QLatin1String("macos");
-#elif defined(Q_OS_TVOS)
-  return QLatin1String("tvos");
-#elif defined(Q_OS_WATCHOS)
-  return QLatin1String("watchos");
-#elif defined(Q_OS_WINCE)
-  return QLatin1String("wince");
-#elif defined(Q_OS_WIN)
-  return QLatin1String("windows");
-#elif defined(Q_OS_LINUX)
-  return QLatin1String("linux");
-#elif defined(Q_OS_UNIX)
-  return QLatin1String("unix");
-#else
-  return QLatin1String("unknown");
-#endif
-}
-
-
-
-QString OMSensDialog::omsensBackendPath()
-{
-  // Get environment var value
-  QString envVarVal = qgetenv("OMSENSBACKEND");
-  // Check if it's empty
-  QString backendPath;
-  if(envVarVal.size() == 0)
-  {
-    backendPath = "?";
-  }
-  else
-  {
-    backendPath=envVarVal;
-  }
-  return backendPath;
-}
-
-QString OMSensDialog::pythonExecPath()
-{
-  // Define command to call depending on platform
-  QString system = osName();
-  QString command;
-  if(system == "linux") command = "which python";
-  else if(system == "windows") command = "where python";
-  else command = "invalid command to call";
-  // Call command
-  QProcess sysProcc;
-  sysProcc.start(command);
-  sysProcc.waitForFinished(); // sets current thread to sleep and waits for pingProcess end
-  // Check that it's was a sucessful call
-  int retCode = sysProcc.exitCode();
-  // Define python path
-  QString pythonPath;
-  if (retCode == 0)
-  {
-    // Get STDOUT
-    QString sysCallSTDOUT(sysProcc.readAllStandardOutput());
-    // Sanitize output
-    QStringList paths = sysCallSTDOUT.split("\n");
-    QString firstPath = paths.at(0);
-    pythonPath = firstPath;
-  }
-  else
-  {
-    pythonPath = "?";
-  }
-  return pythonPath;
-}
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
 {
-  // Dialog settings
-  setMinimumWidth(400);
-  setWindowTitle("OMSens");
+    // Dialog settings
+    setMinimumWidth(600);
+    setWindowTitle("OMSens");
 
-  helpTextPath                    = "qrc:/OMSens/help/help.html";
-  exp_specs_file_name             = "experiment_specs.json";
-  model_specs_file_name           = "model_info.json";
-  analysis_results_info_file_name = "result.json";
+    // OMSens python backend path
+    mPythonBinPath      = "/home/omsens/anaconda3/bin/python";
+    mOMSensPath         = "/home/omsens/Documents/OMSens/";
+    mOMSensResultsPath  = "/home/omsens/Documents/results_experiments/";
 
-  // OMSens python backend path
-  mOMSensPath    = QDir::cleanPath(OMSensPlugin::OpenModelicaHome + "/OMSens")/*omsensBackendPath()*/;
-  // Python executable path
-  mPythonBinPath = QDir::cleanPath(pythonExecPath());
-  // Initialize dialogs
-  mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
-  mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);
-  mpIndivSensDialog    = new IndivParamSensAnalysisDialog(mActiveModel,this);
-  // Initialize paths
-  mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
-  mpOMSensPathValue = new QLabel(mOMSensPath);
-  mpOMSensPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  mpOMSensPathBrowseButton = new QPushButton("Browse");
-  mpOMSensPathBrowseButton->setAutoDefault(true);
-  mpOMSensPathBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpOMSensPathBrowseButton, SIGNAL(clicked()), this, SLOT(launchOMSensBackendChooseFolderDialog()));
+    // Initialize dialogs
+    mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
+    mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);
+    mpIndivSensDialog    = new IndivParamSensAnalysisDialog(mActiveModel,this);
 
-  mpPythonBinLabel = new QLabel("Python executable:");
-  mpPythonBinValue = new QLabel(mPythonBinPath);
-  mpPythonBinValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
-  mpPythonBinBrowseButton = new QPushButton("Browse");
-  mpPythonBinBrowseButton->setAutoDefault(true);
-  mpPythonBinBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpPythonBinBrowseButton, SIGNAL(clicked()), this, SLOT(launchPythonBinChooseFolderDialog()));
+    // Initialize paths
+    mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
+    mpOMSensPathValue = new QLabel(mOMSensPath);
+    mpOMSensPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    mpOMSensPathBrowseButton = new QPushButton("Browse");
+    mpOMSensPathBrowseButton->setAutoDefault(true);
+    mpOMSensPathBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpOMSensPathBrowseButton, SIGNAL(clicked()), this, SLOT(launchOMSensBackendChooseFolderDialog()));
 
-  // Division between paths and buttons
-  mpHorizontalLineOne= new QFrame;
-  mpHorizontalLineOne->setFrameShape(QFrame::HLine);
-  mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
+    mpPythonBinLabel = new QLabel("Python executable:");
+    mpPythonBinValue = new QLabel(mPythonBinPath);
+    mpPythonBinValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
+    mpPythonBinBrowseButton = new QPushButton("Browse");
+    mpPythonBinBrowseButton->setAutoDefault(true);
+    mpPythonBinBrowseButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpPythonBinBrowseButton, SIGNAL(clicked()), this, SLOT(launchPythonBinChooseFolderDialog()));
+
+    // Division between paths and buttons
+    mpHorizontalLineOne= new QFrame;
+    mpHorizontalLineOne->setFrameShape(QFrame::HLine);
+    mpHorizontalLineOne->setFrameShadow(QFrame::Sunken);
+
+    // Individual parameters
+    mpIndivButton = new QPushButton(tr("Run new"));
+    mpIndivButton->setAutoDefault(true);
+    mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
+    mpIndivButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    mpIndivButtonAnalysis->setEnabled(false);
+    connect(mpIndivButtonAnalysis, SIGNAL(clicked()), SLOT(showIndivSensAnalysis()));
+
+    // Parameter Sweep
+    mpSweepButton = new QPushButton(tr("Run new"));
+    mpSweepButton->setAutoDefault(true);
+    mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
+    mpSweepButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    connect(mpSweepButtonAnalysis, SIGNAL(clicked()), SLOT(showMultiParameterSweepAnalysis()));
+
+    // Vectorial
+    mpVectButton = new QPushButton(tr("Run new"));
+    mpVectButton->setAutoDefault(true);
+    mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
+    mpVectButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    mpVectButtonAnalysis->setEnabled(false);
+    connect(mpVectButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
+
+    // Constrained (TODO: do connections the right way)
+    mpConstrainedButton = new QPushButton(tr("Run new"));
+    mpConstrainedButton->setAutoDefault(true);
+    mpConstrainedButton->setSizePolicy(QSizePolicy::Fixed, QSizePolicy::Fixed);
+    connect(mpConstrainedButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
+    mpConstrainedButton->setEnabled(false);
+
+    mpConstrainedButtonAnalysis = new QPushButton(tr("Analyze Results"));
+    mpConstrainedButtonAnalysis->setEnabled(false);
+    connect(mpConstrainedButtonAnalysis, SIGNAL(clicked()), SLOT(showVectorialSensAnalysis()));
 
 
-  // Initialize features
-  mpIndivButton = new QPushButton(tr("Individual Parameter Based Sensitivity Analysis"));
-  mpIndivButton->setAutoDefault(true);
-  mpIndivButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpIndivButton, SIGNAL(clicked()), SLOT(runIndivSensAnalysis()));
+    // Division between features and help
+    mpHorizontalLineTwo= new QFrame;
+    mpHorizontalLineTwo->setFrameShape(QFrame::HLine);
+    mpHorizontalLineTwo->setFrameShadow(QFrame::Sunken);
 
-  mpSweepButton = new QPushButton(tr("Multi-parameter Sweep"));
-  mpSweepButton->setAutoDefault(true);
-  mpSweepButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpSweepButton, SIGNAL(clicked()), SLOT(runMultiParameterSweep()));
+    // Help (not shown for now)
+    mpHelpButton = new QPushButton(tr("Help"));
+    mpHelpButton->setAutoDefault(true);
+    mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
 
-  mpVectButton = new QPushButton(tr("Vectorial Parameter Based Sensitivity Analysis"));
-  mpVectButton->setAutoDefault(true);
-  mpVectButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpVectButton, SIGNAL(clicked()), SLOT(runVectorialSensAnalysis()));
+    // Layout
+    QVBoxLayout *mainLayout = new QVBoxLayout;
+    // OMSens folder
+    mainLayout->addWidget(mpOMSensPathLabel, 0, Qt::AlignLeft);
+    QHBoxLayout *pOMSensValueLayout = new QHBoxLayout;
+    pOMSensValueLayout->addWidget(mpOMSensPathValue);
+    pOMSensValueLayout->addWidget(mpOMSensPathBrowseButton);
+    mainLayout->addLayout(pOMSensValueLayout);
+    // Python bin
+    mainLayout->addWidget(mpPythonBinLabel, 0, Qt::AlignLeft);
+    QHBoxLayout *pPythonBinValueLayout = new QHBoxLayout;
+    pPythonBinValueLayout->addWidget(mpPythonBinValue);
+    pPythonBinValueLayout->addWidget(mpPythonBinBrowseButton);
+    mainLayout->addLayout(pPythonBinValueLayout);
+    // Division
+    mainLayout->addWidget(mpHorizontalLineOne);
 
-  // Division between features and help
-  mpHorizontalLineTwo= new QFrame;
-  mpHorizontalLineTwo->setFrameShape(QFrame::HLine);
-  mpHorizontalLineTwo->setFrameShadow(QFrame::Sunken);
+    // Buttons
+    // LOAD EXPERIMENT PARAMETERIZATION
+    mpLoadExperimentButton = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton->setAutoDefault(true);
+    mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
-  // Help (not shown for now)
-  mpHelpButton = new QPushButton(tr("Help"));
-  mpHelpButton->setAutoDefault(true);
-  mpHelpButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpHelpButton, SIGNAL(clicked()), SLOT(helpDialog()));
+    mpLoadExperimentButton2 = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton2->setAutoDefault(true);
+    mpLoadExperimentButton2->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton2, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
-  // Load experiment
-  mpLoadExperimentButton = new QPushButton(tr("Load"));
-  mpLoadExperimentButton->setAutoDefault(true);
-  mpLoadExperimentButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
-  connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+    mpLoadExperimentButton3 = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton3->setAutoDefault(true);
+    mpLoadExperimentButton3->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton3, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
-  // Layout
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  // OMSens folder
-  mainLayout->addWidget(mpOMSensPathLabel, 0, Qt::AlignLeft);
-  QHBoxLayout *pOMSensValueLayout = new QHBoxLayout;
-  pOMSensValueLayout->addWidget(mpOMSensPathValue);
-  pOMSensValueLayout->addWidget(mpOMSensPathBrowseButton);
-  mainLayout->addLayout(pOMSensValueLayout);
-  // Python bin
-  mainLayout->addWidget(mpPythonBinLabel, 0, Qt::AlignLeft);
-  QHBoxLayout *pPythonBinValueLayout = new QHBoxLayout;
-  pPythonBinValueLayout->addWidget(mpPythonBinValue);
-  pPythonBinValueLayout->addWidget(mpPythonBinBrowseButton);
-  mainLayout->addLayout(pPythonBinValueLayout);
-  // Division
-  mainLayout->addWidget(mpHorizontalLineOne);
-  // Buttons
-  mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpHorizontalLineTwo);
-  // Don't show the help for now
-  //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignLeft);
+    mpLoadExperimentButton4 = new QPushButton(tr("Load previous"));
+    mpLoadExperimentButton4->setAutoDefault(true);
+    mpLoadExperimentButton4->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
+    connect(mpLoadExperimentButton4, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
+    mpLoadExperimentButton4->setEnabled(false);
 
-  // Layout settings
-  mainLayout->setAlignment(Qt::AlignCenter);
-  setLayout(mainLayout);
+    // LABEL 1
+    QLabel *label1 = new QLabel("Individual Parameter Based Sensitivity ");
+    mainLayout->addWidget(label1, 0, Qt::AlignLeft);
+    QHBoxLayout *row1 = new QHBoxLayout;
+    row1->addWidget(mpIndivButton);
+    row1->addWidget(mpIndivButtonAnalysis);
+    row1->addWidget(mpLoadExperimentButton);
+    mainLayout->addItem(row1);
+
+    // LABEL 2
+    QLabel *label2 = new QLabel("Multi-parameter Sweep");
+    mainLayout->addWidget(label2, 0, Qt::AlignLeft);
+    QHBoxLayout *row2 = new QHBoxLayout;
+    row2->addWidget(mpSweepButton);
+    row2->addWidget(mpSweepButtonAnalysis);
+    row2->addWidget(mpLoadExperimentButton2);
+    mainLayout->addItem(row2);
+
+    // LABEL 3
+    QLabel *label3 = new QLabel("Vectorial Parameter Based Sensitivity Analysis");
+    mainLayout->addWidget(label3, 0, Qt::AlignLeft);
+    QHBoxLayout *row3 = new QHBoxLayout;
+    row3->addWidget(mpVectButton);
+    row3->addWidget(mpVectButtonAnalysis);
+    row3->addWidget(mpLoadExperimentButton3);
+    mainLayout->addItem(row3);
+
+    // LABEL 4
+    QLabel *label4 = new QLabel("Constrained Interval Parameter Based Sensitivity Analysis");
+    mainLayout->addWidget(label4, 0, Qt::AlignLeft);
+    QHBoxLayout *row4 = new QHBoxLayout;
+    row4->addWidget(mpConstrainedButton);
+    row4->addWidget(mpConstrainedButtonAnalysis);
+    row4->addWidget(mpLoadExperimentButton4);
+    mainLayout->addItem(row4);
+
+    // Layout settings
+    mainLayout->setAlignment(Qt::AlignCenter);
+    setLayout(mainLayout);
 }
 
-
+// RUN ANALYSIS AND SHOW RESULTS
 void OMSensDialog::runIndivSensAnalysis()
 {
   RunType runType = Individual;
@@ -224,338 +214,412 @@ void OMSensDialog::runVectorialSensAnalysis()
   runAnalysisAndShowResult(mpVectSensDialog, runType, mActiveModel);
 }
 
+// SHOW RESULTS OF (PREVIOUS) ANALYSIS
+void OMSensDialog::showIndivSensAnalysis()
+{
+    RunType runType = Individual;
+    showSpecificAnalysis(mPythonBinPath, mOMSensPath, mOMSensResultsPath, runType);
+}
+void OMSensDialog::showMultiParameterSweepAnalysis()
+{
+    RunType runType = Sweep;
+    showSpecificAnalysis(mPythonBinPath, mOMSensPath, mOMSensResultsPath, runType);
+}
+void OMSensDialog::showVectorialSensAnalysis()
+{
+    RunType runType = Vectorial;
+    showSpecificAnalysis(mPythonBinPath, mOMSensPath, mOMSensResultsPath, runType);
+}
+
 QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
 {
-  // Read JSON file into string
-  QString val;
-  QFile jsonPathsQFile;
-  jsonPathsQFile.setFileName(analysisResultsJSONPath);
-  jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-  val = jsonPathsQFile.readAll();
-  jsonPathsQFile.close();
-  // Parse string into json document
-  QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
+    // Read JSON file into string
+    QString val;
+    QFile jsonPathsQFile;
+    jsonPathsQFile.setFileName(analysisResultsJSONPath);
+    jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
+    val = jsonPathsQFile.readAll();
+    jsonPathsQFile.close();
+    // Parse string into json document
+    QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
 
-  return jsonPathsDocument;
+    return jsonPathsDocument;
 }
 
 QString OMSensDialog::progressDialogTextForCurrentTime()
 {
-  QDateTime currentTime = QDateTime::currentDateTime();
-  QString date = currentTime.toString("dd/MM/yyyy");
-  QString h_m_s = currentTime.toString("H:m:s");
-  QString scriptRunStartString = "(started on " + date + " at " + h_m_s + ")";
-  QString progressDialogText = "Running python script... " + scriptRunStartString;
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString date = currentTime.toString("dd/MM/yyyy");
+    QString h_m_s = currentTime.toString("H:m:s");
+    QString scriptRunStartString = "(started on " + date + " at " + h_m_s + ")";
+    QString progressDialogText = "Running python script... " + scriptRunStartString;
 
-  return progressDialogText;
+    return progressDialogText;
 }
 
-bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command, QString resultsFolderPath)
+bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command)
 {
-  QProcess pythonScriptProcess;
-  // Set working dir path
-  pythonScriptProcess.setWorkingDirectory(scriptDirPath);
-  // Initialize dialog showing progress
-  QString progressDialogText = progressDialogTextForCurrentTime();
-  QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
-  dialog->setAttribute(Qt::WA_DeleteOnClose);
-  // Connect command "close" with dialog close
-  connect(&pythonScriptProcess, SIGNAL(finished(int)), dialog, SLOT(close()));
-  // Connect dialog "cancel"  with command kill
-  connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
+    // Set working dir path
+    pythonScriptProcess.setWorkingDirectory(scriptDirPath);
 
-  // Start process
-  pythonScriptProcess.start(command);
-  // Show dialog with progress
-  dialog->exec();
-  // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
-  pythonScriptProcess.waitForFinished(3000);
-  //
-  // See if the process ended correctly
-  QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
-  int exitCode = pythonScriptProcess.exitCode();
-  // Prepare python call log
-  QString python_log_header    = QString("full command:%1\n-------\n").arg(command);
-  QString python_call_stdout(pythonScriptProcess.readAllStandardOutput());
-  QString python_log_full_str  = python_log_header + python_call_stdout;
-  // Write log to file
-  QString python_log_file_name = "python_log.txt";
-  QString python_log_file_path = QDir::cleanPath(resultsFolderPath + QDir::separator() + python_log_file_name);;
-  QFile logFile(python_log_file_path);
-  if ( logFile.open(QIODevice::ReadWrite) )
-  {
-    QTextStream out(&logFile);
-    out << python_log_full_str;
-    logFile.close();
-  }
+    // Initialize dialog showing progress
+    QString progressDialogText = progressDialogTextForCurrentTime();
+    q_progress_dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 100, this);
+    q_progress_dialog->setAttribute(Qt::WA_DeleteOnClose);
 
-  bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+    this->setWindowModality(Qt::NonModal);
+    q_progress_dialog->setWindowModality(Qt::NonModal);
 
-  return processEndedCorrectly;
+    // Connect command "close" with dialog close
+    connect(&pythonScriptProcess, SIGNAL(finished(int)), q_progress_dialog, SLOT(close()));
+    connect(&pythonScriptProcess, SIGNAL(readyReadStandardOutput()), this, SLOT(readOut()));
+    connect(q_progress_dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
+
+    // Added
+    pythonScriptProcess.setEnvironment(QProcess::systemEnvironment());
+    pythonScriptProcess.setProcessChannelMode(QProcess::MergedChannels);
+
+    // Start process
+    pythonScriptProcess.start(command);
+    q_progress_dialog->exec();
+
+    // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
+    pythonScriptProcess.waitForFinished(3000);
+
+    QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
+    int exitCode = pythonScriptProcess.exitCode();
+    bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+
+    // Show output after proccess ended
+    if (!processEndedCorrectly) {
+        QString output_string(pythonScriptProcess.readAllStandardOutput());
+        QMessageBox msg;
+        msg.setText(output_string);
+        msg.exec();
+    }
+
+    return processEndedCorrectly;
+}
+
+void OMSensDialog::readOut()
+{
+    QString output_string(pythonScriptProcess.readAllStandardOutput());
+    int val = 0;
+    if (output_string != "") {
+        try {
+            std::string last_element = output_string.split(",").back().toStdString();
+            last_element.erase(last_element.begin(),
+                               std::find_if(last_element.begin(), last_element.end(),
+                                            std::bind1st(std::not_equal_to<char>(), ',')));
+            val = std::stoi(last_element);
+            q_progress_dialog->setValue(val);
+        } catch (int e) {
+            QMessageBox msg;
+            msg.setText("ERROR");
+            msg.exec();
+        }
+    }
+}
+
+void OMSensDialog::readErr()
+{
+
 }
 
 QString OMSensDialog::createTimestampDir(QString destFolderPath)
 {
-  QDateTime currentTime = QDateTime::currentDateTime();
-  QString date = currentTime.toString("yyyy-MM-dd");
-  QString h_m_s = currentTime.toString("H_m_s");
-  QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
-  QDir timestampFolderPathDir(timeStampFolderPath);
-  if (!timestampFolderPathDir.exists()){
-    timestampFolderPathDir.mkpath(".");
-  }
+    QDateTime currentTime = QDateTime::currentDateTime();
+    QString date = currentTime.toString("yyyy-MM-dd");
+    QString h_m_s = currentTime.toString("H_m_s");
+    QString timeStampFolderPath = QDir::cleanPath(destFolderPath + QDir::separator() + date + QDir::separator() + h_m_s);;
+    QDir timestampFolderPathDir(timeStampFolderPath);
+    if (!timestampFolderPathDir.exists()){
+      timestampFolderPathDir.mkpath(".");
+    }
 
-  return timeStampFolderPath;
+    return timeStampFolderPath;
 }
 
 QString OMSensDialog::writeJsonToDisk(QString file_path, QJsonDocument runSpecificationsDoc)
 {
-  // Save analysis specifications to disk
-  QFile runSpecificationsFile(file_path);
-  if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
-  {
-    runSpecificationsFile.write(runSpecificationsDoc.toJson());
-    runSpecificationsFile.close();
-  }
+    // Save analysis specifications to disk
+    QFile runSpecificationsFile(file_path);
+    if ( runSpecificationsFile.open(QIODevice::ReadWrite) )
+    {
+        runSpecificationsFile.write(runSpecificationsDoc.toJson());
+        runSpecificationsFile.close();
+    }
 
-  return file_path;
+    return file_path;
 }
 
 QString OMSensDialog::createResultsFolder(QString timeStampFolderPath)
 {
-  QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");;
-  QDir resultsFolderPathDir(resultsFolderPath);
-  if (!resultsFolderPathDir.exists()){
-    resultsFolderPathDir.mkpath(".");
-  }
-
-  return resultsFolderPath;
+    QString resultsFolderPath = QDir::cleanPath(timeStampFolderPath + QDir::separator() + "results");
+    QDir resultsFolderPathDir(resultsFolderPath);
+    if (!resultsFolderPathDir.exists()){
+      resultsFolderPathDir.mkpath(".");
+    }
+    return resultsFolderPath;
 }
 
 QString OMSensDialog::dirPathForFilePath(QString scriptPath)
 {
-  QFileInfo scriptFileInfo = QFileInfo(scriptPath);
-  QDir      scriptDir          = scriptFileInfo.canonicalPath();
-  QString scriptDirPath        = scriptDir.canonicalPath();
+    QFileInfo scriptFileInfo = QFileInfo(scriptPath);
+    QDir      scriptDir          = scriptFileInfo.canonicalPath();
+    QString scriptDirPath        = scriptDir.canonicalPath();
 
-  return scriptDirPath;
+    return scriptDirPath;
 }
 
 QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath)
 {
-  QString scriptDestPathFlag = "--dest_folder_path";
-  QString scriptDestPathFlagAndArg = scriptDestPathFlag + " \"" + resultsFolderPath + "\"";
-  QString command = "\"" + pythonBinPath + "\" \"" + scriptPath + "\" \"" + jsonSpecsPath + "\" " + scriptDestPathFlagAndArg;
+    QString scriptDestPathFlag = "--dest_folder_path";
+    QString scriptDestPathFlagAndArg = scriptDestPathFlag + " " + resultsFolderPath;
+    QString command = pythonBinPath + " " + scriptPath + " " + jsonSpecsPath + " " + scriptDestPathFlagAndArg;
 
-  return command;
+    return command;
 }
 
-bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
+bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath,
+                                       QString scriptPath, QString pythonBinPath)
 {
-  // Define command
-  QString command = commandCallFromPaths(scriptPath, pythonBinPath, jsonSpecsPath, resultsFolderPath);
-  // Call process
-  bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command, resultsFolderPath);
+    QString command = pythonBinPath + " " + scriptPath;
+    command += " " + jsonSpecsPath + " --dest_folder_path " + resultsFolderPath;
 
-  return processEndedCorrectly;
+    bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command);
+    return processEndedCorrectly;
 }
 
 BaseResultsDialog* OMSensDialog::showResultsDialog(RunType runType, QString resultsFolderPath)
 {
-  QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
-  QJsonDocument jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
-  // Initialize results instance with JSON document
-  BaseResultsDialog *resultsDialog = 0;
-  switch (runType)
-  {
-    case Vectorial:
-      resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
-      break;
-    case Sweep:
-      resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
-      break;
-    case Individual:
-      resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
-      break;
-  }
-  return resultsDialog;
+    QString analysisResultsJSONPath = QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name);
+    QJsonDocument jsonPathsDocument = readJsonFile(analysisResultsJSONPath);
+    BaseResultsDialog *resultsDialog = 0;
+    switch (runType)
+    {
+        case Vectorial:
+           resultsDialog = new VectorialResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+           break;
+        case Sweep:
+           resultsDialog = new SweepResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+           break;
+        case Individual:
+           resultsDialog = new IndivSensResultsDialog(jsonPathsDocument, resultsFolderPath, this);
+           break;
+    }
+    return resultsDialog;
+}
+
+void OMSensDialog::showSpecificAnalysis(QString mPythonBinPath, QString mOMSensPath, QString mOMSensResultsPath, RunType runType)
+{
+    BaseResultsDialog *resultsDialog = 0;
+
+    switch (runType)
+    {
+        case Vectorial:
+            resultsDialog = new PlotFromDataDialog(mPythonBinPath, mOMSensPath, mOMSensResultsPath, this);
+            break;
+        case Sweep:
+            resultsDialog = new PlotFromDataDialog(mPythonBinPath, mOMSensPath, mOMSensResultsPath, this);
+            break;
+        case Individual:
+            resultsDialog = new PlotFromDataDialog(mPythonBinPath, mOMSensPath, mOMSensResultsPath, this);
+            break;
+    }
+    if(resultsDialog) {
+        resultsDialog->show();
+    }
 }
 
 void OMSensDialog::runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model)
 {
-  // Hide this dialog before opening the new one
-  this->hide();
-  int dialogCode  = runSpecsDialog->exec();
-  // If the dialog was accepted by the user, run the analysis
-  BaseResultsDialog* resultDialog = 0;
-  if(dialogCode == QDialog::Accepted)
-  {
-    // Get script path from OMSens dir and script file name
-    QString scriptFileName = runSpecsDialog->pythonScriptName();
-    QString scriptPath = QDir::cleanPath(mOMSensPath + QDir::separator() + scriptFileName);
-    // python executable path from class member
-    QString pythonBinPath = mPythonBinPath;
+    // Hide this dialog before opening the new one
+    this->hide();
+    int dialogCode  = runSpecsDialog->exec();
 
-    QJsonDocument exp_specs = runSpecsDialog->getRunSpecifications();
-    QString destFolderPath = runSpecsDialog->getDestFolderPath();
-    // Make timestamp subfolder in dest folder path
-    QString timeStampFolderPath = createTimestampDir(destFolderPath);
-    // Make sub-folder where the results will be written
-    QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
-    // Write Exp specs to disk
-    QString exp_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + exp_specs_file_name);
-    writeJsonToDisk(exp_specs_path, exp_specs);
-    // Write model specs to disk
-    QString model_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + model_specs_file_name);
-    QJsonDocument model_specs = model.toJson();
-    writeJsonToDisk(model_specs_path, model_specs);
-    // Run command
-    QString scriptDirPath = dirPathForFilePath(scriptPath);
-    bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path, resultsFolderPath, scriptPath, pythonBinPath);
-    // If the process ended correctly, show the results dialog
-    if (processEndedCorrectly) {
-      // Read JSON in results folder with the paths to the results of the script
-      resultDialog = showResultsDialog(runType, resultsFolderPath);
+    // If the dialog was accepted by the user, run the analysis
+    BaseResultsDialog* resultDialog = 0;
+    if(dialogCode == QDialog::Accepted)
+    {
+        // Get script path from OMSens dir and script file name
+        QString scriptPath = runSpecsDialog->mPythonScriptPath;
+        QString scriptDirPath = runSpecsDialog->mPythonScriptLibraryPath;
+
+        // python executable path from class member
+        QString pythonBinPath = mPythonBinPath;
+
+        QJsonDocument exp_specs = runSpecsDialog->getRunSpecifications();
+        QString destFolderPath = runSpecsDialog->getDestFolderPath();
+
+        // Make timestamp subfolder in dest folder path
+        QString timeStampFolderPath = createTimestampDir(destFolderPath);
+
+        // Make sub-folder where the results will be written
+        QString resultsFolderPath = createResultsFolder(timeStampFolderPath);
+
+        // Write Exp specs to disk
+        QString exp_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + exp_specs_file_name);
+        writeJsonToDisk(exp_specs_path, exp_specs);
+
+        // Write model specs to disk
+        QString model_specs_path = QDir::cleanPath(timeStampFolderPath + QDir::separator() + model_specs_file_name);
+        QJsonDocument model_specs = model.toJson();
+        writeJsonToDisk(model_specs_path, model_specs);
+
+        // Run command
+        // MODIFY HERE
+        // TODO: change folder results path passed to python process
+        bool processEndedCorrectly = defineAndRunCommand(scriptDirPath, exp_specs_path,
+                                                         timeStampFolderPath, scriptPath, pythonBinPath);
+
+        // If the process ended correctly, show the results dialog
+        if (processEndedCorrectly)
+        {
+            // Read JSON in results folder with the paths to the results of the script
+            resultDialog = showResultsDialog(runType, resultsFolderPath);
+        } else {
+
+        }
     }
-  }
-  // If the user pressed the "Cancel" button, do nothing for now
-  if(dialogCode == QDialog::Rejected) {
-    // Cancel button clicked
-  }
+    // If the user pressed the "Cancel" button, do nothing for now
+    if(dialogCode == QDialog::Rejected) {
+        // Cancel button clicked
+    }
 
-  // First show OMSens main dialog
-  this->show();
+    // First show OMSens main dialog
+    this->show();
 
-  if(resultDialog)
-  {
-    // If a result dialog was initialized, show it
-    resultDialog->show();
-  }
+    if(resultDialog)
+    {
+        // If a result dialog was initialized, show it
+        resultDialog->show();
+    }
 
 }
 
 // OLD FUNCTIONS THAT HAVE BEEN REPLACED:
 void OMSensDialog::openSensAnalysisResult()
 {
-  //ADAPTAR:
-  // Ask for file path using dialog
-  QString filePath = QFileDialog::getOpenFileName(this,tr("Open Sensitivity Analysis Results"), "", tr("Comma Separated Values file(*.csv)"));
-  // Check if the user selected a file or if they clicked cancel
-  if (!filePath.isNull()){
-    // Initialize Results dialog
-    CSVViewerDialog *pSensResult = new CSVViewerDialog(filePath, this);
-    pSensResult->exec();
-  }
-  //ADAPTAR^
+//ADAPTAR:
+ // Ask for file path using dialog
+ QString filePath = QFileDialog::getOpenFileName(this,tr("Open Sensitivity Analysis Results"), "", tr("Comma Separated Values file(*.csv)"));
+ // Check if the user selected a file or if they clicked cancel
+ if (!filePath.isNull()){
+     // Initialize Results dialog
+     CSVViewerDialog *pSensResult = new CSVViewerDialog(filePath, this);
+     pSensResult->exec();
+ }
+//ADAPTAR^
 }
 void OMSensDialog::openSensAnalysisImage()
 {
-  //ADAPTAR:
+//ADAPTAR:
   //Get the valid types supported by the image viewer
-  QStringList mimeTypeFilters =ImageViewerDialog::compatibleMIMETypes();
-  // Initialize the QFileDialog instance to ask the user for a file
-  QFileDialog dialog(this, tr("Open File"));
-  dialog.setMimeTypeFilters(mimeTypeFilters);
-  dialog.selectMimeTypeFilter("image/png");
-  // Ask for file path using dialog
-  dialog.exec();
-  QString filePath = dialog.selectedFiles().first();
+   QStringList mimeTypeFilters =ImageViewerDialog::compatibleMIMETypes();
+   // Initialize the QFileDialog instance to ask the user for a file
+   QFileDialog dialog(this, tr("Open File"));
+   dialog.setMimeTypeFilters(mimeTypeFilters);
+   dialog.selectMimeTypeFilter("image/png");
+   // Ask for file path using dialog
+   dialog.exec();
+   QString filePath = dialog.selectedFiles().first();
 
   // Check if the user selected a file or if they clicked cancel
   if (!filePath.isNull()){
-    // Initialize Results dialog
-    ImageViewerDialog *pImageViewer = new ImageViewerDialog(filePath, this);
-    pImageViewer->exec();
+      // Initialize Results dialog
+      ImageViewerDialog *pImageViewer = new ImageViewerDialog(filePath, this);
+      pImageViewer->exec();
   }
   // open sens analysis Image
-  //ADAPTAR^
+//ADAPTAR^
 }
 
 void OMSensDialog::launchOMSensBackendChooseFolderDialog()
 {
-  // Launch dialog
-  QString path = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
-                                                   "/home",
-                                                   QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
-  if(!path.isEmpty() && !path.isNull())
-  {
-    // Save path into member variable
-    mOMSensPath = path;
-    mpOMSensPathValue->setText(mOMSensPath);
-  }
+    // Launch dialog
+    QString path = QFileDialog::getExistingDirectory(this, tr("Choose Destination Folder"),
+                                                 "/home",
+                                                 QFileDialog::ShowDirsOnly | QFileDialog::DontResolveSymlinks);
+    if(!path.isEmpty() && !path.isNull())
+    {
+        // Save path into member variable
+        mOMSensPath = path;
+        mpOMSensPathValue->setText(mOMSensPath);
+    }
 }
 
 void OMSensDialog::launchPythonBinChooseFolderDialog()
 {
-  // Launch dialog
-  QString path = QFileDialog::getOpenFileName(this, tr("Choose python interpreter"),
-                                              "/home",
-                                              tr("Python interpreter(*)"));
-  if(!path.isEmpty() && !path.isNull())
-  {
-    // Save path into member variable
-    mPythonBinPath = path;
-    mpPythonBinValue->setText(mPythonBinPath);
-  }
+    // Launch dialog
+    QString path = QFileDialog::getOpenFileName(this, tr("Choose python interpreter"),
+                                                 "/home",
+                                                 tr("Python interpreter(*)"));
+    if(!path.isEmpty() && !path.isNull())
+    {
+        // Save path into member variable
+        mPythonBinPath = path;
+        mpPythonBinValue->setText(mPythonBinPath);
+    }
 }
 
 void OMSensDialog::helpDialog()
 {
-  HelpBrowser *helpBrowser = new HelpBrowser(helpTextPath);
-  helpBrowser->show();
+    HelpBrowser *helpBrowser = new HelpBrowser(helpTextPath);
+    helpBrowser->show();
 }
 
 
 void OMSensDialog::loadExperimentFileDialog()
 {
-  // Launch
-  QString exp_specs_path = QFileDialog::getOpenFileName(this, tr("Open File"),
-                                                        "/home",
-                                                        tr("Experiments (*.json)"));
-  if(!exp_specs_path.isEmpty() && !exp_specs_path.isNull())
-  {
-    // Load file
-    QJsonDocument json_specs_doc = readJsonFile(exp_specs_path);
-    // Get object from top
-    QJsonObject json_specs = json_specs_doc.object();
-    // Check if contains key specifying analysis type
-    QString analysis_type_key = "analysis_type";
-    if(json_specs.contains(analysis_type_key))
+    // Launch
+    QString exp_specs_path = QFileDialog::getOpenFileName(this, tr("Open File"),
+                                                            "/home",
+                                                            tr("Experiments (*.json)"));
+    if(!exp_specs_path.isEmpty() && !exp_specs_path.isNull())
     {
-      // Get analysis type
-      QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
-      // Find the corresponding analysis type
-      BaseRunSpecsDialog *runSpecsDialog = 0;
-      RunType             runType = Individual;
-      // Get specs file folder path
-      QFileInfo exp_specs_file_info = QFileInfo(exp_specs_path);
-      QDir exp_specs_dir = exp_specs_file_info.absoluteDir();
-      // We assume that the model information is available in the same folder as the experiment specifications
-      QString model_specs_path = QDir::cleanPath(exp_specs_dir.absolutePath() + QDir::separator() + model_specs_file_name);
-      // Read model info from file
-      QJsonDocument model_info_json = readJsonFile(model_specs_path);
-      Model               model = Model(model_info_json);
-      if (analysis_type == IndivSpecs::analysis_id_str)
-      {
-        IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
-        runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs, this);
-        runType = Individual;
+        // Load file
+        QJsonDocument json_specs_doc = readJsonFile(exp_specs_path);
+        // Get object from top
+        QJsonObject json_specs = json_specs_doc.object();
+        // Check if contains key specifying analysis type
+        QString analysis_type_key = "analysis_type";
+        if(json_specs.contains(analysis_type_key))
+        {
+            // Get analysis type
+            QString analysis_type = json_specs.value(QString(analysis_type_key)).toString();
+            // Find the corresponding analysis type
+            BaseRunSpecsDialog *runSpecsDialog;
+            RunType             runType;
+            // Get specs file folder path
+            QFileInfo exp_specs_file_info = QFileInfo(exp_specs_path);
+            QDir exp_specs_dir = exp_specs_file_info.absoluteDir();
+            // We assume that the model information is available in the same folder as the experiment specifications
+            QString model_specs_path = QDir::cleanPath(exp_specs_dir.absolutePath() + QDir::separator() + model_specs_file_name);
+            // Read model info from file
+            QJsonDocument model_info_json = readJsonFile(model_specs_path);
+            Model               model = Model(model_info_json);
+            if (analysis_type == IndivSpecs::analysis_id_str)
+            {
+                IndivSpecs runSpecs = IndivSpecs(json_specs_doc);
+                runSpecsDialog = new IndivParamSensAnalysisDialog(model, runSpecs, this);
+                runType = Individual;
 
-      }
-      else if (analysis_type == SweepSpecs::analysis_id_str)
-      {
-        SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
-        runSpecsDialog = new MultiParamSweepDialog(model, runSpecs, this);
-        runType = Sweep;
-      }
-      else if (analysis_type == VectSpecs::analysis_id_str)
-      {
-        VectSpecs runSpecs = VectSpecs(json_specs_doc);
-        runSpecsDialog = new VectorialSensAnalysisDialog(model, runSpecs, this);
-        runType = Vectorial;
-      }
+            }
+            else if (analysis_type == SweepSpecs::analysis_id_str)
+            {
+                SweepSpecs runSpecs = SweepSpecs(json_specs_doc);
+                runSpecsDialog = new MultiParamSweepDialog(model, runSpecs, this);
+                runType = Sweep;
+            }
+            else if (analysis_type == VectSpecs::analysis_id_str)
+            {
+                VectSpecs runSpecs = VectSpecs(json_specs_doc);
+                runSpecsDialog = new VectorialSensAnalysisDialog(model, runSpecs, this);
+                runType = Vectorial;
+            }
 
-      runAnalysisAndShowResult(runSpecsDialog,runType,model);
+            runAnalysisAndShowResult(runSpecsDialog,runType,model);
+        }
     }
-  }
 }

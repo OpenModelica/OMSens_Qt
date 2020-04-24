@@ -19,11 +19,14 @@ SweepResultVariableTab::SweepResultVariableTab(QJsonObject varNameToPlotMap, QWi
     mpVariablesComboBox = new QComboBox;
     foreach(const QString& var_name, mVariables) {
         mpVariablesComboBox->addItem(var_name);
+
     }
+
     mpOpenPlotButton = new QPushButton("Open");
     mpOpenPlotButton->setAutoDefault(true);
     mpOpenPlotButton->setSizePolicy(QSizePolicy::Fixed,QSizePolicy::Fixed);
     connect(mpOpenPlotButton, SIGNAL(clicked()), this, SLOT(openSelectedVarPlot()));
+
 
     // Layout
     QHBoxLayout *pMainLayout = new QHBoxLayout;

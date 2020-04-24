@@ -7,21 +7,12 @@
 #include <QJsonArray>
 #include <QJsonDocument>
 #include <QTextStream>
-#include <QStandardPaths>
-#include <QDir>
 
-#include "OMSensPlugin.h"
 #include "omedit_plugin/model.h"
 #include "../../tabs/VariablesTab.h"
 #include "../../tabs/ParametersSimpleTab.h"
 #include "../../tabs/SimulationTab.h"
 #include "../../tabs/HelpTab.h"
-
-// Conventions
-QString IndivParamSensAnalysisDialog::pythonScriptName()
-{
-    return "individual_sens_calculator.py";
-}
 
 // Constructors
 IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, IndivSpecs runSpecs, QWidget *pParent)
@@ -71,12 +62,18 @@ IndivParamSensAnalysisDialog::IndivParamSensAnalysisDialog(Model model, QWidget 
 // Initialize
 void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_inclusion, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime)
 {
+    // Conventions
+    mPythonScriptLibraryPath = "/home/omsens/Documents/OMSens/";
+    mPythonScriptPath        = mPythonScriptLibraryPath + "callable_methods/individual_sens_calculator.py";
+    defaultResultsFolderPath = "/home/omsens/Documents/results_experiments/indiv_sens_results";
+
+    // Dialog settings
+    setWindowTitle("Run Individual Sensitivity Analysis");
+
     // Help text description
     QString helpText = readHelpText();
+
     // Initialize tabs
-//    QString homePath = QStandardPaths::writableLocation(QStandardPaths::HomeLocation);
-//    QString defaultResultsFolderPath = QDir::cleanPath(homePath + QDir::separator() + "omsens_results" + QDir::separator() + "indiv_results");
-    QString defaultResultsFolderPath = QDir::cleanPath(OMSensPlugin::tempPath + "/omsens_results/indiv_results");
     QString parametersQuickExplanation = "Each selected parameter is perturbed in isolation, one at a time";
     mpSimulationSettingsTab = new SimulationTab(modelName, modelFilePath, startTime, stopTime, defaultResultsFolderPath);
     mpVariablesTab          = new VariablesTab(vars_inclusion);
@@ -99,8 +96,6 @@ void IndivParamSensAnalysisDialog::initialize(QList<VariableInclusion> vars_incl
     connect(mpButtonBox, &QDialogButtonBox::accepted, this, &IndivParamSensAnalysisDialog::runIndivParamSensAnalysis);
     connect(mpButtonBox, &QDialogButtonBox::rejected, this, &QDialog::reject);
 
-    // Dialog settings
-    setWindowTitle("Run Individual Sensitivity Analysis");
     // Layout
     QVBoxLayout *mainLayout = new QVBoxLayout;
     mainLayout->addWidget(mpTabWidget);
@@ -115,7 +110,8 @@ QJsonDocument IndivParamSensAnalysisDialog::getRunSpecifications() const
         mpSimulationSettingsTab->getModelPath(),
         mpSimulationSettingsTab->getModelName(),
         this->getParametersToPerturb(),
-        mpPerturbationTab->getPerturbationValue(),
+        mpPerturbationTab->
+                getPerturbationValue(),
         mpSimulationSettingsTab->getStartTimeValue(),
         mpSimulationSettingsTab->getStopTimeValue(),
         this->getVarsToAnalize()
@@ -236,7 +232,7 @@ QList<ParameterInclusion> IndivParamSensAnalysisDialog::defaultParametersToInclu
     QList<ParameterInclusion> params_inclusion;
     foreach (QString param, parameters)
     {
-        bool default_check = true;
+        bool default_check = false;
         ParameterInclusion param_include = ParameterInclusion(param,default_check);
         params_inclusion.append(param_include);
     }

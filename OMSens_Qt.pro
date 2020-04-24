@@ -56,7 +56,18 @@ SOURCES += \
     specs/SweepSpecs.cpp \
     specs/VectSpecs.cpp \
     OMSensPlugin.cpp \
-    omedit_plugin/model.cpp
+    omedit_plugin/model.cpp \
+    dialogs/functions/HistogramCreator.cpp \
+    dialogs/PlotsDialog.cpp \
+    dialogs/sweep/PlotFromDataDialog.cpp \
+    helpers/CSVReader.cpp \
+    dialogs/functions/ScatterPlotCreator.cpp \
+    specs/ConstrainedIntervalSpecs.cpp \
+    dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.cpp \
+    tabs/ParameterCombinationRunMap.cpp \
+    dialogs/functions/LinesPlotVisualizer.cpp \
+    tabs/PlotOptimizationTab.cpp \
+    tabs/PlotSweepTab.cpp
 
 HEADERS += \
     dialogs/general/CSVViewerDialog.h \
@@ -91,7 +102,19 @@ HEADERS += \
     specs/RunSpecifications.h \
     specs/VectSpecs.h \
     OMSensPlugin.h \
-    omedit_plugin/model.h
+    omedit_plugin/interfaces.h \
+    omedit_plugin/model.h \
+    dialogs/functions/HistogramCreator.h \
+    dialogs/PlotsDialog.h \
+    dialogs/sweep/PlotFromDataDialog.h \
+    helpers/CSVReader.h \
+    dialogs/functions/ScatterPlotCreator.h \
+    specs/ConstrainedIntervalSpecs.h \
+    dialogs/constrained/ConstrainedIntervalSensAnalysisDialog.h \
+    tabs/ParameterCombinationRunMap.h \
+    dialogs/functions/LinesPlotVisualizer.h \
+    tabs/PlotOptimizationTab.h \
+    tabs/PlotSweepTab.h
 
 DISTFILES += \
     resource/ModelWithVariousParams.mo \
@@ -102,11 +125,3 @@ DISTFILES += \
 
 RESOURCES += \
     resources.qrc
-
-DESTDIR = bin
-
-UI_DIR = generatedfiles/ui
-
-MOC_DIR = generatedfiles/moc
-
-RCC_DIR = generatedfiles/rcc

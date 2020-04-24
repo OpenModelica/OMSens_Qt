@@ -33,9 +33,6 @@ public:
     QStringList getVarsToAnalize() const;
     QStringList getParametersToPerturb() const;
 
-    // Conventions
-    QString pythonScriptName();
-
 private:
     // GUI members
     QTabWidget          *mpTabWidget;

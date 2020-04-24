@@ -18,12 +18,16 @@ IndivSpecs::IndivSpecs(QJsonDocument json_specs_doc)
     this->percentage      = json_specs.value(QString("percentage")).toDouble();
     this->start_time      = json_specs.value(QString("start_time")).toDouble();
     this->stop_time       = json_specs.value(QString("stop_time")).toDouble();
+
     // Get variables QVariant list
     QList<QVariant> variablesQVariant = json_specs.value(QString("vars_to_analyze")).toArray().toVariantList();
+
     // Transform from list of QVariant to list of QString
     this->vars_to_analyze = fromListOfVariantToListOfStr(variablesQVariant);
+
     // Get parameters QVariant list
     QList<QVariant> parametersQVariant = json_specs.value(QString("parameters_to_perturb")).toArray().toVariantList();
+
     // Transform from list of QVariant to list of QString
     this->parameters_to_perturb = fromListOfVariantToListOfStr(parametersQVariant);
 }

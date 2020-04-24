@@ -1,12 +1,31 @@
 #include "OMSensDialog.h"
 #include "omedit_plugin/model.h"
 
+#include "dialogs/indiv/IndivSensAnalTypeDialog.h"
+#include "dialogs/indiv/IndivParamSensAnalysisDialog.h"
+#include "dialogs/indiv/IndivSensResultsDialog.h"
+#include "dialogs/sweep/MultiParamSweepDialog.h"
+#include "dialogs/sweep/SweepResultDialog.h"
+#include "dialogs/vect/VectorialParamSensAnalysisDialog.h"
+#include "dialogs/vect/VectorialResultsDialog.h"
+#include "dialogs/general/ImageViewerDialog.h"
+#include "dialogs/general/CSVViewerDialog.h"
+#include "dialogs/BaseRunSpecsDialog.h"
+#include "dialogs/BaseResultsDialog.h"
+#include "dialogs/help/HelpBrowser.h"
+#include "specs/IndivSpecs.h"
+#include "specs/SweepSpecs.h"
+#include "specs/VectSpecs.h"
+
 #include <QApplication>
 #include <QTemporaryDir>
+#include <QProcess>
+#include <QProgressDialog>
+#include <QVBoxLayout>
+#include <QPushButton>
+#include <QFileDialog>
+#include <QDateTime>
 
-
-// Model example to be used when OMSens is used as standalone
-// (main function below example)
 Model modelExample()
 {
   // Define model data
@@ -23,12 +42,16 @@ Model modelExample()
 
   // Model name
   QString modelName = "ModelWithVariousParams";
+
   // Model path in Qt resources
   QString fileResourcePath = ":/OMSens/ModelWithVariousParams.mo";
+
   // Model file name to be used when written to disk
   QString tempModelName = "ModelWithVariousParams.mo";
+
   // Temp dir where to write Model
   QTemporaryDir tempDir;
+
   // Disable auto remove so the user can check the model
   tempDir.setAutoRemove(false);
   QString  filePath=  QDir::cleanPath(tempDir.path() + QDir::separator() + tempModelName);
@@ -45,12 +68,12 @@ int main(int argc, char *argv[])
 {
     // Initialize Qt Application
     QApplication a(argc, argv);
-    // Model information for testing:
+
     Model model = modelExample();
-    // Initialize OMSens Dialog
-    OMSensDialog dialog(model);
-    // Show OMSens Dialog
-    dialog.show();
-    // Run and end Qt Application
+
+    // Initialize main dialog with model
+    OMSensDialog* pOmsensDialog =  new OMSensDialog(model);
+    pOmsensDialog->show();
+
     return a.exec();
 }

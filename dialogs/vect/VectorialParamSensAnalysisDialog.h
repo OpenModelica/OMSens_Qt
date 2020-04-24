@@ -18,6 +18,7 @@
 #include "../../tabs/HelpTab.h"
 #include "../BaseRunSpecsDialog.h"
 #include "../../specs/VectSpecs.h"
+#include "../../tabs/PlotOptimizationTab.h"
 
 class VectorialSensAnalysisDialog : public BaseRunSpecsDialog
 {
@@ -29,16 +30,22 @@ public:
     // Getters
     QJsonDocument getRunSpecifications() const;
     QString getDestFolderPath() const;
-    // Conventions
-    QString pythonScriptName();
 
 private:
-    void initialize(QList<QString> variables, QString target_var, bool maximize, double epsilon, QList<ParameterInclusion> params_inclusion, QString modelName, QString modelFilePath, double percentage, double startTime, double stopTime);
+    void initialize(QList<QString> variables, QString target_var, bool maximize,
+                    double epsilon, QList<ParameterInclusion> params_inclusion,
+                    QString modelName, QString modelFilePath,
+                    double percentage, double startTime, double stopTime,
+                    QString optimizer_name, QString objective_function_name, double alpha_value,
+                    QString constrained_time_path_file, QString constrained_variable, double constrained_epsilon,
+                    bool plot_restriction, bool plot_std_run
+                    );
     // GUI members
     QTabWidget            *mpTabWidget;
     SimulationTab         *mpSimulationSettingsTab;
     ParametersSimpleTab   *mpParametersTab;
     OptimizationTab       *mpOptimizationTab;
+    PlotOptimizationTab   *mpPlotOptimizationTab;
     HelpTab               *mpHelpTab;
     QDialogButtonBox      *mpButtonBox;
 

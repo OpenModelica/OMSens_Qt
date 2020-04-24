@@ -18,10 +18,13 @@ SweepSpecs::SweepSpecs(QJsonDocument json_specs_doc)
     this->start_time          = json_specs.value(QString("start_time")).toDouble();
     this->stop_time           = json_specs.value(QString("stop_time")).toDouble();
     this->vars_to_analyze     = json_specs.value(QString("vars_to_analyze")).toVariant().toStringList();
+    this->plot_upper_lower_limit = json_specs.value(QString("plot_upper_lower_limit")).toBool();
+
     // Complex data
     // Sweep params
     QJsonArray sweep_params_jsonarray = json_specs.value(QString("parameters_to_sweep")).toArray();
     this->parameters_to_sweep = fromQJsonArrayToSweepingPerts(sweep_params_jsonarray);
+
     // Fixed params
     QJsonArray fixed_params_jsonarray = json_specs.value(QString("fixed_params")).toArray();
     this->fixed_params        =  fromQJsonArrayToFixedPerts(fixed_params_jsonarray);;
@@ -33,7 +36,8 @@ SweepSpecs::SweepSpecs(QString model_file_path,
     double stop_time,
     QStringList vars_to_analyze,
     QList<SweepingParameterPerturbation> parameters_to_sweep,
-    QList<FixedParameterPerturbation> fixed_params
+    QList<FixedParameterPerturbation> fixed_params,
+    bool plot_upper_lower_limit
     ):
         fixed_params(fixed_params),
         parameters_to_sweep(parameters_to_sweep),
@@ -41,7 +45,8 @@ SweepSpecs::SweepSpecs(QString model_file_path,
         model_name(model_name),
         start_time(start_time),
         stop_time(stop_time),
-        vars_to_analyze(vars_to_analyze)
+        vars_to_analyze(vars_to_analyze),
+        plot_upper_lower_limit(plot_upper_lower_limit)
 {
     // Do nothing else for now
 }
@@ -111,6 +116,7 @@ QJsonDocument SweepSpecs::toJson()
     json_specs["parameters_to_sweep"]   = fromSweepingPertsToQJsonArray(this->parameters_to_sweep);
     json_specs["fixed_params"]          = fromFixedPertsToQJsonArray(this->fixed_params);
     json_specs["vars_to_analyze"]       = QJsonArray::fromStringList(this->vars_to_analyze);
+    json_specs["plot_upper_lower_limit"]= this->plot_upper_lower_limit;
     // Initialize JSON doc from JSON object
     QJsonDocument json_specs_doc(json_specs);
 

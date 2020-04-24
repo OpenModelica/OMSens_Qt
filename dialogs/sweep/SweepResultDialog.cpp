@@ -25,6 +25,7 @@ SweepResultsDialog::SweepResultsDialog(QJsonDocument sweepResults, QString resul
     mpResultsFolderPathValue  = resultsFolderPathLabel(resultsFolderPath);
     mpOpenResultsFolderButton = buttonToOpenResultsFolder();
 
+
     // Buttons
     mpButtonBox = new QDialogButtonBox;
     mpButtonBox->addButton("Ok", QDialogButtonBox::AcceptRole);

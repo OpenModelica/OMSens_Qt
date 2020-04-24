@@ -80,6 +80,6 @@ SensitivityMethodResultsTab* IndivSensResultsDialog::resultsTabForMethodFromJSON
     QString     heatmapPath              = methodHeatmapsJSONObject.value(QString("plot_path")).toString();
     QString     rowsIDsPath              = methodHeatmapsJSONObject.value(QString("index_mapping_file_path")).toString();
     QString     columnsIDsPath           = methodHeatmapsJSONObject.value(QString("cols_mapping_file_path")).toString();
-    SensitivityMethodResultsTab *pResultsTab =new SensitivityMethodResultsTab(description, matrixPath, heatmapPath, columnsIDsPath, rowsIDsPath);
+    SensitivityMethodResultsTab *pResultsTab = new SensitivityMethodResultsTab(description, matrixPath, heatmapPath, columnsIDsPath, rowsIDsPath);
     return pResultsTab;
 }

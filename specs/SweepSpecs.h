@@ -29,7 +29,7 @@ public:
     SweepSpecs(QJsonDocument json_specs_doc);
     SweepSpecs(QString model_file_path, QString model_name, double start_time, double stop_time,
                QStringList vars_to_analyze, QList<SweepingParameterPerturbation> parameters_to_sweep,
-               QList<FixedParameterPerturbation> fixed_params);
+               QList<FixedParameterPerturbation> fixed_params, bool plot_upper_lower_limit);
 
     // Conventions
     static const QString analysis_id_str; // Defined in .cpp
@@ -45,6 +45,7 @@ public:
     double start_time;
     double stop_time;
     QStringList vars_to_analyze;
+    bool plot_upper_lower_limit;
 
 private:
     // Methods

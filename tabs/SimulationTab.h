@@ -5,16 +5,19 @@
 #include <QLabel>
 #include <QDoubleSpinBox>
 #include <QPushButton>
+#include <QLineEdit>
 
 class SimulationTab : public QWidget
 {
     Q_OBJECT
 public:
-    explicit SimulationTab(QString modelName, QString modelFilePath, double startTime, double stopTime, QString defaultResultsFolderPath, QWidget *parent = 0);
+    explicit SimulationTab(QString modelName, QString modelFilePath, double startTime, double stopTime,
+                           QString defaultResultsFolderPath, QWidget *parent = 0);
     // Getters
     double  getStartTimeValue() const;
     double  getStopTimeValue() const;
     QString getDestFolderPath() const;
+    QString getRestrictionPath() const;
 
     QString getModelName() const;
 
@@ -38,6 +41,8 @@ private:
     // Stop time
     QLabel *mpStopTimeLabel;
     QDoubleSpinBox *mpStopTimeBox;
+    // Intermediate results path
+    QLineEdit *mpIntermediateResultPath;
 
 
 signals:
