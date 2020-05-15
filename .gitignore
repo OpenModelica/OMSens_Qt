@@ -39,3 +39,12 @@
 /generatedfiles/*
 /object_script.*
 /OMSens_Qt.pro.*
+
+/Makefile.unix
+/autom4te.cache/
+/config.guess
+/config.log
+/config.status
+/config.sub
+/configure
+/install-sh
