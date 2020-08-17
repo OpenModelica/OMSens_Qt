@@ -6,6 +6,8 @@
 #include <QFileDialog>
 #include <QDateTime>
 #include <QTextStream>
+#include <QMessageBox>
+#include <QGuiApplication>
 
 #include "OMSensPlugin.h"
 #include "dialogs/indiv/IndivSensAnalTypeDialog.h"
@@ -76,8 +78,9 @@ QString OMSensDialog::pythonExecPath()
   QString system = osName();
   QString command;
   if(system == "linux") command = "which python";
-  else if(system == "windows") command = "where python";
-  else command = "invalid command to call";
+  //else if(system == "windows") command = "where python";
+  else if(system == "windows") return ""; // Don't use the default python on Windows. Let the user select the python path. Once we have python 3 in msys enable above line.
+  else  return "";
   // Call command
   QProcess sysProcc;
   sysProcc.start(command);
@@ -230,9 +233,10 @@ QJsonDocument OMSensDialog::readJsonFile(QString analysisResultsJSONPath)
   QString val;
   QFile jsonPathsQFile;
   jsonPathsQFile.setFileName(analysisResultsJSONPath);
-  jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text);
-  val = jsonPathsQFile.readAll();
-  jsonPathsQFile.close();
+  if (jsonPathsQFile.open(QIODevice::ReadOnly | QIODevice::Text)) {
+    val = jsonPathsQFile.readAll();
+    jsonPathsQFile.close();
+  }
   // Parse string into json document
   QJsonDocument jsonPathsDocument = QJsonDocument::fromJson(val.toUtf8());
 
@@ -255,6 +259,7 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
   QProcess pythonScriptProcess;
   // Set working dir path
   pythonScriptProcess.setWorkingDirectory(scriptDirPath);
+  pythonScriptProcess.setProcessChannelMode(QProcess::MergedChannels);
   // Initialize dialog showing progress
   QString progressDialogText = progressDialogTextForCurrentTime();
   QProgressDialog *dialog = new QProgressDialog(progressDialogText, "Cancel", 0, 0, this);
@@ -266,8 +271,12 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
 
   // Start process
   pythonScriptProcess.start(command);
-  // Show dialog with progress
-  dialog->exec();
+  if (pythonScriptProcess.state() == QProcess::Running) {
+    // Show dialog with progress
+    dialog->exec();
+  } else {
+    dialog->close();
+  }
   // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
   pythonScriptProcess.waitForFinished(3000);
   //
@@ -275,12 +284,11 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
   QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
   int exitCode = pythonScriptProcess.exitCode();
   // Prepare python call log
-  QString python_log_header    = QString("full command:%1\n-------\n").arg(command);
-  QString python_call_stdout(pythonScriptProcess.readAllStandardOutput());
-  QString python_log_full_str  = python_log_header + python_call_stdout;
+  QString python_call_output(pythonScriptProcess.readAll());
+  QString python_log_full_str = QString("full command:%1\n\n%2\n\n%3").arg(command, pythonScriptProcess.errorString(), python_call_output);
   // Write log to file
   QString python_log_file_name = "python_log.txt";
-  QString python_log_file_path = QDir::cleanPath(resultsFolderPath + QDir::separator() + python_log_file_name);;
+  QString python_log_file_path = QDir::cleanPath(resultsFolderPath + QDir::separator() + python_log_file_name);
   QFile logFile(python_log_file_path);
   if ( logFile.open(QIODevice::ReadWrite) )
   {
@@ -290,6 +298,10 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
   }
 
   bool processEndedCorrectly = (exitStatus == QProcess::NormalExit) && (exitCode == 0);
+
+  if (!QFile::exists(QDir::cleanPath(resultsFolderPath + QDir::separator() + analysis_results_info_file_name))) {
+    QMessageBox::critical(this, QGuiApplication::applicationDisplayName(), python_log_full_str);
+  }
 
   return processEndedCorrectly;
 }
