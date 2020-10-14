@@ -18,4 +18,8 @@
 /generatedfiles/
 /install-sh
 /Makefile
+/Makefile.Debug
+/Makefile.Release
 /Makefile.unix
+/object_script.*
+/OMSens_Qt.pro.*
