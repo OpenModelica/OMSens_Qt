@@ -110,3 +110,12 @@ UI_DIR = generatedfiles/ui
 MOC_DIR = generatedfiles/moc
 
 RCC_DIR = generatedfiles/rcc
+
+win32 {
+  _cxx = $$(CXX)
+  contains(_cxx, clang++) {
+    message("Found clang++ on windows in $CXX, removing unknown flags: -fno-keep-inline-dllexport")
+    QMAKE_CFLAGS -= -fno-keep-inline-dllexport
+    QMAKE_CXXFLAGS -= -fno-keep-inline-dllexport
+  }
+}
