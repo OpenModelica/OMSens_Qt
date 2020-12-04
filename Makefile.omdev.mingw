@@ -8,7 +8,6 @@ CC = gcc
 CXX = g++
 QMAKE=qmake
 
-builddir_bin=$(OMBUILDDIR)/bin
 builddir_lib=$(OMBUILDDIR)/lib/omc
 
 NAME=omsensplugin
@@ -21,11 +20,10 @@ omsens_qt: mkbuilddirs install
 
 mkbuilddirs:
 	mkdir -p $(builddir_lib)
-	mkdir -p $(builddir_bin)
 
 install: build
-	cp -p bin/$(NAME)$(SHREXT) $(builddir_bin)
-	cp -p bin/$(LIB)$(LIBEXE) $(builddir_bin)
+	cp -p bin/$(NAME)$(SHREXT) $(builddir_lib)
+	cp -p bin/$(LIB)$(LIBEXE) $(builddir_lib)
 
 build: $(NAME)
 	$(MAKE) -f Makefile
