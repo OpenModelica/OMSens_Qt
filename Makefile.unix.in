@@ -2,7 +2,7 @@ detected_OS ?= $(shell uname -s)
 
 ifeq ($(detected_OS),Darwin)
 all:
-	echo "OMSens_Qt is not supported on MacOS yet"
+	echo "OMSens_Qt is not supported on MacOS"
 else
 all: omsens_qt
 endif
@@ -10,18 +10,18 @@ endif
 CC="@CC@" CXX="@CXX@" CFLAGS="@CFLAGS@" CPPFLAGS="@CPPFLAGS@"
 QMAKE=@QMAKE@
 
-builddir_bin=../build/bin
+builddir_lib=../build/lib/@host_short@/omc
 
 NAME=omsensplugin
 SHREXT=.so
 LIB=libomsensplugin
 
 mkbuilddirs:
-	mkdir -p $(builddir_bin)
+	mkdir -p $(builddir_lib)
 omsens_qt: mkbuilddirs install
 
 install: build
-	cp -p bin/$(LIB)$(SHREXT)* $(builddir_bin)
+	cp -p bin/$(LIB)$(SHREXT)* $(builddir_lib)
 
 build: $(NAME)
 	$(MAKE) -f Makefile
