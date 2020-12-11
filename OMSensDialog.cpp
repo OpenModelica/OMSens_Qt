@@ -77,10 +77,9 @@ QString OMSensDialog::pythonExecPath()
   // Define command to call depending on platform
   QString system = osName();
   QString command;
-  if(system == "linux") command = "which python";
-  //else if(system == "windows") command = "where python";
-  else if(system == "windows") return ""; // Don't use the default python on Windows. Let the user select the python path. Once we have python 3 in msys enable above line.
-  else  return "";
+  if (system == "linux") command = "which python";
+  else if(system == "windows") command = "where python";
+  else return "";
   // Call command
   QProcess sysProcc;
   sysProcc.start(command);
@@ -102,7 +101,7 @@ QString OMSensDialog::pythonExecPath()
   {
     pythonPath = "?";
   }
-  return pythonPath;
+  return pythonPath.trimmed();
 }
 
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
