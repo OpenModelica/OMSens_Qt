@@ -20,9 +20,19 @@ $ make install
 ```
 
 ### Windows MinGW
-- If you don't have OMDev then download it from the svn repository [here](https://openmodelica.org/svn/OpenModelicaExternal/trunk/tools/windows/OMDev).
-- Follow the instructions in [INSTALL.txt](https://openmodelica.org/svn/OpenModelicaExternal/trunk/tools/windows/OMDev/INSTALL.txt).
-- Open msys terminal. Either `$OMDEV/tools/msys/mingw32_shell.bat` OR `$OMDEV/tools/msys/mingw64_shell.bat`.
+- install git for windows https://git-scm.com/downloads
+- make sure we git clone with the correct line endings, run in a terminal:
+    ```bash
+      git config --global core.eol lf
+      git config --global core.autocrlf input
+	```
+- clone it from the git repository [here](https://openmodelica.org/git/OMDev.git)
+  ```
+  cd C:\
+  git clone https://openmodelica.org/git/OMDev.git
+  ```
+- follow the instructions in OMDev/INSTALL.txt
+- Open the mingw terminal. Either `$OMDEV/tools/msys/mingw32.exe` OR `$OMDEV/tools/msys/mingw64.exe`.
 ```bash
 $ cd /path/to/OMSens_Qt
 $ make -f Makefile.omdev.mingw omsens_qt
