@@ -116,7 +116,7 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
   analysis_results_info_file_name = "result.json";
 
   // OMSens python backend path
-  mOMSensPath    = QDir::cleanPath(OMSensPlugin::OpenModelicaHome + "/OMSens")/*omsensBackendPath()*/;
+  mOMSensPath    = QDir::cleanPath(OMSensPlugin::OpenModelicaHome + "/share/OMSens")/*omsensBackendPath()*/;
   // Python executable path
   mPythonBinPath = QDir::cleanPath(pythonExecPath());
   // Initialize dialogs
