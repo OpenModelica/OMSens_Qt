@@ -74,15 +74,18 @@ QString OMSensDialog::omsensBackendPath()
 
 QString OMSensDialog::pythonExecPath()
 {
-  // Define command to call depending on platform
   QString system = osName();
-  QString command;
-  if (system == "linux") command = "which python";
-  else if(system == "windows") command = "where python";
-  else return "";
-  // Call command
   QProcess sysProcc;
-  sysProcc.start(command);
+
+  // Call command depending on platform
+  if (system == "linux") {
+    sysProcc.start("which", {"python"});
+  } else if (system == "windows") {
+    sysProcc.start("where", {"python"});
+  } else {
+    return "";
+  }
+
   sysProcc.waitForFinished(); // sets current thread to sleep and waits for pingProcess end
   // Check that it's was a sucessful call
   int retCode = sysProcc.exitCode();
@@ -253,7 +256,7 @@ QString OMSensDialog::progressDialogTextForCurrentTime()
   return progressDialogText;
 }
 
-bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command, QString resultsFolderPath)
+bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString command, QStringList args, QString resultsFolderPath)
 {
   QProcess pythonScriptProcess;
   // Set working dir path
@@ -269,7 +272,7 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
   connect(dialog, SIGNAL(canceled()), &pythonScriptProcess, SLOT(kill()));
 
   // Start process
-  pythonScriptProcess.start(command);
+  pythonScriptProcess.start(command, args);
   if (pythonScriptProcess.state() == QProcess::Running) {
     // Show dialog with progress
     dialog->exec();
@@ -352,21 +355,12 @@ QString OMSensDialog::dirPathForFilePath(QString scriptPath)
   return scriptDirPath;
 }
 
-QString OMSensDialog::commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath)
-{
-  QString scriptDestPathFlag = "--dest_folder_path";
-  QString scriptDestPathFlagAndArg = scriptDestPathFlag + " \"" + resultsFolderPath + "\"";
-  QString command = "\"" + pythonBinPath + "\" \"" + scriptPath + "\" \"" + jsonSpecsPath + "\" " + scriptDestPathFlagAndArg;
-
-  return command;
-}
-
 bool OMSensDialog::defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath)
 {
   // Define command
-  QString command = commandCallFromPaths(scriptPath, pythonBinPath, jsonSpecsPath, resultsFolderPath);
+  QStringList args = {scriptPath, jsonSpecsPath, "--dest_folder_path", resultsFolderPath};
   // Call process
-  bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, command, resultsFolderPath);
+  bool processEndedCorrectly = runProcessAndShowProgress(scriptDirPath, pythonBinPath, args, resultsFolderPath);
 
   return processEndedCorrectly;
 }
