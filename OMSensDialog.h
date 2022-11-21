@@ -55,12 +55,11 @@ private:
   QPushButton *mpLoadExperimentButton;
   // Auxs
   QJsonDocument readJsonFile(QString analysisResultsJSONPath);
-  bool runProcessAndShowProgress(QString scriptDirPath, QString command, QString resultsFolderPath);
+  bool runProcessAndShowProgress(QString scriptDirPath, QString command, QStringList args, QString resultsFolderPath);
   QString createTimestampDir(QString destFolderPath);
   QString writeJsonToDisk(QString file_path, QJsonDocument runSpecifications);
   QString createResultsFolder(QString timeStampFolderPath);
   QString dirPathForFilePath(QString scriptPath);
-  QString commandCallFromPaths(QString scriptPath, QString pythonBinPath, QString jsonSpecsPath, QString resultsFolderPath);
   bool defineAndRunCommand(QString scriptDirPath, QString jsonSpecsPath, QString resultsFolderPath, QString scriptPath, QString pythonBinPath);
   QString progressDialogTextForCurrentTime();
   void runAnalysisAndShowResult(BaseRunSpecsDialog *runSpecsDialog, RunType runType, Model model);
