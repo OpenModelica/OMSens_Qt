@@ -3,42 +3,31 @@ A GUI interface for OMSens which can be loaded into OMEdit as a plugin.
 
 ## Dependencies
 
-- [OpenModelica](https://openmodelica.org) - Just the plugin interface header files are needed.
+  - [OpenModelica Compiler](../OMCompiler) - Just the plugin interface header files are needed.
 
 ## Build instructions
 
 If needed fix paths for the plugin interface headers files in `OMSensPlugin.h`.
 
-### Unix
-```bash
-$ cd /path/to/OMSens_Qt
-$ autoconf
-# OPENMODELICAHOME is usually /usr, /opt, /opt/openmodelica, or /path/to/OpenModelica/build
-$ ./configure --prefix=/path/to/OPENMODELICAHOME
-$ make
-$ make install
-```
 
-### Windows MinGW
-- install git for windows https://git-scm.com/downloads
-- make sure we git clone with the correct line endings, run in a terminal:
-    ```bash
-      git config --global core.eol lf
-      git config --global core.autocrlf input
-	```
-- clone it from the git repository [here](https://openmodelica.org/git/OMDev.git)
-  ```
-  cd C:\
-  git clone https://openmodelica.org/git/OMDev.git
-  ```
-- follow the instructions in OMDev/INSTALL.txt
-- Open the mingw terminal. Either `$OMDEV/tools/msys/mingw32.exe` OR `$OMDEV/tools/msys/mingw64.exe`.
+Follow the instructions matching your OS:
+
+  - [OMCompiler/README.Linux.md](../OMCompiler/README.Linux.md)
+  - [OMCompiler/README.Windows.md](../OMCompiler/README.Windows.md)
+
+### Windows MSYS Makefiles
+
+If you used MSYS Makefiles to compile OpenModelica you need one additional step:
+
+Start a MSYS terminal `$OMDEV\tools\msys\mingw64.exe` (64 bit) or
+`$OMDEV\tools\msys\mingw32.exe` (32 bit) and run:
+
 ```bash
-$ cd /path/to/OMSens_Qt
-$ make -f Makefile.omdev.mingw omsens_qt
+$ cd /path/to/OpenModelica
+make -f Makefile.omdev.mingw omsens_qt -j<Nr. of cores>
 ```
 
 ## Bug Reports
 
-- Submit bugs through the [issues](../../issues)
-- [Pull requests](../../pulls) are welcome.
+  - Submit bugs through the [OpenModelica GitHub issues](https://github.com/OpenModelica/OpenModelica/issues/new).
+  - [Pull requests](https://github.com/OpenModelica/OpenModelica/pulls) are welcome ❤️
