@@ -273,14 +273,14 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
 
   // Start process
   pythonScriptProcess.start(command, args);
-  if (pythonScriptProcess.state() == QProcess::Running) {
+  if (pythonScriptProcess.state() == QProcess::Running || pythonScriptProcess.state() == QProcess::Starting ) {
     // Show dialog with progress
     dialog->exec();
   } else {
     dialog->close();
   }
   // Wait for the process to finish in the case that we cancel the process and it doesn't have time to finish correctly
-  pythonScriptProcess.waitForFinished(3000);
+  pythonScriptProcess.waitForFinished(30000);
   //
   // See if the process ended correctly
   QProcess::ExitStatus exitStatus = pythonScriptProcess.exitStatus();
