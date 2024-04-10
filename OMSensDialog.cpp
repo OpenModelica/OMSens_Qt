@@ -1,5 +1,6 @@
 #include "OMSensDialog.h"
 #include <QProcess>
+#include <QProcessEnvironment>
 #include <QProgressDialog>
 #include <QVBoxLayout>
 #include <QPushButton>
@@ -287,7 +288,7 @@ bool OMSensDialog::runProcessAndShowProgress(QString scriptDirPath, QString comm
   int exitCode = pythonScriptProcess.exitCode();
   // Prepare python call log
   QString python_call_output(pythonScriptProcess.readAll());
-  QString python_log_full_str = QString("full command:%1\n\n%2\n\n%3").arg(command, pythonScriptProcess.errorString(), python_call_output);
+  QString python_log_full_str = QString("running: %1 %2\n\n%3\n\n%4").arg(command, args.join(" "), pythonScriptProcess.errorString(), python_call_output);
   // Write log to file
   QString python_log_file_name = "python_log.txt";
   QString python_log_file_path = QDir::cleanPath(resultsFolderPath + QDir::separator() + python_log_file_name);
