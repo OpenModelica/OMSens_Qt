@@ -6,7 +6,11 @@ all: omsens_qt
 
 CC = gcc
 CXX = g++
-QMAKE=qmake
+ifeq ($(OM_QT_MAJOR_VERSION),6)
+	QMAKE=qmake6
+else
+	QMAKE=qmake
+endif
 
 builddir_lib=$(OMBUILDDIR)/lib/omc
 
