@@ -14,7 +14,7 @@ set(CMAKE_AUTORCC ON)
 set(CMAKE_AUTOUIC ON)
 
 
-find_package(Qt5 COMPONENTS Core Gui Widgets REQUIRED)
+find_package(Qt${OM_QT_MAJOR_VERSION} COMPONENTS Core Gui Widgets REQUIRED)
 
 
 set(OMSENS_QT_SOURCES dialogs/general/CSVViewerDialog.cpp
@@ -85,6 +85,6 @@ add_library(omsensplugin SHARED ${OMSENS_QT_SOURCES} ${OMSENS_QT_HEADERS})
 
 target_include_directories(omsensplugin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
-target_link_libraries(omsensplugin PUBLIC Qt5::Widgets)
+target_link_libraries(omsensplugin PUBLIC Qt${OM_QT_MAJOR_VERSION}::Widgets)
 
 install(TARGETS omsensplugin)
