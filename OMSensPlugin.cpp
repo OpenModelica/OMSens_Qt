@@ -4,6 +4,8 @@
 
 QString OMSensPlugin::OpenModelicaHome = "";
 QString OMSensPlugin::tempPath = "";
+QString OMSensPlugin::OMSensBackendPath = "";
+QString OMSensPlugin::pythonExecPath = "";
 
 void OMSensPlugin::setOpenModelicaHome(const QString &omhome)
 {
@@ -13,6 +15,16 @@ void OMSensPlugin::setOpenModelicaHome(const QString &omhome)
 void OMSensPlugin::setTempPath(const QString &path)
 {
   OMSensPlugin::tempPath = path;
+}
+
+void OMSensPlugin::setOMSensPath(const QString &path)
+{
+  OMSensPlugin::OMSensBackendPath = path;
+}
+
+void OMSensPlugin::setPython(const QString &path)
+{
+  OMSensPlugin::pythonExecPath = path;
 }
 
 void OMSensPlugin::analyzeModel(const QList<QVariant> &modelData)

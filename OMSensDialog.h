@@ -24,12 +24,6 @@ public:
   QString exp_specs_file_name             = "experiment_specs.json";
   QString model_specs_file_name           = "model_info.json";
   QString analysis_results_info_file_name = "result.json";
-
-
-  QString omsensBackendPath();
-
-  QString pythonExecPath();
-
 private:
   // Data
   Model mActiveModel;

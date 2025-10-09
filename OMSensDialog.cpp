@@ -27,87 +27,6 @@
 #include "specs/SweepSpecs.h"
 #include "specs/VectSpecs.h"
 
-QString osName()
-{
-#if defined(Q_OS_ANDROID)
-  return QLatin1String("android");
-#elif defined(Q_OS_BLACKBERRY)
-  return QLatin1String("blackberry");
-#elif defined(Q_OS_IOS)
-  return QLatin1String("ios");
-#elif defined(Q_OS_MACOS)
-  return QLatin1String("macos");
-#elif defined(Q_OS_TVOS)
-  return QLatin1String("tvos");
-#elif defined(Q_OS_WATCHOS)
-  return QLatin1String("watchos");
-#elif defined(Q_OS_WINCE)
-  return QLatin1String("wince");
-#elif defined(Q_OS_WIN)
-  return QLatin1String("windows");
-#elif defined(Q_OS_LINUX)
-  return QLatin1String("linux");
-#elif defined(Q_OS_UNIX)
-  return QLatin1String("unix");
-#else
-  return QLatin1String("unknown");
-#endif
-}
-
-
-
-QString OMSensDialog::omsensBackendPath()
-{
-  // Get environment var value
-  QString envVarVal = qgetenv("OMSENSBACKEND");
-  // Check if it's empty
-  QString backendPath;
-  if(envVarVal.size() == 0)
-  {
-    backendPath = "?";
-  }
-  else
-  {
-    backendPath=envVarVal;
-  }
-  return backendPath;
-}
-
-QString OMSensDialog::pythonExecPath()
-{
-  QString system = osName();
-  QProcess sysProcc;
-
-  // Call command depending on platform
-  if (system == "linux") {
-    sysProcc.start("which", {"python"});
-  } else if (system == "windows") {
-    sysProcc.start("where", {"python"});
-  } else {
-    return "";
-  }
-
-  sysProcc.waitForFinished(); // sets current thread to sleep and waits for pingProcess end
-  // Check that it's was a sucessful call
-  int retCode = sysProcc.exitCode();
-  // Define python path
-  QString pythonPath;
-  if (retCode == 0)
-  {
-    // Get STDOUT
-    QString sysCallSTDOUT(sysProcc.readAllStandardOutput());
-    // Sanitize output
-    QStringList paths = sysCallSTDOUT.split("\n");
-    QString firstPath = paths.at(0);
-    pythonPath = firstPath;
-  }
-  else
-  {
-    pythonPath = "?";
-  }
-  return pythonPath.trimmed();
-}
-
 OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mActiveModel(model)
 {
   // Dialog settings
@@ -120,14 +39,22 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
   analysis_results_info_file_name = "result.json";
 
   // OMSens python backend path
-  mOMSensPath    = QDir::cleanPath(OMSensPlugin::OpenModelicaHome + "/share/OMSens")/*omsensBackendPath()*/;
+  mOMSensPath    = OMSensPlugin::OMSensBackendPath;
   // Python executable path
-  mPythonBinPath = QDir::cleanPath(pythonExecPath());
+  mPythonBinPath = QDir::cleanPath(OMSensPlugin::pythonExecPath);
   // Initialize dialogs
   mpVectSensDialog     = new VectorialSensAnalysisDialog(mActiveModel,this);
   mpSweepDialog        = new MultiParamSweepDialog(mActiveModel,this);
   mpIndivSensDialog    = new IndivParamSensAnalysisDialog(mActiveModel,this);
   // Initialize paths
+  QLabel *pInfoLabel = new QLabel(tr("Set the OMSens backend to the directory where the OMSens Python package is installed.<br />"
+                                     "Specify the Python executable you want to use for running OMSens scripts.<br /><br />"
+                                     "You can also define these settings in <b>Tools->Options->Sensitivity Optimization</b>"));
+  pInfoLabel->setWordWrap(true);
+  pInfoLabel->setOpenExternalLinks(true);
+  pInfoLabel->setTextInteractionFlags(Qt::TextBrowserInteraction);
+  pInfoLabel->setToolTip("");
+
   mpOMSensPathLabel = new QLabel("OMSens python backend folder:");
   mpOMSensPathValue = new QLabel(mOMSensPath);
   mpOMSensPathValue->setFrameStyle(QFrame::Panel | QFrame::Sunken);
@@ -184,33 +111,24 @@ OMSensDialog::OMSensDialog(Model model, QWidget *parent) : QDialog(parent), mAct
   connect(mpLoadExperimentButton, SIGNAL(clicked()), SLOT(loadExperimentFileDialog()));
 
   // Layout
-  QVBoxLayout *mainLayout = new QVBoxLayout;
-  // OMSens folder
-  mainLayout->addWidget(mpOMSensPathLabel, 0, Qt::AlignLeft);
-  QHBoxLayout *pOMSensValueLayout = new QHBoxLayout;
-  pOMSensValueLayout->addWidget(mpOMSensPathValue);
-  pOMSensValueLayout->addWidget(mpOMSensPathBrowseButton);
-  mainLayout->addLayout(pOMSensValueLayout);
-  // Python bin
-  mainLayout->addWidget(mpPythonBinLabel, 0, Qt::AlignLeft);
-  QHBoxLayout *pPythonBinValueLayout = new QHBoxLayout;
-  pPythonBinValueLayout->addWidget(mpPythonBinValue);
-  pPythonBinValueLayout->addWidget(mpPythonBinBrowseButton);
-  mainLayout->addLayout(pPythonBinValueLayout);
-  // Division
-  mainLayout->addWidget(mpHorizontalLineOne);
-  // Buttons
-  mainLayout->addWidget(mpIndivButton, 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpSweepButton, 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpVectButton , 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpHorizontalLineTwo);
+  QGridLayout *pMainLayout = new QGridLayout;
+  pMainLayout->setAlignment(Qt::AlignTop);
+  pMainLayout->addWidget(pInfoLabel, 0, 0, 1, 2);
+  pMainLayout->addWidget(mpOMSensPathLabel, 1, 0, 1, 2);
+  pMainLayout->addWidget(mpOMSensPathValue, 2, 0);
+  pMainLayout->addWidget(mpOMSensPathBrowseButton, 2, 1);
+  pMainLayout->addWidget(mpPythonBinLabel, 3, 0, 1, 2);
+  pMainLayout->addWidget(mpPythonBinValue, 4, 0);
+  pMainLayout->addWidget(mpPythonBinBrowseButton, 4, 1);
+  pMainLayout->addWidget(mpHorizontalLineOne, 5, 0, 1, 2);
+  pMainLayout->addWidget(mpIndivButton, 6, 0, 1, 2, Qt::AlignCenter);
+  pMainLayout->addWidget(mpSweepButton, 7, 0, 1, 2, Qt::AlignCenter);
+  pMainLayout->addWidget(mpVectButton , 8, 0, 1, 2, Qt::AlignCenter);
+  pMainLayout->addWidget(mpHorizontalLineTwo, 9, 0, 1, 2);
   // Don't show the help for now
-  //    mainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
-  mainLayout->addWidget(mpLoadExperimentButton , 0, Qt::AlignLeft);
-
-  // Layout settings
-  mainLayout->setAlignment(Qt::AlignCenter);
-  setLayout(mainLayout);
+  //    pMainLayout->addWidget(mpHelpButton , 0, Qt::AlignCenter);
+  pMainLayout->addWidget(mpLoadExperimentButton, 10, 0, 1, 2);
+  setLayout(pMainLayout);
 }
 
 

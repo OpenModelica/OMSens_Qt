@@ -17,9 +17,15 @@ class OMSensPlugin: public QObject, public InformationInterface, public ModelInt
 public:
   static QString OpenModelicaHome;
   static QString tempPath;
+  static QString OMSensBackendPath;
+  static QString pythonExecPath;
 
+  // InformationInterface interface
+public:
   virtual void setOpenModelicaHome(const QString &omhome) override;
   virtual void setTempPath(const QString &path) override;
+  virtual void setOMSensPath(const QString &path) override;
+  virtual void setPython(const QString &path) override;
 
   // ModelInterface interface
 public:
