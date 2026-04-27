@@ -6,20 +6,29 @@
 #include <QTableView>
 #include <QVBoxLayout>
 #include <QHeaderView>
+#include <QMessageBox>
+#include <QGuiApplication>
+#include <QDir>
 #include "../../TableItemDelegate.h"
 
 CSVViewerDialog::CSVViewerDialog(QString filePath, QWidget *parent) : QDialog(parent)
 {
     QStandardItemModel *csvModel = standardItemModelFromFilePath(filePath);
-    initializeTableWithStandardItemModel(csvModel);
-    configureLayout();
+    if (csvModel) {
+      initializeTableWithStandardItemModel(csvModel);
+      configureLayout();
+    }
 }
 
 QStandardItemModel * CSVViewerDialog::standardItemModelFromFilePath(QString filePath)
 {
     // Open file
     QFile file(filePath);
-    file.open(QFile::ReadOnly | QFile::Text);
+    if (!file.open(QFile::ReadOnly | QFile::Text)) {
+      QMessageBox::information(this, QGuiApplication::applicationDisplayName(),
+                               tr("Cannot open %1 for reading").arg(QDir::toNativeSeparators(filePath)));
+      return nullptr;
+    }
     // Create a thread to retrieve data from a file
     QTextStream in(&file);
     // Read first row into column names
