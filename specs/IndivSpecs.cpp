@@ -33,7 +33,7 @@
  *
  */
 
-﻿#include "IndivSpecs.h"
+#include "IndivSpecs.h"
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QList>

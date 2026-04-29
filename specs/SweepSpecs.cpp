@@ -33,7 +33,7 @@
  *
  */
 
-﻿#include "SweepSpecs.h"
+#include "SweepSpecs.h"
 #include <QJsonObject>
 #include <QJsonArray>
 #include <QList>
