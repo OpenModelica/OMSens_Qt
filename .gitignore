@@ -23,3 +23,5 @@
 /Makefile.unix
 /object_script.*
 /OMSens_Qt.pro.*
+.qtcreator/
+.qtc_clangd/
