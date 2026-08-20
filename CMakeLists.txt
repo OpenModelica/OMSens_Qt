@@ -87,4 +87,7 @@ target_include_directories(omsensplugin PUBLIC ${CMAKE_CURRENT_SOURCE_DIR})
 
 target_link_libraries(omsensplugin PUBLIC Qt${OM_QT_MAJOR_VERSION}::Widgets)
 
-install(TARGETS omsensplugin)
+install(TARGETS omsensplugin RUNTIME DESTINATION ${CMAKE_INSTALL_LIBDIR})
+if(WIN32)
+  set_target_properties(omsensplugin PROPERTIES PREFIX "")
+endif()
